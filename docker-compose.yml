@@ -1,0 +1,9 @@
+version: "3.9"
+services:
+  collector:
+    build: .
+    stdin_open: true
+  redis:
+    image: "redis:6-alpine"
+    ports: 
+      - 6379:6379
