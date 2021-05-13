@@ -1,0 +1,48 @@
+# Welcome to serverless. Read the docs
+# https://serverless.com/framework/docs/
+
+# Serverless.yml is the configuration the CLI
+# uses to deploy your code to your provider of choice
+
+# The `service` block is the name of the service
+service: hathor-explorer-service
+
+# The `provider` block defines where your service will be deployed
+provider:
+  name: aws
+  runtime: python3.8
+  profile: serverless
+  region: us-east-1
+  vpc:
+    securityGroupIds:
+      - sg-096e4b4e
+    subnetIds:
+      - subnet-06585a4c
+      - subnet-26255a7a
+      - subnet-2ecfbc49
+
+package:
+  individually: true
+
+
+functions:
+  network_handler:
+    handler: handlers/network_handler.handle
+    package:
+      patterns:
+        - '!*'
+        - '!**/*'
+        - 'handlers/network_handler.py'
+    events:
+      - http:
+          path: network
+          method: get
+          cors: true
+
+  network_data_aggregator:
+    handler: handlers/network_data_aggregator.handle
+    package:
+      patterns:
+        - '!*'
+        - '!**/*'
+        - 'handlers/network_data_aggregator.py'
