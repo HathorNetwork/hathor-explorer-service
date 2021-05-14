@@ -1,5 +1,7 @@
 import aiohttp
 import asyncio
+import boto3
+import json
 
 STATUS_NODES = [
     'node.explorer.hathor.network',
@@ -8,7 +10,13 @@ STATUS_NODES = [
 ]
 
 def process_node_status(node_status: dict):
-    print(node_status['server']['id'])
+    session = boto3.session.Session()
+    lamb = session.client("lambda", endpoint_url="http://localhost:3002")
+    lamb.invoke(
+        InvocationType='Event',
+        FunctionName='hathor-explorer-service-dev-network_data_aggregator',
+        Payload=json.dumps(node_status)
+    )
 
 async def request_node(session: aiohttp.ClientSession, url: str):
     try:

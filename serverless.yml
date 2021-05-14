@@ -21,9 +21,11 @@ provider:
       - subnet-26255a7a
       - subnet-2ecfbc49
 
+plugins:
+  - serverless-offline
+
 package:
   individually: true
-
 
 functions:
   network_handler:
@@ -35,9 +37,13 @@ functions:
         - 'handlers/network_handler.py'
     events:
       - http:
-          path: network
+          path: network/{hash?}
           method: get
           cors: true
+          request: 
+            parameters: 
+              paths: 
+                hash: false
 
   network_data_aggregator:
     handler: handlers/network_data_aggregator.handle
