@@ -1,12 +1,18 @@
-import redis
-import json
+from usecases.save_network_data import SaveNetworkData
 
-redis_client = redis.Redis(host='localhost', port=6379, db=0)
 
-def handle(node_status: dict, _context):
+def handle(node_status: dict, _context) -> dict:
 
-    redis_client.set(node_status['server']['id'], json.dumps(node_status))
+    save_network_data = SaveNetworkData()
+    result = save_network_data.save(node_status)
+
+    if result:
+        return {
+            "statusCode": 200,
+            "body": "{}"
+        }
+    
     return {
-        "statusCode": 200,
+        "statusCode": 400,
         "body": "{}"
     }

@@ -1,0 +1,11 @@
+*
+!common
+!daemons
+!domain
+!gateways
+!usecases
+!utils
+!configuration.yml
+!daemons_runner.py
+!poetry.lock
+!pyproject.toml

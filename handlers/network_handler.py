@@ -1,19 +1,21 @@
-import redis
 import json
 
-redis_client = redis.Redis(host='localhost', port=6379, db=0)
+from usecases.get_network import GetNetwork
+from usecases.list_available_nodes import ListAvailableNodes
 
 
-def handle(event, context):
+def handle(event: dict, context: dict):
     response = None
     if event['pathParameters'] is not None:
-        response = redis_client.get(event['pathParameters']['hash']).decode()
+        get_network = GetNetwork()
+        response = get_network.get(event['pathParameters']['hash'])
     else:
-        response = json.dumps([k.decode() for k in redis_client.keys()])
+        list_available_nodes = ListAvailableNodes()
+        response = list_available_nodes.list()
 
     return {
         "statusCode": 200,
-        "body": response,
+        "body": json.dumps(response),
         "headers": {
             "Content-Type": "application/json"
         }

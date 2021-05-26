@@ -12,9 +12,25 @@ boto3 = "^1.17.72"
 python-dotenv = "^0.17.1"
 asyncio = "^3.4.3"
 aiohttp = "^3.7.4"
+PyYAML = "^5.4.1"
+aws-lambda-context = "^1.1.0"
 
 [tool.poetry.dev-dependencies]
+pytest = "^6.2.4"
+yapf = "^0.31.0"
+isort = "^5.8.0"
+flake8 = "^3.9.2"
+mypy = "^0.812"
+pytest-cov = "^2.12.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.isort]
+combine_as_imports = true
+default_section = "THIRDPARTY"
+include_trailing_comma = true
+known_first_party = "hathor,tests"
+line_length = 119
+multi_line_output = 3

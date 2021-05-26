@@ -27,6 +27,10 @@ plugins:
 package:
   individually: true
 
+custom:
+  serverless-offline:
+    httpPort: 3001
+
 functions:
   network_handler:
     handler: handlers/network_handler.handle
