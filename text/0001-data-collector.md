@@ -17,7 +17,7 @@ In order to reduce `full-node` overloads, instead of have each open explorer app
 # Guide-level explanation
 [guide-level-explanation]: #guide-level-explanation
 
-![image](https://user-images.githubusercontent.com/698586/118033566-57a9f600-b33f-11eb-8e26-72c2e3753d70.png)
+![image](https://raw.githubusercontent.com/HathorNetwork/hathor-explorer-service/main/text/img/data-collector.png)
 
 Data collector will get data from `full-node` by the following way
 
@@ -125,7 +125,7 @@ For each request, part of the response is sent to `network-data-aggregator`:
 
 > `'hathor-explorer-service.network.${server.id}'`
 
-**Endpoiont:**
+**Endpoint:**
 
 GET `/v1a/network/`
 
@@ -135,7 +135,7 @@ GET `/v1a/network/`
 [string, ...]
 ```
 
-**Endpoiont:**
+**Endpoint:**
 
 GET `/v1a/network/:hash`
 

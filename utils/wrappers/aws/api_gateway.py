@@ -17,15 +17,13 @@ class ApiGatewayEvent:
 
     def __init__(self, event: dict, context: LambdaContext) -> None:
         self.query = event.get('queryStringParameters', {})
+        self.path = event.get('pathParameters', {})
         self.body = parse_body(event)
         self.headers = event.get('headers', {})
         self.request_id = context.aws_request_id
 
 
 class ApiGateway:
-
-    def __init__(self, *args, **kwargs) -> None:
-        pass
 
     def __call__(self, function_to_call: Callable[[ApiGatewayEvent, LambdaContext, Any, Any], dict]) -> Callable[[dict, LambdaContext, Any, Any], dict]:
         def wrapper(event: dict, context: LambdaContext, *args: Any, **kwargs: Any) -> dict:

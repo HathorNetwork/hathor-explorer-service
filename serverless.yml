@@ -32,22 +32,33 @@ custom:
     httpPort: 3001
 
 functions:
-  network_handler:
-    handler: handlers/network_handler.handle
+  get_network_handler:
+    handler: handlers/get_network_handler.handle
     package:
       patterns:
         - '!*'
         - '!**/*'
-        - 'handlers/network_handler.py'
+        - 'handlers/get_network_handler.py'
     events:
       - http:
-          path: network/{hash?}
+          path: network/{hash}
           method: get
-          cors: true
           request: 
             parameters: 
               paths: 
-                hash: false
+                hash: true
+
+  list_nodes_handler:
+    handler: handlers/list_nodes_handler.handle
+    package:
+      patterns:
+        - '!*'
+        - '!**/*'
+        - 'handlers/list_nodes_handler.py'
+    events:
+      - http:
+          path: network/
+          method: get
 
   network_data_aggregator:
     handler: handlers/network_data_aggregator.handle

@@ -2,7 +2,7 @@
 name = "hathor-explorer-service"
 version = "0.0.1"
 description = ""
-authors = ["Giovane Costa <gigio.coder@gmail.com>"]
+authors = ["Hathor Labs <contact@hathor.network>"]
 license = "MIT"
 
 [tool.poetry.dependencies]

@@ -12,7 +12,8 @@ class DataCollector:
     async def run(self) -> None:
         await CollectNodesStatuses().collect()
 
-if __name__ == "__main__":
+
+def main() -> None:
     loop = asyncio.get_event_loop()
     try:
         data_collector = DataCollector()
@@ -23,3 +24,6 @@ if __name__ == "__main__":
     finally:
         print("Closing Loop")
         loop.close()
+
+if __name__ == "__main__":
+    main()
