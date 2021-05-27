@@ -1,11 +1,10 @@
 import json
+from typing import Any, Callable
 
-from typing import Callable, Any
-
-from aws_lambda_context import LambdaContext # type: ignore
+from aws_lambda_context import LambdaContext
 
 
-def parse_body(event: dict):
+def parse_body(event: dict) -> dict:
     try:
         possible_body = event.get('body', '{}')
         return json.loads(possible_body)
@@ -25,7 +24,10 @@ class ApiGatewayEvent:
 
 class ApiGateway:
 
-    def __call__(self, function_to_call: Callable[[ApiGatewayEvent, LambdaContext, Any, Any], dict]) -> Callable[[dict, LambdaContext, Any, Any], dict]:
+    def __call__(
+        self,
+        function_to_call: Callable[[ApiGatewayEvent, LambdaContext, Any], dict]
+    ) -> Callable[[dict, LambdaContext, Any], dict]:
         def wrapper(event: dict, context: LambdaContext, *args: Any, **kwargs: Any) -> dict:
             errors_status = {
                 'invalid_parameters': 400,
@@ -36,7 +38,7 @@ class ApiGateway:
 
             try:
                 api_gateway_event = ApiGatewayEvent(event, context)
-                result = function_to_call(api_gateway_event, context, *args, **kwargs) # type: ignore
+                result = function_to_call(api_gateway_event, context, *args, **kwargs)  # type: ignore
                 return result
             except Exception as error:
                 return {

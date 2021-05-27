@@ -1,11 +1,9 @@
 import os
-
 from collections import UserDict
 from enum import Enum
+from typing import List, Union
 
 import yaml
-from typing import Union, List
-
 
 SRC_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir)
 CONFIGURATION_FILE = os.path.join(SRC_DIR, 'configuration.yml')

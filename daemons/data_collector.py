@@ -2,8 +2,6 @@
 
 import asyncio
 
-from typing import Callable, Generator
-
 from usecases.collect_nodes_statuses import CollectNodesStatuses
 
 
@@ -24,6 +22,7 @@ def main() -> None:
     finally:
         print("Closing Loop")
         loop.close()
+
 
 if __name__ == "__main__":
     main()

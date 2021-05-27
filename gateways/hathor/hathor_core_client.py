@@ -1,14 +1,14 @@
-import aiohttp
-
-from typing import Callable
+from typing import Callable, Union
 from urllib import parse
+
+import aiohttp
 
 from common import config
 
 
 class HathorCoreClient:
 
-    def __init__(self, domain: str = None) -> None:
+    def __init__(self, domain: Union[str, None] = None) -> None:
         self.domain = domain or config.hathor_core_domain
 
     def get(self, path: str) -> dict:
@@ -17,7 +17,7 @@ class HathorCoreClient:
 
 class HathorCoreAsyncClient:
 
-    def __init__(self, domain: str = None) -> None:
+    def __init__(self, domain: Union[str, None] = None) -> None:
         """Client to make async requests
 
         :param domain: domain where the requests will be made, defaults to config `hathor_core_domain`

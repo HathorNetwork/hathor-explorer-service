@@ -1,7 +1,8 @@
-from common import config
+from typing import Union
 
-from gateways.aws.lambda_client import LambdaClient
+from common import config
 from domain.network.network import Network
+from gateways.aws.lambda_client import LambdaClient
 
 
 class LambdaGateway:
@@ -11,7 +12,7 @@ class LambdaGateway:
     :type lambda_client:  :py:class:`gateways.aws.lambda_client.LambdaClient`, optional
     """
 
-    def __init__(self, lambda_client: LambdaClient = None) -> None:
+    def __init__(self, lambda_client: Union[LambdaClient, None] = None) -> None:
         self.lambda_client = lambda_client or LambdaClient()
 
     def send_network_to_data_aggregator(self, payload: Network) -> int:
@@ -26,5 +27,5 @@ class LambdaGateway:
 
         if lambda_name is not None:
             return self.lambda_client.invoke_async(lambda_name, payload.to_dict())
-        
+
         raise Exception('No lambda name in config')

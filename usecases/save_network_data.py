@@ -1,10 +1,12 @@
+from typing import Union
+
 from domain.network.network import Network
 from gateways.cache.cache_gateway import CacheGateway
 
 
 class SaveNetworkData:
 
-    def __init__(self, cache_gateway: CacheGateway = None) -> None:
+    def __init__(self, cache_gateway: Union[CacheGateway, None] = None) -> None:
         self.cache_gateway = cache_gateway or CacheGateway()
 
     def save(self, payload: dict) -> bool:

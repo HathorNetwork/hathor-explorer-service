@@ -1,5 +1,6 @@
-from common import config
+from typing import Union
 
+from common import config
 from domain.network.network import Network
 from gateways.aws.lambda_gateway import LambdaGateway
 from gateways.hathor.hathor_core_client import HathorCoreAsyncClient
@@ -8,9 +9,9 @@ from gateways.hathor.hathor_core_gateway import HathorCoreGateway
 
 class CollectNodesStatuses:
 
-    def __init__(self, lambda_gateway: LambdaGateway = None) -> None:
+    def __init__(self, lambda_gateway: Union[LambdaGateway, None] = None) -> None:
         self.lambda_gateway = lambda_gateway or LambdaGateway()
-    
+
     async def collect(self) -> None:
         for node in config.hathor_nodes:
             client = HathorCoreAsyncClient(node)

@@ -1,6 +1,6 @@
-from dataclasses import dataclass, asdict
-from typing import List
+from dataclasses import asdict, dataclass
 from enum import Enum
+from typing import List
 
 
 class NodeState(str, Enum):
@@ -33,8 +33,8 @@ class Network:
 
     :param app_version: The current version of app running on node
     :type app_version: str
-    
-    :param state: Current state of the node 
+
+    :param state: Current state of the node
     :type state: :py:class:`domain.network.network.NodeState`
 
     :param network: Current network. Can be `mainnet`, any version of `testnet` or other
@@ -76,19 +76,19 @@ class Network:
     @classmethod
     def from_dict(cls, dikt: dict) -> 'Network':
         dikt['state'] = NodeState(dikt['state'])
-        
+
         connected_peers = []
 
         for peer in dikt['connected_peers']:
             peer['state'] = NodeState(peer['state'])
             connected_peers.append(Peer(**peer))
-        
+
         dikt['connected_peers'] = connected_peers
 
         return Network(**dikt)
 
     @classmethod
-    def from_status_dict(cls, status: dict) ->  'Network':
+    def from_status_dict(cls, status: dict) -> 'Network':
         """Convenience method to parse response to domain object
 
         :return: A new Network class built from status data

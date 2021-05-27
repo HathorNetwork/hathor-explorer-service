@@ -1,5 +1,5 @@
 
-py_sources = src/ tests/ handlers/
+py_sources = common/ daemons/ domain/ gateways/ handlers/ tests/ usecases/ utils/
 pytest_flags = -p no:warnings --cov-report=term --cov-report=html --cov-report=xml --cov=hathor
 mypy_flags = --warn-unused-configs --disallow-incomplete-defs --no-implicit-optional --warn-redundant-casts --warn-unused-ignores
 
