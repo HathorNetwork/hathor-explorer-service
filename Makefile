@@ -1,6 +1,6 @@
 
 py_sources = common/ daemons/ domain/ gateways/ handlers/ tests/ usecases/ utils/
-pytest_flags = -p no:warnings --cov-report=term --cov-report=html --cov-report=xml --cov=hathor
+pytest_flags = -p no:warnings --cov=. --cov-report=html --cov-report=term --cov-report=xml --cov-fail-under=90
 mypy_flags = --warn-unused-configs --disallow-incomplete-defs --no-implicit-optional --warn-redundant-casts --warn-unused-ignores
 
 default:
@@ -32,9 +32,9 @@ isort:
 .PHONY: fmt
 fmt: yapf isort
 
-.PHONY: terraform
-terraform:
-	terraform -chdir=terraform apply
+.PHONY: test
+test:
+	ENVIRONMENT=test pytest $(pytest_flags) ./tests
 
 .PHONY: serverless
 serverless:

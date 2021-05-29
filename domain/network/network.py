@@ -13,6 +13,36 @@ class NodeState(str, Enum):
 
 @dataclass
 class Peer:
+    """ Information about a Peer connected to a node
+
+    :param id: Peer id hash
+    :type id: str
+
+    :param app_version: The current version of app running on node
+    :type app_version: str
+
+    :param uptime: Time of node activity in seconds
+    :type uptime: float
+
+    :param address: Ip address and port of the peer
+    :type address: str
+
+    :param state: Current state of the peer
+    :type state: :py:class:`domain.network.network.NodeState`
+
+    :param last_message: Time passed since the last message that node received in seconds
+    :type last_message: float
+
+    :param latest_timestamp: Timestamp of the latest block of the node
+    :type latest_timestamp: int
+
+    :param sync_timestamp: Timestamp of the last synchronized block of the node
+    :type sync_timestamp: int
+
+    :param warning_flags: List of node warnings, if any
+    :type warning_flags: List[str]
+
+    """
     id: str
     app_version: str
     uptime: float
@@ -70,11 +100,24 @@ class Network:
     known_peers: List[str]
     connected_peers: List[Peer]
 
-    def to_dict(self):
+    def to_dict(self) -> dict:
+        """ Convert a Network instance into dict
+
+        :return: The dict representation of the Network
+        :rtype: dict
+        """
         return asdict(self)
 
     @classmethod
     def from_dict(cls, dikt: dict) -> 'Network':
+        """ Creates a new Network instance from a given dict (inverse operation of `to_dict`)
+
+        :param dikt: Dict with Network structure and data
+        :type dikt: dict
+
+        :return: The new instance
+        :rtype: :py:class:`domain.network.network.Network`
+        """
         dikt['state'] = NodeState(dikt['state'])
 
         connected_peers = []
@@ -90,6 +133,9 @@ class Network:
     @classmethod
     def from_status_dict(cls, status: dict) -> 'Network':
         """Convenience method to parse response to domain object
+
+        :param dikt: Dict response of a request to node status endpoint
+        :type dikt: dict
 
         :return: A new Network class built from status data
         :rtype: Network

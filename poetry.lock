@@ -126,6 +126,33 @@ toml = {version = "*", optional = true, markers = "extra == \"toml\""}
 toml = ["toml"]
 
 [[package]]
+name = "factory-boy"
+version = "3.2.0"
+description = "A versatile test fixtures replacement based on thoughtbot's factory_bot for Ruby."
+category = "dev"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+Faker = ">=0.7.0"
+
+[package.extras]
+dev = ["coverage", "django", "flake8", "isort", "pillow", "sqlalchemy", "mongoengine", "wheel (>=0.32.0)", "tox", "zest.releaser"]
+doc = ["sphinx", "sphinx-rtd-theme", "sphinxcontrib-spelling"]
+
+[[package]]
+name = "faker"
+version = "8.4.0"
+description = "Faker is a Python package that generates fake data for you."
+category = "dev"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+python-dateutil = ">=2.4"
+text-unidecode = "1.3"
+
+[[package]]
 name = "flake8"
 version = "3.9.2"
 description = "the modular source code checker: pep8 pyflakes and co"
@@ -369,6 +396,14 @@ optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
 
 [[package]]
+name = "text-unidecode"
+version = "1.3"
+description = "The most basic Text::Unidecode port"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "toml"
 version = "0.10.2"
 description = "Python Library for Tom's Obvious, Minimal Language"
@@ -428,7 +463,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "81a203cab30874a419ffdcee66244c25a1a930ea74158e7226d0f535f86146ef"
+content-hash = "dbb3a122f79c00ca5d903c6e31fe82a199b5271cb06247754ceae2082ae6c223"
 
 [metadata.files]
 aiohttp = [
@@ -561,6 +596,14 @@ coverage = [
     {file = "coverage-5.5-pp36-none-any.whl", hash = "sha256:f030f8873312a16414c0d8e1a1ddff2d3235655a2174e3648b4fa66b3f2f1079"},
     {file = "coverage-5.5-pp37-none-any.whl", hash = "sha256:2a3859cb82dcbda1cfd3e6f71c27081d18aa251d20a17d87d26d4cd216fb0af4"},
     {file = "coverage-5.5.tar.gz", hash = "sha256:ebe78fe9a0e874362175b02371bdfbee64d8edc42a044253ddf4ee7d3c15212c"},
+]
+factory-boy = [
+    {file = "factory_boy-3.2.0-py2.py3-none-any.whl", hash = "sha256:1d3db4b44b8c8c54cdd8b83ae4bdb9aeb121e464400035f1f03ae0e1eade56a4"},
+    {file = "factory_boy-3.2.0.tar.gz", hash = "sha256:401cc00ff339a022f84d64a4339503d1689e8263a4478d876e58a3295b155c5b"},
+]
+faker = [
+    {file = "Faker-8.4.0-py3-none-any.whl", hash = "sha256:5b1c0781c0c2f6b177adf4018feec265bbcd0118b301dbec64a1908c29124ed6"},
+    {file = "Faker-8.4.0.tar.gz", hash = "sha256:c94240c40073400b269c50b14da765fd4d3b4dda8ae25c2753afc809c72f1062"},
 ]
 flake8 = [
     {file = "flake8-3.9.2-py2.py3-none-any.whl", hash = "sha256:bf8fd333346d844f616e8d47905ef3a3384edae6b4e9beb0c5101e25e3110907"},
@@ -735,6 +778,10 @@ s3transfer = [
 six = [
     {file = "six-1.16.0-py2.py3-none-any.whl", hash = "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"},
     {file = "six-1.16.0.tar.gz", hash = "sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926"},
+]
+text-unidecode = [
+    {file = "text-unidecode-1.3.tar.gz", hash = "sha256:bad6603bb14d279193107714b288be206cac565dfa49aa5b105294dd5c4aab93"},
+    {file = "text_unidecode-1.3-py2.py3-none-any.whl", hash = "sha256:1311f10e8b895935241623731c2ba64f4c455287888b18189350b67134a822e8"},
 ]
 toml = [
     {file = "toml-0.10.2-py2.py3-none-any.whl", hash = "sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"},

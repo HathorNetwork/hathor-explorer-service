@@ -8,7 +8,6 @@ from common import config
 class LambdaClient:
     """This is an abstraction for boto3 lambda client
     """
-
     def __init__(self) -> None:
         session = boto3.session.Session()
         if config.lambda_invoke_url is None:

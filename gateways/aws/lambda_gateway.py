@@ -11,7 +11,6 @@ class LambdaGateway:
     :param lambda_client: Client for lambda interactions, defaults to domain LambdaClient
     :type lambda_client:  :py:class:`gateways.aws.lambda_client.LambdaClient`, optional
     """
-
     def __init__(self, lambda_client: Union[LambdaClient, None] = None) -> None:
         self.lambda_client = lambda_client or LambdaClient()
 
