@@ -6,15 +6,6 @@ import aiohttp
 from common import config
 
 
-class HathorCoreClient:
-
-    def __init__(self, domain: Union[str, None] = None) -> None:
-        self.domain = domain or config.hathor_core_domain
-
-    def get(self, path: str) -> dict:
-        return {}
-
-
 class HathorCoreAsyncClient:
 
     def __init__(self, domain: Union[str, None] = None) -> None:
