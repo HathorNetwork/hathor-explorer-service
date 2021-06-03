@@ -21,6 +21,6 @@ coverage.xml
 .mypy_cache
 .pytest_cache
 
-terraform/.terraform*
+.serverless
 
 .vscode
