@@ -3,8 +3,11 @@ py_sources = common/ daemons/ domain/ gateways/ handlers/ tests/ usecases/ utils
 pytest_flags = -p no:warnings --cov=. --cov-report=html --cov-report=term --cov-report=xml --cov-fail-under=90
 mypy_flags = --warn-unused-configs --disallow-incomplete-defs --no-implicit-optional --warn-redundant-casts --warn-unused-ignores
 
-default:
-	echo "help"
+default: help
+
+.PHONY: help
+help:
+	@echo "Use 'make build' to generate the docker image and 'make run' to launch it."
 
 .PHONY: mypy
 mypy:

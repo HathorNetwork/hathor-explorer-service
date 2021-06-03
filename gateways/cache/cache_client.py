@@ -3,7 +3,7 @@ from typing import List, Union
 
 from redis import StrictRedis
 
-from common import config
+from common.configuration import REDIS_DB, REDIS_HOST, REDIS_PORT, REDIS_KEY_PREFIX
 
 
 class CacheClient:
@@ -11,16 +11,16 @@ class CacheClient:
     """
     def __init__(self) -> None:
         client_args = {
-            'host': config.redis_host,
-            'port': config.redis_port,
-            'db': config.redis_db
+            'host': REDIS_HOST,
+            'port': REDIS_PORT,
+            'db': REDIS_DB
         }
 
         client_args = {k: v for k, v in client_args.items() if v is not None}
 
         self.client = StrictRedis(**client_args)  # type: ignore
 
-    def set(self, collection: str, key: str, value: dict) -> bool:
+    def set(self, collection: str, key: str, value: dict) -> Union[bool, None]:
         """Saves a dict into cache
 
         :param collection: a name to separate contexts
@@ -80,7 +80,7 @@ class CacheClient:
         :return: configured project prefix + given collection
         :rtype: str
         """
-        return f"{config.redis_key_prefix}.{collection}"
+        return f"{REDIS_KEY_PREFIX}.{collection}"
 
     def _get_context_key(self, collection: str, key: str) -> str:
         """Returns the complete key ready to be saved in cache

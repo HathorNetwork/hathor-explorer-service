@@ -2,7 +2,7 @@ import json
 
 import boto3
 
-from common import config
+from common.configuration import LAMBDA_INVOKE_URL
 
 
 class LambdaClient:
@@ -10,10 +10,10 @@ class LambdaClient:
     """
     def __init__(self) -> None:
         session = boto3.session.Session()
-        if config.lambda_invoke_url is None:
+        if LAMBDA_INVOKE_URL is None:
             self.client = session.client("lambda")
         else:
-            self.client = session.client("lambda", endpoint_url=config.lambda_invoke_url)
+            self.client = session.client("lambda", endpoint_url=LAMBDA_INVOKE_URL)
 
     def invoke_async(self, function: str, payload: dict) -> int:
         """Invoke lambda asyncronously

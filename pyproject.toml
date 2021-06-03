@@ -12,8 +12,8 @@ boto3 = "^1.17.72"
 python-dotenv = "^0.17.1"
 asyncio = "^3.4.3"
 aiohttp = "^3.7.4"
-PyYAML = "^5.4.1"
 aws-lambda-context = "^1.1.0"
+python-decouple = "^3.4"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.4"

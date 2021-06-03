@@ -1,5 +1,3 @@
-import os
-
 import json
 from io import BytesIO
 
@@ -11,6 +9,7 @@ from gateways.aws.lambda_client import LambdaClient
 
 class TestLambdaClient:
 
+    @patch('gateways.aws.lambda_client.LAMBDA_INVOKE_URL', None)
     def test_invoke_async(self):
         lambda_client = LambdaClient()
 
@@ -31,7 +30,7 @@ class TestLambdaClient:
 
         assert result == 202
 
-    @patch.dict(os.environ, {"LAMBDA_INVOKE_URL": "http://lambda.invoke.endpoint"})
+    @patch('gateways.aws.lambda_client.LAMBDA_INVOKE_URL', 'http://lambda.invoke.endpoint')
     def test_invoke(self):
         lambda_client = LambdaClient()
 

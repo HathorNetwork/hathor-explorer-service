@@ -1,7 +1,7 @@
 from typing import Union
 
-from common import config
-from domain.network.network import Network
+from common.configuration import DATA_AGGREGATOR_LAMBDA_NAME
+from domain.network.node import Node
 from gateways.aws.lambda_client import LambdaClient
 
 
@@ -14,15 +14,15 @@ class LambdaGateway:
     def __init__(self, lambda_client: Union[LambdaClient, None] = None) -> None:
         self.lambda_client = lambda_client or LambdaClient()
 
-    def send_network_to_data_aggregator(self, payload: Network) -> int:
-        """Invoke data-aggregator lambda passing network data to be aggregated
+    def send_node_to_data_aggregator(self, payload: Node) -> int:
+        """Invoke data-aggregator lambda passing node data to be aggregated
 
-        :param payload: Network data to be sent
-        :type payload: :py:class:`domain.network.network.Network`
+        :param payload: Node data to be sent
+        :type payload: :py:class:`domain.network.node.Node`
         :return: Status code of the request
         :rtype: int
         """
-        lambda_name = config.data_aggregator_lambda_name
+        lambda_name = DATA_AGGREGATOR_LAMBDA_NAME
 
         if lambda_name is not None:
             return self.lambda_client.invoke_async(lambda_name, payload.to_dict())

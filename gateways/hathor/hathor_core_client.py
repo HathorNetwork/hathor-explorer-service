@@ -3,7 +3,7 @@ from urllib import parse
 
 import aiohttp
 
-from common import config
+from common.configuration import HATHOR_CORE_DOMAIN
 
 
 class HathorCoreAsyncClient:
@@ -14,7 +14,7 @@ class HathorCoreAsyncClient:
         :param domain: domain where the requests will be made, defaults to config `hathor_core_domain`
         :type domain: str, optional
         """
-        self.domain = domain or config.hathor_core_domain
+        self.domain = domain or HATHOR_CORE_DOMAIN
         self.session = aiohttp.ClientSession()
 
     async def get(self, path: str, callback: Callable[[dict], None]) -> None:

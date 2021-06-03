@@ -3,7 +3,7 @@ from factory import List, lazy_attribute
 from factory.declarations import SubFactory
 from faker import Faker
 
-from domain.network.network import Network, NodeState, Peer
+from domain.network.node import Node, NodeState, Peer
 
 fake = Faker()
 
@@ -27,9 +27,9 @@ class PeerFactory(factory.Factory):
     warning_flags = lazy_attribute(lambda o: fake.random_elements(['no_entrypoints', 'no_peer_id_url'], unique=True))
 
 
-class NetworkFactory(factory.Factory):
+class NodeFactory(factory.Factory):
     class Meta:
-        model = Network
+        model = Node
 
     id = lazy_attribute(lambda o: fake.sha256())
     app_version = lazy_attribute(lambda o: fake.bothify(text='Hathor v0.!#.#'))

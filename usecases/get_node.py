@@ -1,14 +1,17 @@
 from typing import Union
 
-from domain.network.network import Network
 from gateways.cache.cache_gateway import CacheGateway
 
 
-class SaveNetworkData:
+class GetNode:
 
     def __init__(self, cache_gateway: Union[CacheGateway, None] = None) -> None:
         self.cache_gateway = cache_gateway or CacheGateway()
 
-    def save(self, payload: dict) -> bool:
-        network = Network.from_dict(payload)
-        return self.cache_gateway.save_network(network.id, network)
+    def get(self, id: str) -> Union[dict, None]:
+        network = self.cache_gateway.get_node(id)
+
+        if network is not None:
+            return network.to_dict()
+
+        return None

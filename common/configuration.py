@@ -1,14 +1,5 @@
-import os
-from collections import UserDict
 from enum import Enum
-from typing import List, Union
-
-import yaml
-
-SRC_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir)
-CONFIGURATION_FILE = os.path.join(SRC_DIR, 'configuration.yml')
-
-assert os.path.exists(CONFIGURATION_FILE), f'File {CONFIGURATION_FILE} not found.'
+from decouple import config
 
 
 class Environment(Enum):
@@ -33,100 +24,19 @@ class Environment(Enum):
         return cls.DEV
 
 
-class Configuration(UserDict):
-    def __init__(self):
-        super().__init__()
-        with open(CONFIGURATION_FILE, "r") as file:
-            data = yaml.safe_load(file)
+ENVIRONMENT = Environment(config('ENVIRONMENT', default=Environment.default().value).upper())
 
-        self.data = data
+API_PORT = config('API_PORT', default=None)
 
-    @property
-    def environment(self) -> Environment:
-        env = os.environ.get("ENVIRONMENT", Environment.default().value)
-        return Environment(env.upper())
+LAMBDA_INVOKE_URL = config('LAMBDA_INVOKE_URL', default=None)
 
-    @property
-    def api_url(self) -> Union[str, None]:
-        return self.get_key("api_url")
+DATA_AGGREGATOR_LAMBDA_NAME = config('DATA_AGGREGATOR_LAMBDA_NAME', default=None)
 
-    @property
-    def lambda_invoke_url(self) -> Union[str, None]:
-        return self.get_key("lambda_invoke_url")
+HATHOR_CORE_DOMAIN = config('HATHOR_CORE_DOMAIN', default=None)
 
-    @property
-    def data_aggregator_lambda_name(self) -> Union[str, None]:
-        return self.get_key("data_aggregator_lambda_name")
+HATHOR_NODES = [hn for hn in config('HATHOR_NODES', default='').split(',') if hn != '']
 
-    @property
-    def hathor_core_domain(self) -> Union[str, None]:
-        return self.get_key('hathor_core_domain')
-
-    @property
-    def hathor_nodes(self) -> List:
-        nodes = self.get_key('hathor_nodes')
-
-        if nodes:
-            return nodes.split(',')
-
-        return []
-
-    @property
-    def redis_key_prefix(self) -> Union[str, None]:
-        return self.get_key('redis_key_prefix')
-
-    @property
-    def redis_host(self) -> Union[str, None]:
-        return self.get_key('redis_host')
-
-    @property
-    def redis_port(self) -> Union[int, None]:
-        value = self.get_key('redis_port')
-
-        if value:
-            return int(value)
-
-        return None
-
-    @property
-    def redis_db(self) -> Union[int, None]:
-        value = self.get_key('redis_db')
-
-        if value:
-            return int(value)
-
-        return None
-
-    def get_key(self, key: str) -> Union[str, None]:
-        value = self._find_from_environment(key)
-        if value is not None:
-            return value
-
-        value = self._find_from_config_file_using_environment_stage(key)
-
-        if value is not None:
-            return value
-
-        value = self._find_from_config_file(key)
-
-        if value is not None:
-            return value
-
-        print(f"Not found config key: {key}")
-
-        return None
-
-    def _find_from_environment(self, key: str) -> Union[str, None]:
-        return os.environ.get(key.upper())
-
-    def _find_from_config_file_using_environment_stage(self, key: str) -> Union[str, None]:
-        try:
-            return self.data[self.environment.value][key]
-        except KeyError:
-            return None
-
-    def _find_from_config_file(self, key: str) -> Union[str, None]:
-        try:
-            return self.data[key]
-        except KeyError:
-            return None
+REDIS_KEY_PREFIX = config('REDIS_KEY_PREFIX', default=None)
+REDIS_HOST = config('REDIS_HOST', default=None)
+REDIS_PORT = config('REDIS_PORT', default=None)
+REDIS_DB = config('REDIS_DB', default='0', cast=int)

@@ -9,4 +9,4 @@ class ListAvailableNodes:
         self.cache_gateway = cache_gateway or CacheGateway()
 
     def list(self) -> List[str]:
-        return self.cache_gateway.list_network_keys()
+        return self.cache_gateway.list_node_keys()

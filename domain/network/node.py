@@ -28,7 +28,7 @@ class Peer:
     :type address: str
 
     :param state: Current state of the peer
-    :type state: :py:class:`domain.network.network.NodeState`
+    :type state: :py:class:`domain.network.node.NodeState`
 
     :param last_message: Time passed since the last message that node received in seconds
     :type last_message: float
@@ -55,8 +55,8 @@ class Peer:
 
 
 @dataclass
-class Network:
-    """ Network information of a given node
+class Node:
+    """ Node information of a given node
 
     :param id: Node id hash
     :type id: str
@@ -65,7 +65,7 @@ class Network:
     :type app_version: str
 
     :param state: Current state of the node
-    :type state: :py:class:`domain.network.network.NodeState`
+    :type state: :py:class:`domain.network.node.NodeState`
 
     :param network: Current network. Can be `mainnet`, any version of `testnet` or other
     :type network: str
@@ -101,22 +101,22 @@ class Network:
     connected_peers: List[Peer]
 
     def to_dict(self) -> dict:
-        """ Convert a Network instance into dict
+        """ Convert a Node instance into dict
 
-        :return: The dict representation of the Network
+        :return: The dict representation of the Node
         :rtype: dict
         """
         return asdict(self)
 
     @classmethod
-    def from_dict(cls, dikt: dict) -> 'Network':
-        """ Creates a new Network instance from a given dict (inverse operation of `to_dict`)
+    def from_dict(cls, dikt: dict) -> 'Node':
+        """ Creates a new Node instance from a given dict (inverse operation of `to_dict`)
 
-        :param dikt: Dict with Network structure and data
+        :param dikt: Dict with Node structure and data
         :type dikt: dict
 
         :return: The new instance
-        :rtype: :py:class:`domain.network.network.Network`
+        :rtype: :py:class:`domain.network.node.Node`
         """
         dikt['state'] = NodeState(dikt['state'])
 
@@ -128,17 +128,17 @@ class Network:
 
         dikt['connected_peers'] = connected_peers
 
-        return Network(**dikt)
+        return Node(**dikt)
 
     @classmethod
-    def from_status_dict(cls, status: dict) -> 'Network':
+    def from_status_dict(cls, status: dict) -> 'Node':
         """Convenience method to parse response to domain object
 
         :param dikt: Dict response of a request to node status endpoint
         :type dikt: dict
 
-        :return: A new Network class built from status data
-        :rtype: Network
+        :return: A new Node class built from status data
+        :rtype: Node
         """
         known_peers = [peer['id'] for peer in status['known_peers']]
 

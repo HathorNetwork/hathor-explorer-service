@@ -1,4 +1,4 @@
-from tests.fixtures.network_factory import NetworkFactory
+from tests.fixtures.node_factory import NodeFactory
 from gateways.cache.cache_gateway import CacheGateway
 from unittest.mock import MagicMock
 
@@ -15,44 +15,44 @@ class TestCacheGateway:
         cache_client.set = MagicMock(return_value=True)
 
         gateway = CacheGateway(cache_client)
-        network = NetworkFactory()
-        id = network.id
+        node = NodeFactory()
+        id = node.id
 
-        result = gateway.save_network(id, network)
+        result = gateway.save_node(id, node)
 
-        cache_client.set.assert_called_once_with('network', id, network.to_dict())
+        cache_client.set.assert_called_once_with('node', id, node.to_dict())
         assert result
 
-    def test_get_network(self, cache_client):
-        network = NetworkFactory()
-        id = network.id
-        cache_client.get = MagicMock(return_value=network.to_dict())
+    def test_get_node(self, cache_client):
+        node = NodeFactory()
+        id = node.id
+        cache_client.get = MagicMock(return_value=node.to_dict())
 
         gateway = CacheGateway(cache_client)
 
-        result = gateway.get_network(id)
+        result = gateway.get_node(id)
 
-        cache_client.get.assert_called_once_with('network', id)
+        cache_client.get.assert_called_once_with('node', id)
         assert result
         assert result.id == id
 
-    def test_get_no_network(self, cache_client):
+    def test_get_no_node(self, cache_client):
         cache_client.get = MagicMock(return_value=None)
 
         gateway = CacheGateway(cache_client)
 
-        result = gateway.get_network('abc123')
+        result = gateway.get_node('abc123')
 
-        cache_client.get.assert_called_once_with('network', 'abc123')
+        cache_client.get.assert_called_once_with('node', 'abc123')
         assert result is None
 
-    def test_list_network_keys(self, cache_client):
+    def test_list_node_keys(self, cache_client):
         keys = ['alderaan', 'dagobah', 'jakku', 'naboo', 'tatooine']
         cache_client.keys = MagicMock(return_value=keys)
 
         gateway = CacheGateway(cache_client)
 
-        result = gateway.list_network_keys()
+        result = gateway.list_node_keys()
 
-        cache_client.keys.assert_called_once_with('network')
+        cache_client.keys.assert_called_once_with('node')
         assert result == keys
