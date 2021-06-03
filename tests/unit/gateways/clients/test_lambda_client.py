@@ -4,12 +4,12 @@ from io import BytesIO
 from unittest.mock import patch
 from botocore.response import StreamingBody
 from botocore.stub import Stubber
-from gateways.aws.lambda_client import LambdaClient
+from gateways.clients.lambda_client import LambdaClient
 
 
 class TestLambdaClient:
 
-    @patch('gateways.aws.lambda_client.LAMBDA_INVOKE_URL', None)
+    @patch('gateways.clients.lambda_client.LAMBDA_INVOKE_URL', None)
     def test_invoke_async(self):
         lambda_client = LambdaClient()
 
@@ -30,7 +30,7 @@ class TestLambdaClient:
 
         assert result == 202
 
-    @patch('gateways.aws.lambda_client.LAMBDA_INVOKE_URL', 'http://lambda.invoke.endpoint')
+    @patch('gateways.clients.lambda_client.LAMBDA_INVOKE_URL', 'http://lambda.invoke.endpoint')
     def test_invoke(self):
         lambda_client = LambdaClient()
 

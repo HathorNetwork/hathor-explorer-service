@@ -1,5 +1,5 @@
 import fakeredis
-from gateways.cache.cache_client import CacheClient
+from gateways.clients.cache_client import CacheClient
 from pytest import fixture
 
 

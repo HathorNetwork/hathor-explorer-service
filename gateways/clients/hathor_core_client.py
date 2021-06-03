@@ -6,6 +6,9 @@ import aiohttp
 from common.configuration import HATHOR_CORE_DOMAIN
 
 
+STATUS_ENDPOINT = '/v1a/status'
+
+
 class HathorCoreAsyncClient:
 
     def __init__(self, domain: Union[str, None] = None) -> None:
