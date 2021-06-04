@@ -1,0 +1,87 @@
+# Welcome to serverless. Read the docs
+# https://serverless.com/framework/docs/
+
+# Serverless.yml is the configuration the CLI
+# uses to deploy your code to your provider of choice
+
+# The `service` block is the name of the service
+service: hathor-explorer-service
+useDotenv: true
+# The `provider` block defines where your service will be deployed
+provider:
+  name: aws
+  runtime: python3.8
+  profile: serverless
+  region: ${env:AWS_DEFAULT_REGION}
+  vpc:
+    securityGroupIds:
+      - ${env:AWS_VPC_ID}
+    subnetIds:
+      - ${env:AWS_SUBNET_ID_1}
+      - ${env:AWS_SUBNET_ID_2}
+      - ${env:AWS_SUBNET_ID_3}
+  environment:
+    HATHOR_CORE_DOMAIN: ${env:HATHOR_CORE_DOMAIN}
+    HATHOR_NODES: ${env:HATHOR_NODES}
+    REDIS_KEY_PREFIX: ${env:REDIS_KEY_PREFIX}
+    REDIS_HOST: ${env:REDIS_HOST}
+    REDIS_PORT: ${env:REDIS_PORT}
+    REDIS_DB: ${env:REDIS_DB}
+
+plugins:
+  - serverless-offline
+  - serverless-python-requirements
+package:
+  individually: true
+  patterns:
+    - '!*'
+    - '!**/*'
+    - 'common/**'
+    - 'domain/**'
+    - 'gateways/**'
+    - 'usecases/**'
+    - 'utils/**'
+    - '!**/__pycache__'
+
+custom:
+  serverless-offline:
+    httpPort: ${env:API_PORT}
+  pythonRequirements:
+    layer: true
+
+functions:
+  get_node_handler:
+    handler: handlers/get_node_handler.handle
+    package:
+      patterns:
+        - 'handlers/get_node_handler.py'
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: node/{hash}
+          method: get
+          request: 
+            parameters: 
+              paths: 
+                hash: true
+
+  list_nodes_handler:
+    handler: handlers/list_nodes_handler.handle
+    package:
+      patterns:
+        - 'handlers/list_nodes_handler.py'
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: node/
+          method: get
+
+  node_data_aggregator:
+    handler: handlers/node_data_aggregator.handle
+    package:
+      patterns:
+        - 'handlers/node_data_aggregator.py'
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
