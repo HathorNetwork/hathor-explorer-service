@@ -6,9 +6,9 @@ from gateways.node_gateway import NodeGateway
 
 class SaveNodeData:
 
-    def __init__(self, cache_gateway: Union[NodeGateway, None] = None) -> None:
-        self.cache_gateway = cache_gateway or NodeGateway()
+    def __init__(self, node_gateway: Union[NodeGateway, None] = None) -> None:
+        self.node_gateway = node_gateway or NodeGateway()
 
     def save(self, payload: dict) -> Union[bool, None]:
         node = Node.from_dict(payload)
-        return self.cache_gateway.save_node(node.id, node)
+        return self.node_gateway.save_node(node.id, node)

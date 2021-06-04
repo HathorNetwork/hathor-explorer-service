@@ -1,10 +1,10 @@
-from usecases.save_network_data import SaveNetworkData
+from usecases.save_node_data import SaveNodeData
 
 
 def handle(node_status: dict, _context: None = None) -> dict:
 
-    save_network_data = SaveNetworkData()
-    result = save_network_data.save(node_status)
+    save_node_data = SaveNodeData()
+    result = save_node_data.save(node_status)
 
     if result:
         return {

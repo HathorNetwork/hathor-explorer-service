@@ -1,5 +1,5 @@
 from enum import Enum
-from decouple import config
+from decouple import config, Csv
 
 
 class Environment(Enum):
@@ -34,7 +34,7 @@ DATA_AGGREGATOR_LAMBDA_NAME = config('DATA_AGGREGATOR_LAMBDA_NAME', default=None
 
 HATHOR_CORE_DOMAIN = config('HATHOR_CORE_DOMAIN', default=None)
 
-HATHOR_NODES = [hn for hn in config('HATHOR_NODES', default='').split(',') if hn != '']
+HATHOR_NODES = config('HATHOR_NODES', default='', cast=Csv())
 
 REDIS_KEY_PREFIX = config('REDIS_KEY_PREFIX', default=None)
 REDIS_HOST = config('REDIS_HOST', default=None)

@@ -18,7 +18,6 @@ class HathorCoreAsyncClient:
         :type domain: str, optional
         """
         self.domain = domain or HATHOR_CORE_DOMAIN
-        self.session = aiohttp.ClientSession()
 
     async def get(self, path: str, callback: Callable[[dict], None]) -> None:
         """Make a get request async
@@ -31,7 +30,7 @@ class HathorCoreAsyncClient:
         url = parse.urljoin(f"https://{self.domain}", path)
 
         try:
-            async with self.session as session:
+            async with aiohttp.ClientSession() as session:
                 async with session.get(url) as response:
                     callback(await response.json())
         except Exception as e:

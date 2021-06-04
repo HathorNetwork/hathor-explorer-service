@@ -19,7 +19,6 @@ class ApiGatewayEvent:
         self.path = event.get('pathParameters', {})
         self.body = parse_body(event)
         self.headers = event.get('headers', {})
-        self.request_id = context.aws_request_id
 
 
 class ApiGateway:
