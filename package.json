@@ -7,7 +7,8 @@
     "serverless-offline": "^7.0.0"
   },
   "devDependencies": {
-    "serverless-python-requirements": "^5.1.1"
+    "serverless-python-requirements": "^5.1.1",
+    "serverless-s3-local": "^0.6.17"
   },
   "scripts": {
     "start": "serverless offline --printOutput"

@@ -38,6 +38,10 @@ class ApiGateway:
             try:
                 api_gateway_event = ApiGatewayEvent(event, context)
                 result = function_to_call(api_gateway_event, context, *args, **kwargs)  # type: ignore
+
+                result['headers']['Access-Control-Allow-Origin'] = '*'
+                result['headers']['Access-Control-Allow-Credentials'] = True
+
                 return result
             except Exception as error:
                 return {
