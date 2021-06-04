@@ -4,6 +4,7 @@
   "description": "Hathor Explorer Service Serverless deps",
   "dependencies": {
     "serverless": "^2.44.0",
+    "serverless-api-gateway-caching": "^1.7.2",
     "serverless-offline": "^7.0.0"
   },
   "devDependencies": {
