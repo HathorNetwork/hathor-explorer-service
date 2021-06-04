@@ -6,7 +6,7 @@
 
 # The `service` block is the name of the service
 service: hathor-explorer-service
-
+useDotenv: true
 # The `provider` block defines where your service will be deployed
 provider:
   name: aws
@@ -29,7 +29,6 @@ provider:
     REDIS_DB: ${env:REDIS_DB}
 
 plugins:
-  - serverless-dotenv-plugin
   - serverless-offline
 
 package:
