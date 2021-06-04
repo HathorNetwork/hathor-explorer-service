@@ -30,7 +30,7 @@ provider:
 
 plugins:
   - serverless-offline
-
+  - serverless-python-requirements
 package:
   individually: true
   patterns:
@@ -46,6 +46,8 @@ package:
 custom:
   serverless-offline:
     httpPort: ${env:API_PORT}
+  pythonRequirements:
+    layer: true
 
 functions:
   get_node_handler:
@@ -53,6 +55,8 @@ functions:
     package:
       patterns:
         - 'handlers/get_node_handler.py'
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
     events:
       - http:
           path: node/{hash}
@@ -67,6 +71,8 @@ functions:
     package:
       patterns:
         - 'handlers/list_nodes_handler.py'
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
     events:
       - http:
           path: node/
@@ -77,3 +83,5 @@ functions:
     package:
       patterns:
         - 'handlers/node_data_aggregator.py'
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
