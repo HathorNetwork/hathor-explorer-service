@@ -39,15 +39,31 @@ fmt: yapf isort
 test:
 	ENVIRONMENT=test pytest $(pytest_flags) ./tests
 
-.PHONY: serverless
-serverless:
-	serverless deploy
+.PHONY: deploy-lambdas-dev
+deploy-lambdas-dev:
+	serverless deploy --stage dev --region eu-central-1
+
+.PHONY: deploy-lambdas-mainnet
+deploy-lambdas-mainnet:
+	serverless deploy --stage mainnet --region eu-central-1
 
 .PHONY: build
 build:
 	npm install
 	poetry install
 	docker-compose build
+
+.PHONY: build-daemons
+build-daemons:
+	if [[ -z "${AWS_ACCOUNT_ID}" ]]; then \
+		echo "Please export a AWS_ACCOUNT_ID env var before running this"; \
+		exit 1; \
+	fi
+
+	commit=`git rev-parse HEAD`; \
+	aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin $$AWS_ACCOUNT_ID.dkr.ecr.eu-central-1.amazonaws.com; \
+	docker build -t $$AWS_ACCOUNT_ID.dkr.ecr.eu-central-1.amazonaws.com/hathor-explorer-service:$$commit .; \
+	docker push $$AWS_ACCOUNT_ID.dkr.ecr.eu-central-1.amazonaws.com/hathor-explorer-service:$$commit
 
 .PHONY: run
 run:
