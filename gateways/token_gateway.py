@@ -26,12 +26,12 @@ class TokenGateway:
         """
         token_metadata_bucket = TOKEN_METADATA_BUCKET
 
-        if token_metadata_bucket is not None:
-            token_raw_metadata = self.s3_client.load_file(token_metadata_bucket, file)
-            if token_raw_metadata:
-                token_metadata = json.loads(token_raw_metadata)
-                return TokenMetadata.from_dict(token_metadata)
+        if token_metadata_bucket is None:
+            raise Exception('No bucket name in config')
 
+        token_raw_metadata = self.s3_client.load_file(token_metadata_bucket, file)
+        if token_raw_metadata is None:
             return None
 
-        raise Exception('No bucket name in config')
+        token_metadata = json.loads(token_raw_metadata)
+        return TokenMetadata.from_dict(token_metadata)

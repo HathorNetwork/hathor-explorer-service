@@ -24,3 +24,6 @@ coverage.xml
 .serverless
 
 .vscode
+
+# convenience folder to put files without messing git status up
+.tray

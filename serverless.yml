@@ -16,7 +16,7 @@ provider:
   lambdaHashingVersion: 20201221
   vpc:
     securityGroupIds:
-      - ${env:AWS_VPC_ID}
+      - ${env:AWS_VPC_DEFAULT_SG_ID}
     subnetIds:
       - ${env:AWS_SUBNET_ID_1}
       - ${env:AWS_SUBNET_ID_2}
@@ -28,6 +28,7 @@ provider:
     REDIS_HOST: ${env:REDIS_HOST}
     REDIS_PORT: ${env:REDIS_PORT}
     REDIS_DB: ${env:REDIS_DB}
+    TOKEN_METADATA_BUCKET: ${env:TOKEN_METADATA_BUCKET}
 
 plugins:
   - serverless-s3-local
@@ -53,13 +54,6 @@ custom:
   s3:
     host: localhost
     directory: /tmp
-
-resources:
-  Resources:
-    NewResource:
-      Type: AWS::S3::Bucket
-      Properties:
-        BucketName: ${env:TOKEN_METADATA_BUCKET}
 
 functions:
   get_node_handler:
@@ -106,8 +100,6 @@ functions:
     layers:
       - { Ref: PythonRequirementsLambdaLayer }
     events:
-      - s3: ${env:TOKEN_METADATA_BUCKET}
-        event: s3:*
       - http:
           path: token/{hash}/meta
           method: get

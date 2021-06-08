@@ -28,4 +28,5 @@ class S3Client:
             response = self.client.get_object(Bucket=bucket, Key=file)
             return response['Body'].read().decode()
         except self.client.exceptions.NoSuchKey:
+            # TODO: Add log here
             return None

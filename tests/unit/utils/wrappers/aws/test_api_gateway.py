@@ -9,7 +9,7 @@ from utils.wrappers.aws.api_gateway import ApiGateway
 class TestApiGateway:
 
     def test_calling_function(self):
-        function = MagicMock(return_value={'statusCode': 200})
+        function = MagicMock(return_value={'statusCode': 200, 'headers': {}})
         api_gateway = ApiGateway()
 
         event = {
@@ -55,7 +55,7 @@ class TestApiGateway:
             api_gateway.__call__(function)(event, context)
 
     def test_parse_json_fail_proof(self):
-        function = MagicMock(return_value={'statusCode': 200})
+        function = MagicMock(return_value={'statusCode': 200, 'headers': {}})
         api_gateway = ApiGateway()
 
         event = {
