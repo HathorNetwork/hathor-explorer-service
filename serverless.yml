@@ -34,6 +34,8 @@ plugins:
   - serverless-s3-local
   - serverless-offline
   - serverless-python-requirements
+  - serverless-api-gateway-caching
+
 package:
   individually: true
   patterns:
@@ -54,6 +56,9 @@ custom:
   s3:
     host: localhost
     directory: /tmp
+  apiGatewayCaching:
+    enabled: true
+    ttlInSeconds: 300
 
 functions:
   get_node_handler:
@@ -67,10 +72,15 @@ functions:
       - http:
           path: node/{hash}
           method: get
+          cors: true
           request: 
             parameters: 
               paths: 
                 hash: true
+          caching:
+            enabled: true
+            cacheKeyParameters:
+              - name: request.path.hash
 
   list_nodes_handler:
     handler: handlers/list_nodes_handler.handle
@@ -83,6 +93,11 @@ functions:
       - http:
           path: node/
           method: get
+          cors: true
+          # TODO Be careful when adding pagination to this endpoint. We will have to include
+          #  the page as cache key.
+          caching:
+            enabled: true
 
   node_data_aggregator_handler:
     handler: handlers/node_data_aggregator.handle
@@ -103,7 +118,12 @@ functions:
       - http:
           path: token/{hash}/meta
           method: get
+          cors: true
           request: 
             parameters: 
               paths: 
                 hash: true
+          caching:
+            enabled: true
+            cacheKeyParameters:
+              - name: request.path.hash
