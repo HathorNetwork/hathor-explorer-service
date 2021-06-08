@@ -1,4 +1,5 @@
 from typing import Union
+
 from gateways.token_gateway import TokenGateway
 
 

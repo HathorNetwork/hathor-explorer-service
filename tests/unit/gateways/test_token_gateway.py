@@ -2,9 +2,9 @@ import json
 from unittest.mock import MagicMock, patch
 
 import pytest
-from gateways.token_gateway import TokenGateway
 from pytest import fixture
 
+from gateways.token_gateway import TokenGateway
 from tests.fixtures.token_factory import TokenMetadataFactory, TokenNFTFactory
 
 

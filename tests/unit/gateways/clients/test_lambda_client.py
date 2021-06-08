@@ -1,9 +1,10 @@
 import json
 from io import BytesIO
-
 from unittest.mock import patch
+
 from botocore.response import StreamingBody
 from botocore.stub import Stubber
+
 from gateways.clients.lambda_client import LambdaClient
 
 

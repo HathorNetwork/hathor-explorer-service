@@ -1,7 +1,9 @@
-from usecases.get_node import GetNode
-from tests.fixtures.node_factory import NodeFactory
-from pytest import fixture
 from unittest.mock import MagicMock
+
+from pytest import fixture
+
+from tests.fixtures.node_factory import NodeFactory
+from usecases.get_node import GetNode
 
 
 class TestGetNode:

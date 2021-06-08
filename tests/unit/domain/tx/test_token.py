@@ -1,5 +1,4 @@
 from domain.tx.token import TokenMetadata
-from tests.fixtures.hathor_core_fixtures import HATHOR_CORE_MAINNET_GET_STATUS, HATHOR_CORE_TESTNET_GET_STATUS
 from tests.fixtures.token_factory import TokenMetadataFactory, TokenNFTFactory
 
 

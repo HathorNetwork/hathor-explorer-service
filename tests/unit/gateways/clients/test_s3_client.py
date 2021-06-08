@@ -1,9 +1,10 @@
 import json
 from io import BytesIO
-
 from unittest.mock import patch
+
 from botocore.response import StreamingBody
 from botocore.stub import Stubber
+
 from gateways.clients.s3_client import S3Client
 from tests.fixtures.token_factory import TokenMetadataFactory
 

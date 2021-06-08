@@ -1,6 +1,6 @@
-import pytest
-
 from unittest.mock import MagicMock
+
+import pytest
 from aws_lambda_context import LambdaContext
 
 from utils.wrappers.aws.api_gateway import ApiGateway

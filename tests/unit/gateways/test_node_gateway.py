@@ -1,10 +1,10 @@
 from unittest.mock import MagicMock, patch
 
 import pytest
-
-from tests.fixtures.node_factory import NodeFactory
-from gateways.node_gateway import NodeGateway
 from pytest import fixture
+
+from gateways.node_gateway import NodeGateway
+from tests.fixtures.node_factory import NodeFactory
 
 
 class TestNodeGateway:

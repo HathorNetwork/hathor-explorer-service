@@ -1,6 +1,7 @@
 import fakeredis
-from gateways.clients.cache_client import CacheClient
 from pytest import fixture
+
+from gateways.clients.cache_client import CacheClient
 
 
 class TestCacheClient:

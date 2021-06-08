@@ -1,6 +1,8 @@
-from usecases.list_available_nodes import ListAvailableNodes
 from unittest.mock import MagicMock
+
 from pytest import fixture
+
+from usecases.list_available_nodes import ListAvailableNodes
 
 
 class TestListAvailableNodes:

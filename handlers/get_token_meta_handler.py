@@ -1,8 +1,9 @@
 import json
 from typing import Union
-from usecases.get_token_metadata import GetTokenMetadata
 
 from aws_lambda_context import LambdaContext
+
+from usecases.get_token_metadata import GetTokenMetadata
 from utils.wrappers.aws.api_gateway import ApiGateway, ApiGatewayEvent
 
 

@@ -2,8 +2,8 @@ from typing import Union
 
 from common.configuration import HATHOR_NODES
 from domain.network.node import Node
-from gateways.node_gateway import NodeGateway
 from gateways.clients.hathor_core_client import HathorCoreAsyncClient
+from gateways.node_gateway import NodeGateway
 
 
 class CollectNodesStatuses:

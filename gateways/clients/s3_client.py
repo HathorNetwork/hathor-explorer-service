@@ -1,6 +1,7 @@
 from typing import Union
 
 from boto3.session import Session
+
 from common.configuration import S3_ENDPOINT
 
 

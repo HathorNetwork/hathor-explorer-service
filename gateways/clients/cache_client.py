@@ -3,8 +3,7 @@ from typing import List, Union
 
 from redis import StrictRedis
 
-from common.configuration import REDIS_DB, REDIS_HOST, REDIS_PORT, REDIS_KEY_PREFIX
-
+from common.configuration import REDIS_DB, REDIS_HOST, REDIS_KEY_PREFIX, REDIS_PORT
 
 NODE_COLLECTION_NAME = 'node'
 
@@ -21,7 +20,7 @@ class CacheClient:
 
         client_args = {k: v for k, v in client_args.items() if v is not None}
 
-        self.client = StrictRedis(**client_args)  # type: ignore
+        self.client = StrictRedis(**client_args)
 
     def set(self, collection: str, key: str, value: dict) -> Union[bool, None]:
         """Saves a dict into cache

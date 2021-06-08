@@ -1,7 +1,9 @@
+from unittest.mock import MagicMock
+
+from pytest import fixture
+
 from tests.fixtures.node_factory import NodeFactory
 from usecases.save_node_data import SaveNodeData
-from unittest.mock import MagicMock
-from pytest import fixture
 
 
 class TestSaveNodeData:

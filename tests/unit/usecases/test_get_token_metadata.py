@@ -1,7 +1,9 @@
+from unittest.mock import MagicMock
+
+from pytest import fixture
+
 from tests.fixtures.token_factory import TokenMetadataFactory
 from usecases.get_token_metadata import GetTokenMetadata
-from unittest.mock import MagicMock
-from pytest import fixture
 
 
 class TestGetTokenMetadata:

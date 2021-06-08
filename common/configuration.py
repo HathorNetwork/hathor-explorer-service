@@ -1,5 +1,6 @@
 from enum import Enum
-from decouple import config, Csv
+
+from decouple import Csv, config
 
 
 class Environment(Enum):
