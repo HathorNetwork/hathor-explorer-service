@@ -92,6 +92,27 @@ functions:
     layers:
       - { Ref: PythonRequirementsLambdaLayer }
 
+  get_token_handler:
+    handler: handlers/get_token_handler.handle
+    package:
+      patterns:
+        - 'handlers/get_token_handler.py'
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: token/{hash}
+          method: get
+          request: 
+            parameters: 
+              paths: 
+                hash: true
+          caching:
+            enabled: true
+            ttlInSeconds: 15
+            cacheKeyParameters:
+              - name: request.path.hash
+
   get_token_meta_handler:
     handler: handlers/get_token_meta_handler.handle
     package:
