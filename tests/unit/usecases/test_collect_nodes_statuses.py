@@ -1,9 +1,11 @@
-from gateways.node_gateway import NodeGateway
+from unittest.mock import MagicMock, patch
+
+from pytest import fixture
+
 from domain.network.node import Node
+from gateways.node_gateway import NodeGateway
 from tests.fixtures.hathor_core_fixtures import HATHOR_CORE_MAINNET_GET_STATUS
 from usecases.collect_nodes_statuses import CollectNodesStatuses
-from unittest.mock import MagicMock, patch
-from pytest import fixture
 
 
 class AsyncMock(MagicMock):

@@ -13,9 +13,10 @@ provider:
   runtime: python3.8
   profile: serverless
   region: ${env:AWS_DEFAULT_REGION}
+  lambdaHashingVersion: 20201221
   vpc:
     securityGroupIds:
-      - ${env:AWS_VPC_ID}
+      - ${env:AWS_VPC_DEFAULT_SG_ID}
     subnetIds:
       - ${env:AWS_SUBNET_ID_1}
       - ${env:AWS_SUBNET_ID_2}
@@ -27,8 +28,10 @@ provider:
     REDIS_HOST: ${env:REDIS_HOST}
     REDIS_PORT: ${env:REDIS_PORT}
     REDIS_DB: ${env:REDIS_DB}
+    TOKEN_METADATA_BUCKET: ${env:TOKEN_METADATA_BUCKET}
 
 plugins:
+  - serverless-s3-local
   - serverless-offline
   - serverless-python-requirements
 package:
@@ -48,6 +51,9 @@ custom:
     httpPort: ${env:API_PORT}
   pythonRequirements:
     layer: true
+  s3:
+    host: localhost
+    directory: /tmp
 
 functions:
   get_node_handler:
@@ -78,10 +84,26 @@ functions:
           path: node/
           method: get
 
-  node_data_aggregator:
+  node_data_aggregator_handler:
     handler: handlers/node_data_aggregator.handle
     package:
       patterns:
         - 'handlers/node_data_aggregator.py'
     layers:
       - { Ref: PythonRequirementsLambdaLayer }
+
+  get_token_meta_handler:
+    handler: handlers/get_token_meta_handler.handle
+    package:
+      patterns:
+        - 'handlers/get_token_meta_handler.py'
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: token/{hash}/meta
+          method: get
+          request: 
+            parameters: 
+              paths: 
+                hash: true

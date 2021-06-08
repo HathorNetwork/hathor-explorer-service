@@ -5,7 +5,6 @@ import aiohttp
 
 from common.configuration import HATHOR_CORE_DOMAIN
 
-
 STATUS_ENDPOINT = '/v1a/status'
 
 

@@ -1,5 +1,6 @@
 from enum import Enum
-from decouple import config, Csv
+
+from decouple import Csv, config
 
 
 class Environment(Enum):
@@ -29,6 +30,7 @@ ENVIRONMENT = Environment(config('ENVIRONMENT', default=Environment.default().va
 API_PORT = config('API_PORT', default=None)
 
 LAMBDA_INVOKE_URL = config('LAMBDA_INVOKE_URL', default=None)
+S3_ENDPOINT = config('S3_ENDPOINT', default=None)
 
 DATA_AGGREGATOR_LAMBDA_NAME = config('DATA_AGGREGATOR_LAMBDA_NAME', default=None)
 
@@ -40,3 +42,5 @@ REDIS_KEY_PREFIX = config('REDIS_KEY_PREFIX', default=None)
 REDIS_HOST = config('REDIS_HOST', default=None)
 REDIS_PORT = config('REDIS_PORT', default=None)
 REDIS_DB = config('REDIS_DB', default='0', cast=int)
+
+TOKEN_METADATA_BUCKET = config('TOKEN_METADATA_BUCKET', default=None)
