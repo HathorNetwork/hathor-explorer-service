@@ -1,10 +1,10 @@
-from gateways.clients.responses.hathor_core.hathor_core_token_response import HathorCoreTokenResponse
-from gateways.clients.hathor_core_client import HathorCoreClient, TOKEN_ENDPOINT
 import json
 from typing import Union
 
 from common.configuration import TOKEN_METADATA_BUCKET
 from domain.tx.token import Token, TokenMetadata
+from gateways.clients.hathor_core_client import TOKEN_ENDPOINT, HathorCoreClient
+from gateways.clients.responses.hathor_core.hathor_core_token_response import HathorCoreTokenResponse
 from gateways.clients.s3_client import S3Client
 
 
@@ -54,4 +54,4 @@ class TokenGateway:
         if not token_response.success:
             return None
 
-        return token_response.to_domain(id)
+        return token_response.to_token(id)

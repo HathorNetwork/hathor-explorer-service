@@ -1,6 +1,7 @@
 from dataclasses import asdict, dataclass
 from enum import Enum
 from typing import Optional
+
 from dacite import from_dict
 
 

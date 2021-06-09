@@ -1,7 +1,9 @@
 from dataclasses import dataclass
 from typing import List, Optional
-from domain.tx.token import Token
+
 from dacite import from_dict
+
+from domain.tx.token import Token
 
 
 @dataclass
@@ -20,16 +22,19 @@ class HathorCoreTokenResponse:
     def from_dict(cls, dikt: dict) -> 'HathorCoreTokenResponse':
         return from_dict(data_class=cls, data=dikt)
 
-    def to_domain(self, id: str) -> Token:
+    def to_token(self, id: str) -> Token:
         if not self.success:
             raise Exception('unknown_token')
 
-        return Token(
-            id=id,
-            name=self.name,
-            symbol=self.symbol,
-            total_supply=self.total,
-            transactions_count=self.transactions_count,
-            can_melt=len(self.melt) > 0,
-            can_mint=len(self.mint) > 0
-        )
+        try:
+            return Token(
+                id=id,
+                name=self.name,  # type: ignore
+                symbol=self.symbol,  # type: ignore
+                total_supply=self.total,  # type: ignore
+                transactions_count=self.transactions_count,  # type: ignore
+                can_melt=len(self.melt) > 0,  # type: ignore
+                can_mint=len(self.mint) > 0  # type: ignore
+            )
+        except Exception:
+            raise Exception('malformed_token')
