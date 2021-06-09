@@ -1045,3 +1045,29 @@ HATHOR_CORE_TESTNET_GET_STATUS = {
         "latest_timestamp": 1622140105
     }
 }
+
+
+HATHOR_CORE_GET_TOKEN = {
+    "melt": [
+        {
+            "tx_id": "0058dacaa9cb6e120e825fa40f738273f3bf87e82c8b376158695a4fb42e187d",
+            "index": 3
+        }
+    ],
+    "mint": [
+        {
+            "tx_id": "0058dacaa9cb6e120e825fa40f738273f3bf87e82c8b376158695a4fb42e187d",
+            "index": 2
+        }
+    ],
+    "name": "HTR Token",
+    "success": True,
+    "symbol": "TOKEN",
+    "total": 10000000,
+    "transactions_count": 11
+}
+
+HATHOR_CORE_GET_TOKEN_INVALID = {
+    "message": "Unknown token",
+    "success": False
+}
