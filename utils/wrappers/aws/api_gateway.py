@@ -50,6 +50,10 @@ class ApiGateway:
                     error_key = 'internal_error'
 
                 return {
+                    'headers': {
+                        'Access-Control-Allow-Origin': '*',
+                        'Access-Control-Allow-Credentials': True
+                    },
                     'statusCode': errors_status[error_key],
                     'body': json.dumps({
                         'error': str(error)
