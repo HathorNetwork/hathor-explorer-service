@@ -1,6 +1,7 @@
 import json
 from typing import Any, Callable
 
+from common.configuration import CORS_ALLOWED_ORIGIN
 from aws_lambda_context import LambdaContext
 
 
@@ -39,7 +40,7 @@ class ApiGateway:
                 api_gateway_event = ApiGatewayEvent(event, context)
                 result = function_to_call(api_gateway_event, context, *args, **kwargs)  # type: ignore
 
-                result['headers']['Access-Control-Allow-Origin'] = '*'
+                result['headers']['Access-Control-Allow-Origin'] = CORS_ALLOWED_ORIGIN
                 result['headers']['Access-Control-Allow-Credentials'] = True
 
                 return result
@@ -51,7 +52,7 @@ class ApiGateway:
 
                 return {
                     'headers': {
-                        'Access-Control-Allow-Origin': '*',
+                        'Access-Control-Allow-Origin': CORS_ALLOWED_ORIGIN,
                         'Access-Control-Allow-Credentials': True
                     },
                     'statusCode': errors_status[error_key],

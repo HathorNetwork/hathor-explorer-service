@@ -44,3 +44,5 @@ REDIS_PORT = config('REDIS_PORT', default=None)
 REDIS_DB = config('REDIS_DB', default='0', cast=int)
 
 TOKEN_METADATA_BUCKET = config('TOKEN_METADATA_BUCKET', default=None)
+
+CORS_ALLOWED_ORIGIN = config('CORS_ALLOWED_ORIGIN', default='*')
