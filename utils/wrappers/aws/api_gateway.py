@@ -44,8 +44,13 @@ class ApiGateway:
 
                 return result
             except Exception as error:
+                error_key = str(error)
+
+                if error_key not in errors_status.keys():
+                    error_key = 'internal_error'
+
                 return {
-                    'statusCode': errors_status[str(error)],
+                    'statusCode': errors_status[error_key],
                     'body': json.dumps({
                         'error': str(error)
                     })
