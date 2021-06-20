@@ -8,6 +8,7 @@ from dacite import from_dict
 class TokenNFTType(str, Enum):
     VIDEO = 'VIDEO'
     IMAGE = 'IMAGE'
+    AUDIO = 'AUDIO'
 
 
 @dataclass
