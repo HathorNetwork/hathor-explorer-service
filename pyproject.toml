@@ -1,0 +1,41 @@
+[tool.poetry]
+name = "hathor-explorer-service"
+version = "0.0.1"
+description = ""
+authors = ["Hathor Labs <contact@hathor.network>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+redis = "^3.5.3"
+boto3 = "^1.17.72"
+python-dotenv = "^0.17.1"
+aiohttp = "^3.7.4"
+aws-lambda-context = "^1.1.0"
+python-decouple = "^3.4"
+dacite = "^1.6.0"
+requests = "^2.25.1"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2.4"
+yapf = "^0.31.0"
+isort = "^5.8.0"
+flake8 = "^3.9.2"
+mypy = "^0.812"
+pytest-cov = "^2.12.0"
+Faker = "^8.4.0"
+factory-boy = "^3.2.0"
+fakeredis = "^1.5.1"
+pytest-aiohttp = "^0.3.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.isort]
+combine_as_imports = true
+default_section = "THIRDPARTY"
+include_trailing_comma = true
+known_first_party = "hathor,tests"
+line_length = 119
+multi_line_output = 3
