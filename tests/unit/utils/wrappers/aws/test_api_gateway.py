@@ -70,3 +70,53 @@ class TestApiGateway:
 
         function.assert_called()
         assert result['statusCode'] == 200
+
+    def test_returning_cors_headers(self):
+        function = MagicMock(return_value={'statusCode': 200, 'headers': {}})
+        api_gateway = ApiGateway()
+
+        event = {
+            'body': '{}',
+            'headers': {}
+        }
+
+        context = LambdaContext()
+
+        result = api_gateway.__call__(function)(event, context)
+
+        function.assert_called()
+        assert result['headers']['Access-Control-Allow-Origin']
+        assert result['headers']['Access-Control-Allow-Credentials']
+
+    def test_returning_cors_on_error(self):
+        function = MagicMock(side_effect=Exception('Boom!'))
+        api_gateway = ApiGateway()
+
+        event = {
+            'body': '{}',
+            'headers': {}
+        }
+
+        context = LambdaContext()
+
+        result = api_gateway.__call__(function)(event, context)
+
+        function.assert_called()
+        assert result['headers']['Access-Control-Allow-Origin']
+        assert result['headers']['Access-Control-Allow-Credentials']
+
+    def test_works_with_no_headers_from_function(self):
+        function = MagicMock(return_value={'statusCode': 200})
+        api_gateway = ApiGateway()
+
+        event = {
+            'body': '{}',
+            'headers': {}
+        }
+
+        context = LambdaContext()
+
+        result = api_gateway.__call__(function)(event, context)
+
+        function.assert_called()
+        assert result['headers']
