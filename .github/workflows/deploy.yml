@@ -25,12 +25,12 @@ jobs:
       - name: Set environment
         id: setenv
         run: |
-          if [[ "${{github.base_ref}}" == "main" || "${{github.ref}}" == "refs/heads/main" ]]; then
-            echo "::set-output name=environment::testnet"
-          fi
-
           if [[ "${{github.ref}}" == refs/tags/v* ]]; then
+            echo "Setting mainnet environment"
             echo "::set-output name=environment::mainnet"
+          elif [[ "${{github.base_ref}}" == "main" || "${{github.ref}}" == "refs/heads/main" ]]; then
+            echo "Setting testnet environment"
+            echo "::set-output name=environment::testnet"
           fi
 
   deploy:
