@@ -37,6 +37,14 @@ class ApiGateway:
                 'not_found': 404
             }
 
+            headers = {}
+
+            if CORS_ALLOWED_ORIGIN:
+                headers = {
+                    'Access-Control-Allow-Origin': CORS_ALLOWED_ORIGIN,
+                    'Access-Control-Allow-Credentials': True
+                }
+
             try:
                 api_gateway_event = ApiGatewayEvent(event, context)
                 result = function_to_call(api_gateway_event, context, *args, **kwargs)  # type: ignore
@@ -44,8 +52,7 @@ class ApiGateway:
                 if result.get('headers') is None:
                     result['headers'] = {}
 
-                result['headers']['Access-Control-Allow-Origin'] = CORS_ALLOWED_ORIGIN
-                result['headers']['Access-Control-Allow-Credentials'] = True
+                result['headers'].update(headers)
 
                 return result
             except Exception as error:
@@ -55,10 +62,7 @@ class ApiGateway:
                     error_key = 'internal_error'
 
                 return {
-                    'headers': {
-                        'Access-Control-Allow-Origin': CORS_ALLOWED_ORIGIN,
-                        'Access-Control-Allow-Credentials': True
-                    },
+                    'headers': headers,
                     'statusCode': errors_status[error_key],
                     'body': json.dumps({
                         'error': str(error)
