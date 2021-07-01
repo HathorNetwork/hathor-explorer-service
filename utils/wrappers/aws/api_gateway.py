@@ -3,6 +3,8 @@ from typing import Any, Callable
 
 from aws_lambda_context import LambdaContext
 
+from common.configuration import CORS_ALLOWED_ORIGIN
+
 
 def parse_body(event: dict) -> dict:
     try:
@@ -35,12 +37,22 @@ class ApiGateway:
                 'not_found': 404
             }
 
+            headers = {}
+
+            if CORS_ALLOWED_ORIGIN:
+                headers = {
+                    'Access-Control-Allow-Origin': CORS_ALLOWED_ORIGIN,
+                    'Access-Control-Allow-Credentials': True
+                }
+
             try:
                 api_gateway_event = ApiGatewayEvent(event, context)
                 result = function_to_call(api_gateway_event, context, *args, **kwargs)  # type: ignore
 
-                result['headers']['Access-Control-Allow-Origin'] = '*'
-                result['headers']['Access-Control-Allow-Credentials'] = True
+                if result.get('headers') is None:
+                    result['headers'] = {}
+
+                result['headers'].update(headers)
 
                 return result
             except Exception as error:
@@ -50,6 +62,7 @@ class ApiGateway:
                     error_key = 'internal_error'
 
                 return {
+                    'headers': headers,
                     'statusCode': errors_status[error_key],
                     'body': json.dumps({
                         'error': str(error)
