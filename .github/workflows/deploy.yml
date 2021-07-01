@@ -72,7 +72,8 @@ jobs:
       #   run: |
       #     poetry run make check
       - name: Deploy Lambdas Testnet
-        if: ${{ needs.init.outputs.environment == 'testnet' }}
+        # if: ${{ needs.init.outputs.environment == 'testnet' }}
+        if: ${{ needs.init.outputs.environment == 'mainnet' }}
         run: |
           npx make deploy-lambdas-testnet
         env:
