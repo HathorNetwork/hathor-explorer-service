@@ -2,7 +2,7 @@ name: deploy
 
 on:
   push:
-    branches: [main, fix/deploy-pipeline]
+    branches: [main]
     tags: ['v*.*.*']
 
 env:
@@ -31,9 +31,6 @@ jobs:
           elif [[ "${{github.base_ref}}" == "main" || "${{github.ref}}" == "refs/heads/main" ]]; then
             echo "Setting testnet environment"
             echo "::set-output name=environment::testnet"
-          elif [[ "${{github.base_ref}}" == "fix/deploy-pipeline" || "${{github.ref}}" == "refs/heads/fix/deploy-pipeline" ]]; then
-            echo "Setting testnet environment"
-            echo "::set-output name=environment::testnet"
           fi
 
   deploy:
@@ -52,28 +49,27 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 14.x
-      # - name: Cache node modules
-      #   uses: actions/cache@v2
-      #   env:
-      #     cache-name: cache-node-modules
-      #   with:
-      #     # npm cache files are stored in `~/.npm` on Linux/macOS
-      #     path: /home/runner/work/hathor-explorer/hathor-explorer/node_modules
-      #     key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-      #     restore-keys: |
-      #       ${{ runner.os }}-build-${{ env.cache-name }}-
-      #       ${{ runner.os }}-build-
-      #       ${{ runner.os }}-
-      # - name: Install Dependencies
-      #   run: |
-      #     pip -q --no-input install poetry
-      #     make install
-      # - name: Linters
-      #   run: |
-      #     poetry run make check
+      - name: Cache node modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules
+        with:
+          # npm cache files are stored in `~/.npm` on Linux/macOS
+          path: /home/runner/work/hathor-explorer/hathor-explorer/node_modules
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - name: Install Dependencies
+        run: |
+          pip -q --no-input install poetry
+          make install
+      - name: Linters
+        run: |
+          poetry run make check
       - name: Deploy Lambdas Testnet
-        # if: ${{ needs.init.outputs.environment == 'testnet' }}
-        if: ${{ needs.init.outputs.environment == 'mainnet' }}
+        if: ${{ needs.init.outputs.environment == 'testnet' }}
         run: |
           npx make deploy-lambdas-testnet
         env:
