@@ -69,7 +69,7 @@ jobs:
         run: |
           poetry run make check
       - name: Deploy Lambdas Testnet
-        if: ${{ job.environment == 'testnet' }}
+        if: ${{ needs.init.outputs.environment == 'testnet' }}
         run: |
           npx make deploy-lambdas-testnet
         env:
@@ -82,7 +82,7 @@ jobs:
           REDIS_DB: 0
           TOKEN_METADATA_BUCKET: token-metadata-testnet
       - name: Deploy Lambdas Mainnet
-        if: ${{ job.environment == 'mainnet' }}
+        if: ${{ needs.init.outputs.environment == 'mainnet' }}
         run: |
           npx make deploy-lambdas-mainnet
         env:
@@ -95,13 +95,13 @@ jobs:
           REDIS_DB: 0
           TOKEN_METADATA_BUCKET: token-metadata-mainnet
       - name: Deploy Daemons Testnet
-        if: ${{ job.environment == 'testnet' }}
+        if: ${{ needs.init.outputs.environment == 'testnet' }}
         run: |
           timestamp=`date +%s`; \
           export DOCKER_IMAGE_TAG=testnet-${{ github.sha }}-$timestamp
           make deploy-daemons
       - name: Deploy Daemons Mainnet
-        if: ${{ job.environment == 'mainnet' }}
+        if: ${{ needs.init.outputs.environment == 'mainnet' }}
         run: |
           export DOCKER_IMAGE_TAG=${GITHUB_REF#refs/*/}
           make deploy-daemons
