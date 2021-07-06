@@ -1,6 +1,7 @@
 from dataclasses import asdict, dataclass
 from enum import Enum
 from typing import List
+from datetime import datetime, timedelta
 
 
 class NodeState(str, Enum):
@@ -21,8 +22,8 @@ class Peer:
     :param app_version: The current version of app running on node
     :type app_version: str
 
-    :param uptime: Time of node activity in seconds
-    :type uptime: float
+    :param up_since: Timestamp of when peer started
+    :type up_since: float
 
     :param address: Ip address and port of the peer
     :type address: str
@@ -47,7 +48,7 @@ class Peer:
     """
     id: str
     app_version: str
-    uptime: float
+    up_since: float
     address: str
     state: NodeState
     last_message: float
@@ -73,8 +74,8 @@ class Node:
     :param network: Current network. Can be `mainnet`, any version of `testnet` or other
     :type network: str
 
-    :param uptime: Time of node activity in seconds
-    :type uptime: float
+    :param up_since: Timestamp of when node started
+    :type up_since: float
 
     :param first_timestamp: Timestamp of the first block of the node
     :type first_timestamp: int
@@ -96,7 +97,7 @@ class Node:
     app_version: str
     state: NodeState
     network: str
-    uptime: float
+    up_since: float
     first_timestamp: int
     latest_timestamp: int
     entrypoints: List[str]
@@ -151,7 +152,7 @@ class Node:
             connected_peers.append(Peer(
                 id=peer['id'],
                 app_version=peer['app_version'],
-                uptime=peer['uptime'],
+                up_since=cls._uptime_to_up_since(peer['uptime']),
                 address=peer['address'],
                 state=NodeState(peer['state']),
                 last_message=peer['last_message'],
@@ -166,10 +167,15 @@ class Node:
             app_version=status['server']['app_version'],
             state=NodeState(status['server']['state']),
             network=status['server']['network'],
-            uptime=status['server']['uptime'],
+            up_since=cls._uptime_to_up_since(status['server']['uptime']),
             first_timestamp=status['dag']['first_timestamp'],
             latest_timestamp=status['dag']['latest_timestamp'],
             entrypoints=status['server']['entrypoints'],
             known_peers=[id for id in peer_entrypoints.keys()],
             connected_peers=connected_peers
         )
+
+    @classmethod
+    def _uptime_to_up_since(cls, uptime: float) -> float:
+        up_since_date = datetime.now() - timedelta(seconds=uptime)
+        return datetime.timestamp(up_since_date)

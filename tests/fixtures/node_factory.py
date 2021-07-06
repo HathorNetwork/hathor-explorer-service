@@ -2,6 +2,7 @@ import factory
 from factory import List, lazy_attribute
 from factory.declarations import SubFactory
 from faker import Faker
+from datetime import datetime
 
 from domain.network.node import Node, NodeState, Peer
 
@@ -18,7 +19,7 @@ class PeerFactory(factory.Factory):
 
     id = lazy_attribute(lambda o: fake.sha256())
     app_version = lazy_attribute(lambda o: fake.bothify(text='Hathor v0.!#.#'))
-    uptime = lazy_attribute(lambda o: fake.pyfloat(right_digits=11, positive=True))
+    up_since = lazy_attribute(lambda o: datetime.timestamp(fake.date_time_between(start_date='-1y', end_date='-1d')))
     address = lazy_attribute(lambda o: entrypoint())
     state = lazy_attribute(lambda o: fake.random_element(list(NodeState)))
     last_message = lazy_attribute(lambda o: fake.pyfloat(right_digits=14, positive=True, max_value=1))
@@ -36,7 +37,7 @@ class NodeFactory(factory.Factory):
     app_version = lazy_attribute(lambda o: fake.bothify(text='Hathor v0.!#.#'))
     state = lazy_attribute(lambda o: fake.random_element(list(NodeState)))
     network = lazy_attribute(lambda o: f"testnet-{fake.word()}")
-    uptime = lazy_attribute(lambda o: fake.pyfloat(right_digits=11, positive=True))
+    up_since = lazy_attribute(lambda o: datetime.timestamp(fake.date_time_between(start_date='-1y', end_date='-1d')))
     first_timestamp = lazy_attribute(lambda o: fake.pyint(min_value=10_000, max_value=100_000))
     latest_timestamp = lazy_attribute(lambda o: fake.pyint(min_value=10_000, max_value=100_000))
     entrypoints = lazy_attribute(lambda o: [f"tcp://{entrypoint()}" for i in range(fake.random_int(min=1, max=5))])
