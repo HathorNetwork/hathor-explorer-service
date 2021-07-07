@@ -1,8 +1,9 @@
-from typing import Callable, List, Union
+from typing import Callable, List, Union, Dict
 
 from common.configuration import DATA_AGGREGATOR_LAMBDA_NAME, NODE_CACHE_TTL
 from domain.network.node import Node
-from gateways.clients.cache_client import NODE_COLLECTION_NAME, CacheClient
+from domain.network.network import AggregatedNode, AggregatedPeer, Network
+from gateways.clients.cache_client import NODE_COLLECTION_NAME, NETWORK_COLLECTION_NAME, CacheClient
 from gateways.clients.hathor_core_client import STATUS_ENDPOINT, HathorCoreAsyncClient
 from gateways.clients.lambda_client import LambdaClient
 
@@ -77,6 +78,29 @@ class NodeGateway:
 
         return None
 
+    def save_network(self, network: Network) -> Union[bool, None]:
+        """Saves Network data into cache with '1' as key
+
+        :param network: Network object with data
+        :type network: :py:class:`domain.network.network.Network`
+        :return: If saved successfuly or not
+        :rtype: bool
+        """
+        return self.cache_client.set(NETWORK_COLLECTION_NAME, '1', network.to_dict())
+
+    def get_network(self) -> Union[Network, None]:
+        """Retrives network data
+
+        :return: Network data or None if nothing found
+        :rtype: Union[Node, None]
+        """
+        value = self.cache_client.get(NETWORK_COLLECTION_NAME, '1')
+
+        if value is not None:
+            return Network.from_dict(value)
+
+        return None
+
     def list_node_keys(self) -> List[str]:
         """List current ids of saved nodes
 
@@ -84,3 +108,21 @@ class NodeGateway:
         :rtype: List[str]
         """
         return self.cache_client.keys(NODE_COLLECTION_NAME)
+
+    def aggregate_network(self) -> Network:
+        peers: Dict[str, AggregatedPeer] = {}
+        nodes = []
+
+        for node_id in self.list_node_keys():
+            node = self.get_node(node_id)
+            if not node:
+                continue
+            for peer in node.connected_peers:
+                if not peers.get(peer.id, None):
+                    peers[peer.id] = AggregatedPeer.from_peer(peer)
+
+                peers[peer.id].add_connected_to(node.id)
+
+            nodes.append(AggregatedNode.from_node(node))
+
+        return Network(nodes=nodes, peers=[peer for id, peer in peers.items()])
