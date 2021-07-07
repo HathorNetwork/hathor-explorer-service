@@ -86,7 +86,7 @@ class NodeGateway:
         :return: If saved successfuly or not
         :rtype: bool
         """
-        return self.cache_client.set(NETWORK_COLLECTION_NAME, '1', network.to_dict())
+        return self.cache_client.set(NETWORK_COLLECTION_NAME, 'v1', network.to_dict())
 
     def get_network(self) -> Union[Network, None]:
         """Retrives network data
@@ -94,7 +94,7 @@ class NodeGateway:
         :return: Network data or None if nothing found
         :rtype: Union[Node, None]
         """
-        value = self.cache_client.get(NETWORK_COLLECTION_NAME, '1')
+        value = self.cache_client.get(NETWORK_COLLECTION_NAME, 'v1')
 
         if value is not None:
             return Network.from_dict(value)
