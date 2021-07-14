@@ -2,7 +2,7 @@ from typing import Optional
 from dataclasses import dataclass
 from enum import Enum
 
-from domain.metadata.metadata import Metadata
+from domain.metadata.metadata import Metadata, MetadataType
 
 
 class TokenNFTType(str, Enum):
@@ -45,15 +45,24 @@ class MetaToken:
     :type nft: :py:class:`domain.metadata.token_metdata.TokenNFT`
     """
     id: str
-    verified: bool
-    banned: bool
-    reason: Optional[str]
-    nft: Optional[TokenNFT]
+    verified: Optional[bool] = False
+    banned: Optional[bool] = False
+    reason: Optional[str] = ''
+    nft: Optional[TokenNFT] = None
 
 
+@dataclass
 class TokenMetadata(Metadata):
-    type: type = type(self)
-    data: MetaToken
+    _data: MetaToken
+    type: MetadataType = MetadataType.TOKEN
+
+    @property
+    def data(self) -> MetaToken:
+        return self._data
+
+    @data.setter
+    def data(self, value: MetaToken):
+        self._data = value
 
     @classmethod
     def from_dict(cls, dikt: dict) -> 'TokenMetadata':
@@ -68,4 +77,7 @@ class TokenMetadata(Metadata):
         if dikt.get('nft'):
             dikt['nft'] = TokenNFT(TokenNFTType(dikt['nft']['type'].upper()), dikt['nft']['file'])
 
-        return TokenMetadata(**dikt)
+        return cls(
+            id=dikt['id'],
+            data=MetaToken(**dikt)
+        )

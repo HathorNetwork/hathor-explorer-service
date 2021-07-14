@@ -80,7 +80,7 @@ jobs:
           REDIS_HOST: ${{ secrets.REDIS_HOST }}
           REDIS_PORT: 6379
           REDIS_DB: 0
-          TOKEN_METADATA_BUCKET: token-metadata-testnet
+          METADATA_BUCKET: metadata-testnet
           CORS_ALLOWED_ORIGIN: https://explorer.testnet.hathor.network
       - name: Deploy Lambdas Mainnet
         if: ${{ needs.init.outputs.environment == 'mainnet' }}
@@ -94,7 +94,7 @@ jobs:
           REDIS_HOST: ${{ secrets.REDIS_HOST }}
           REDIS_PORT: 6379
           REDIS_DB: 0
-          TOKEN_METADATA_BUCKET: token-metadata-mainnet
+          METADATA_BUCKET: metadata-mainnet
           CORS_ALLOWED_ORIGIN: https://explorer.hathor.network
       - name: Deploy Daemons Testnet
         if: ${{ needs.init.outputs.environment == 'testnet' }}

@@ -1,15 +1,15 @@
 from typing import Union
 
-from gateways.token_gateway import TokenGateway
+from gateways.metadata_gateway import MetadataGateway
 
 
 class GetTokenMetadata:
 
-    def __init__(self, token_gateway: Union[TokenGateway, None] = None) -> None:
-        self.token_gateway = token_gateway or TokenGateway()
+    def __init__(self, metadata_gateway: Union[MetadataGateway, None] = None) -> None:
+        self.metadata_gateway = metadata_gateway or MetadataGateway()
 
     def get(self, id: str) -> Union[dict, None]:
-        meta = self.token_gateway.get_token_metadata_from_s3(f"{id}.json")
+        meta = self.metadata_gateway.get_token_metadata(id)
 
         if meta:
             return meta.to_dict()

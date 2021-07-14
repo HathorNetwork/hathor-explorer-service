@@ -1,17 +1,30 @@
 from dataclasses import dataclass, asdict
+from enum import Enum
 
 
-@dataclass
+class MetadataType(str, Enum):
+    TOKEN = 'TOKEN'
+    TRANSACTION = 'TRANSACTION'
+
+
+@dataclass(init=False)
 class Metadata:
-    type: type
     id: str
+
+    @property
+    def type(self) -> MetadataType:
+        raise NotImplementedError
 
     @property
     def data(self):
         raise NotImplementedError
 
+    @data.setter
+    def data(self, value):
+        raise NotImplementedError
+
     @classmethod
-    def from_dict(cls):
+    def from_dict(cls, dikt: dict):
         raise NotImplementedError
 
     def to_dict(self) -> dict:

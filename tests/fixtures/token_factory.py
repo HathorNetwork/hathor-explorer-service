@@ -3,7 +3,7 @@ import re
 from factory import Factory, lazy_attribute
 from faker import Faker
 
-from domain.tx.token import Token, TokenMetadata, TokenNFT, TokenNFTType
+from domain.tx.token import Token
 
 fake = Faker()
 
@@ -15,25 +15,6 @@ def token_symbol(name):
         symbol = f"{symbol}TK"[:3]
 
     return symbol
-
-
-class TokenNFTFactory(Factory):
-    class Meta:
-        model = TokenNFT
-
-    type = lazy_attribute(lambda o: fake.random_element(list(TokenNFTType)))
-    file = lazy_attribute(lambda o: f"http://{fake.domain_name()}{fake.file_path(category=o.type.value.lower())}")
-
-
-class TokenMetadataFactory(Factory):
-    class Meta:
-        model = TokenMetadata
-
-    id = lazy_attribute(lambda o: f"0000{fake.sha256()}"[:64])
-    verified = lazy_attribute(lambda o: fake.boolean(chance_of_getting_true=10))
-    banned = lazy_attribute(lambda o: fake.boolean(chance_of_getting_true=15))
-    reason = lazy_attribute(lambda o: fake.sentence() if o.banned else None)
-    nft = lazy_attribute(lambda o: TokenNFTFactory() if fake.boolean(chance_of_getting_true=5) else None)
 
 
 class TokenFactory(Factory):
