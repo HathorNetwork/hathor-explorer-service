@@ -4,8 +4,13 @@ from unittest.mock import MagicMock, patch
 from pytest import fixture, raises
 
 from gateways.metadata_gateway import MetadataGateway
-from tests.fixtures.metadata_factory import TokenMetadataFactory, TokenNFTFactory, MetaTokenFactory, \
-                                            MetaTransactionFactory, TransactionMetadataFactory
+from tests.fixtures.metadata_factory import (
+    MetaTokenFactory,
+    MetaTransactionFactory,
+    TokenMetadataFactory,
+    TokenNFTFactory,
+    TransactionMetadataFactory,
+)
 
 
 class TestMetadataGateway:

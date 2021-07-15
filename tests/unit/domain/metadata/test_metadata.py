@@ -1,5 +1,6 @@
-from domain.metadata.metadata import Metadata
 from pytest import raises
+
+from domain.metadata.metadata import Metadata
 
 
 class TestMetadata:

@@ -2,8 +2,13 @@ from unittest.mock import MagicMock
 
 from pytest import fixture
 
-from tests.fixtures.metadata_factory import TokenMetadataFactory, TokenNFTFactory, MetaTokenFactory, \
-                                            MetaTransactionFactory, TransactionMetadataFactory
+from tests.fixtures.metadata_factory import (
+    MetaTokenFactory,
+    MetaTransactionFactory,
+    TokenMetadataFactory,
+    TokenNFTFactory,
+    TransactionMetadataFactory,
+)
 from usecases.get_metadata import GetMetadata
 
 
@@ -30,7 +35,7 @@ class TestGetMetadata:
         assert result['data']['verified'] == token_metadata.data.verified
         assert result['data']['banned'] == token_metadata.data.banned
         assert result['data']['nft']['file'] == token_metadata.data.nft.file
-    
+
     def test_get_for_transaction(self, metadata_gateway):
         meta_transaction = MetaTransactionFactory()
         transaction_metadata = TransactionMetadataFactory(id=meta_transaction.id, data=meta_transaction)
@@ -56,4 +61,3 @@ class TestGetMetadata:
 
         metadata_gateway.get_token_metadata.assert_called_once_with("some-id")
         assert result is None
-

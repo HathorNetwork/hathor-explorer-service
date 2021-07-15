@@ -1,6 +1,6 @@
-from typing import Optional
 from dataclasses import dataclass
 from enum import Enum
+from typing import Optional
 
 from domain.metadata.metadata import Metadata, MetadataType
 

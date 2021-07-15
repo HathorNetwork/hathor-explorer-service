@@ -2,7 +2,7 @@ from unittest.mock import MagicMock
 
 from pytest import fixture
 
-from tests.fixtures.metadata_factory import TokenMetadataFactory, TokenNFTFactory, MetaTokenFactory
+from tests.fixtures.metadata_factory import MetaTokenFactory, TokenMetadataFactory, TokenNFTFactory
 from usecases.get_token_metadata import GetTokenMetadata
 
 

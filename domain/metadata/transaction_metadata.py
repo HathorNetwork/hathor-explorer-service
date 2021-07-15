@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Optional, Union
+from typing import Optional
 
 from domain.metadata.metadata import Metadata, MetadataType
 

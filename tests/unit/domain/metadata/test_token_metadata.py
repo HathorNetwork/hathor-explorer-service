@@ -1,5 +1,5 @@
 from domain.metadata.token_metadata import TokenMetadata
-from tests.fixtures.metadata_factory import TokenMetadataFactory, TokenNFTFactory, MetaTokenFactory
+from tests.fixtures.metadata_factory import MetaTokenFactory, TokenMetadataFactory, TokenNFTFactory
 
 
 class TestTokenMetadata:

@@ -1,13 +1,11 @@
 import json
-
 from typing import Union
 
 from common.configuration import METADATA_BUCKET
 from domain.metadata.metadata import MetadataType
-from domain.metadata.transaction_metadata import TransactionMetadata
 from domain.metadata.token_metadata import TokenMetadata
+from domain.metadata.transaction_metadata import TransactionMetadata
 from gateways.clients.s3_client import S3Client
-
 
 TYPE_TO_FOLDER = {
     MetadataType.TRANSACTION: 'transaction',

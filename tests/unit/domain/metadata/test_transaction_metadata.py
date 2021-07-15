@@ -1,5 +1,5 @@
 from domain.metadata.transaction_metadata import TransactionMetadata
-from tests.fixtures.metadata_factory import TransactionMetadataFactory, MetaTransactionFactory
+from tests.fixtures.metadata_factory import MetaTransactionFactory, TransactionMetadataFactory
 
 
 class TestTransactionMetadata:

@@ -1,4 +1,4 @@
-from dataclasses import dataclass, asdict
+from dataclasses import asdict, dataclass
 from enum import Enum
 
 
@@ -20,7 +20,7 @@ class Metadata:
         raise NotImplementedError
 
     @classmethod
-    def from_dict(cls, dikt: dict):
+    def from_dict(cls, dikt: dict) -> 'Metadata':
         raise NotImplementedError
 
     def to_dict(self) -> dict:

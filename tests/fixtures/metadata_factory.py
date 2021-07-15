@@ -2,8 +2,8 @@ from factory import Factory, lazy_attribute
 from factory.declarations import SubFactory
 from faker import Faker
 
-from domain.metadata.token_metadata import TokenMetadata, TokenNFT, MetaToken, TokenNFTType
-from domain.metadata.transaction_metadata import TransactionMetadata, MetaTransaction
+from domain.metadata.token_metadata import MetaToken, TokenMetadata, TokenNFT, TokenNFTType
+from domain.metadata.transaction_metadata import MetaTransaction, TransactionMetadata
 
 fake = Faker()
 
