@@ -12,6 +12,6 @@ class GetTokenMetadata:
         meta = self.metadata_gateway.get_token_metadata(id)
 
         if meta:
-            return meta.to_dict()
+            return meta.to_dict()['data']
 
         return None

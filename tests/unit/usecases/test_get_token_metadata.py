@@ -2,7 +2,7 @@ from unittest.mock import MagicMock
 
 from pytest import fixture
 
-from tests.fixtures.metadata_factory import TokenMetadataFactory
+from tests.fixtures.metadata_factory import TokenMetadataFactory, TokenNFTFactory, MetaTokenFactory
 from usecases.get_token_metadata import GetTokenMetadata
 
 
@@ -13,26 +13,29 @@ class TestGetTokenMetadata:
         return MagicMock()
 
     def test_get(self, token_gateway):
-        token_metadata = TokenMetadataFactory()
-        token_metadata_dict = token_metadata.to_dict()
-        token_gateway.get_token_metadata_from_s3 = MagicMock(return_value=token_metadata)
+        nft = TokenNFTFactory()
+        meta_token = MetaTokenFactory(nft=nft)
+        token_metadata = TokenMetadataFactory(id=meta_token.id, data=meta_token)
+
+        token_gateway.get_token_metadata = MagicMock(return_value=token_metadata)
 
         get_token_metadata = GetTokenMetadata(token_gateway)
 
         result = get_token_metadata.get(token_metadata.id)
 
-        token_gateway.get_token_metadata_from_s3.assert_called_once_with(f"{token_metadata.id}.json")
+        token_gateway.get_token_metadata.assert_called_once_with(token_metadata.id)
         assert result
-        assert result['id'] == token_metadata_dict['id']
-        assert result['verified'] == token_metadata_dict['verified']
-        assert result['banned'] == token_metadata_dict['banned']
+        assert result['id'] == token_metadata.id
+        assert result['verified'] == token_metadata.data.verified
+        assert result['banned'] == token_metadata.data.banned
+        assert result['nft']['file'] == token_metadata.data.nft.file
 
     def test_get_return_none(self, token_gateway):
-        token_gateway.get_token_metadata_from_s3 = MagicMock(return_value=None)
+        token_gateway.get_token_metadata = MagicMock(return_value=None)
 
         get_token_metadata = GetTokenMetadata(token_gateway)
 
         result = get_token_metadata.get('some-id')
 
-        token_gateway.get_token_metadata_from_s3.assert_called_once_with("some-id.json")
+        token_gateway.get_token_metadata.assert_called_once_with("some-id")
         assert result is None

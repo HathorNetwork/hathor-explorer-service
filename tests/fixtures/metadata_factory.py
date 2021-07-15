@@ -2,8 +2,8 @@ from factory import Factory, lazy_attribute
 from factory.declarations import SubFactory
 from faker import Faker
 
-from domain.metadata.metadata import MetadataType
 from domain.metadata.token_metadata import TokenMetadata, TokenNFT, MetaToken, TokenNFTType
+from domain.metadata.transaction_metadata import TransactionMetadata, MetaTransaction
 
 fake = Faker()
 
@@ -32,4 +32,20 @@ class TokenMetadataFactory(Factory):
         model = TokenMetadata
 
     id = lazy_attribute(lambda o: f"0000{fake.sha256()}"[:64])
-    # data = SubFactory(MetaTokenFactory)
+    data = SubFactory(MetaTokenFactory)
+
+
+class MetaTransactionFactory(Factory):
+    class Meta:
+        model = MetaTransaction
+
+    id = lazy_attribute(lambda o: f"0000{fake.sha256()}"[:64])
+    context = lazy_attribute(lambda o: fake.sentence())
+    genesis = lazy_attribute(lambda o: fake.boolean(chance_of_getting_true=10))
+
+
+class TransactionMetadataFactory(Factory):
+    class Meta:
+        model = TransactionMetadata
+
+    data = SubFactory(MetaTransactionFactory)

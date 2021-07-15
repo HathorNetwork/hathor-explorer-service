@@ -7,7 +7,7 @@ class MetadataType(str, Enum):
     TRANSACTION = 'TRANSACTION'
 
 
-@dataclass(init=False)
+@dataclass
 class Metadata:
     id: str
 
@@ -17,10 +17,6 @@ class Metadata:
 
     @property
     def data(self):
-        raise NotImplementedError
-
-    @data.setter
-    def data(self, value):
         raise NotImplementedError
 
     @classmethod

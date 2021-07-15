@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Optional
+from typing import Optional, Union
 
 from domain.metadata.metadata import Metadata, MetadataType
 
@@ -13,7 +13,7 @@ class MetaTransaction:
 
 @dataclass
 class TransactionMetadata(Metadata):
-    data: MetaTransaction
+    data: Optional[MetaTransaction] = None
     type: MetadataType = MetadataType.TRANSACTION
 
     @classmethod
@@ -29,5 +29,5 @@ class TransactionMetadata(Metadata):
 
         return cls(
             id=dikt['id'],
-            data=MetaTransaction(**dikt)
+            data=MetaTransaction(**dikt['data'])
         )

@@ -149,3 +149,26 @@ functions:
             enabled: true
             cacheKeyParameters:
               - name: request.path.hash
+
+  get_meta_handler:
+    handler: handlers/get_meta_handler.handle
+    package:
+      patterns:
+        - 'handlers/get_meta_handler.py'
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: metadata/{type}/{hash}
+          method: get
+          cors: true
+          request:
+            parameters:
+              paths:
+                type: true
+                hash: true
+          caching:
+            enabled: true
+            cacheKeyParameters:
+              - name: request.path.type
+              - name: request.path.hash

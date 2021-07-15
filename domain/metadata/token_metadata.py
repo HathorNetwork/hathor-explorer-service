@@ -53,16 +53,8 @@ class MetaToken:
 
 @dataclass
 class TokenMetadata(Metadata):
-    _data: MetaToken
+    data: Optional[MetaToken] = None
     type: MetadataType = MetadataType.TOKEN
-
-    @property
-    def data(self) -> MetaToken:
-        return self._data
-
-    @data.setter
-    def data(self, value: MetaToken):
-        self._data = value
 
     @classmethod
     def from_dict(cls, dikt: dict) -> 'TokenMetadata':
@@ -74,10 +66,11 @@ class TokenMetadata(Metadata):
         :return: The new instance
         :rtype: :py:class:`domain.metadata.token_metdata.TokenMetadata`
         """
-        if dikt.get('nft'):
-            dikt['nft'] = TokenNFT(TokenNFTType(dikt['nft']['type'].upper()), dikt['nft']['file'])
+        data = dikt.get('data', {})
+        if data.get('nft'):
+            data['nft'] = TokenNFT(TokenNFTType(data['nft']['type'].upper()), data['nft']['file'])
 
         return cls(
             id=dikt['id'],
-            data=MetaToken(**dikt)
+            data=MetaToken(**data)
         )
