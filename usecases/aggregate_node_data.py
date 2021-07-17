@@ -1,6 +1,7 @@
 from typing import Union
 
 from deepdiff import DeepDiff
+
 from gateways.node_gateway import NodeGateway
 
 

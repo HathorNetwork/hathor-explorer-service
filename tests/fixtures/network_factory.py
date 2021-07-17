@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from factory import List, lazy_attribute, Factory
+from factory import Factory, List, lazy_attribute
 from factory.declarations import SubFactory
 from faker import Faker
 

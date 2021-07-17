@@ -1,9 +1,10 @@
 from dataclasses import asdict, dataclass
-from typing import List, Set
 from datetime import datetime, timedelta
+from typing import List, Set
+
 from dacite import from_dict
 
-from domain.network.node import NodeState, Peer, Node
+from domain.network.node import Node, NodeState, Peer
 
 
 def uptime_to_up_since(uptime: float) -> int:

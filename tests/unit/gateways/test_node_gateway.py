@@ -4,8 +4,8 @@ import pytest
 from pytest import fixture
 
 from gateways.node_gateway import NodeGateway
-from tests.fixtures.node_factory import NodeFactory
 from tests.fixtures.network_factory import NetworkFactory
+from tests.fixtures.node_factory import NodeFactory
 
 
 class TestNodeGateway:

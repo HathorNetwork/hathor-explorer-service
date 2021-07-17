@@ -1,9 +1,9 @@
-from typing import Callable, List, Union, Dict
+from typing import Callable, Dict, List, Union
 
 from common.configuration import DATA_AGGREGATOR_LAMBDA_NAME, NODE_CACHE_TTL
 from domain.network.node import Node
 from domain.network.network import AggregatedNode, AggregatedPeer, Network
-from gateways.clients.cache_client import NODE_COLLECTION_NAME, NETWORK_COLLECTION_NAME, CacheClient
+from gateways.clients.cache_client import NETWORK_COLLECTION_NAME, NODE_COLLECTION_NAME, CacheClient
 from gateways.clients.hathor_core_client import STATUS_ENDPOINT, HathorCoreAsyncClient
 from gateways.clients.lambda_client import LambdaClient
 

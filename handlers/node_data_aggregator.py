@@ -1,5 +1,5 @@
-from usecases.save_node_data import SaveNodeData
 from usecases.aggregate_node_data import AggregateNodeData
+from usecases.save_node_data import SaveNodeData
 
 
 def handle(node_status: dict, _context: None = None) -> dict:
