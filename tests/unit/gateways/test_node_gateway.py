@@ -5,6 +5,7 @@ from pytest import fixture
 
 from gateways.node_gateway import NodeGateway
 from tests.fixtures.node_factory import NodeFactory
+from tests.fixtures.network_factory import NetworkFactory
 
 
 class TestNodeGateway:
@@ -42,7 +43,7 @@ class TestNodeGateway:
             gateway.send_node_to_data_aggregator(node_data)
 
     @patch('gateways.node_gateway.NODE_CACHE_TTL', 30)
-    def test_save_netowrk(self, cache_client):
+    def test_save_node(self, cache_client):
         cache_client.set = MagicMock(return_value=True)
 
         gateway = NodeGateway(cache_client=cache_client)
@@ -87,3 +88,14 @@ class TestNodeGateway:
 
         cache_client.keys.assert_called_once_with('node')
         assert result == keys
+
+    def test_save_network(self, cache_client):
+        cache_client.set = MagicMock(return_value=True)
+
+        gateway = NodeGateway(cache_client=cache_client)
+        network = NetworkFactory()
+
+        result = gateway.save_network(id, network)
+
+        cache_client.set.assert_called_once_with('network', 'v1', network.to_dict())
+        assert result
