@@ -4,24 +4,46 @@ from decouple import Csv, config
 
 
 class Environment(Enum):
+    """List of possible environments"""
+
     PROD = 'PROD'
     DEV = 'DEV'
     TEST = 'TEST'
 
     @property
     def is_prod(self) -> bool:
+        """Check if current value is prod
+
+        :return: if is prod or not
+        :rtype: bool
+        """
         return self is self.PROD
 
     @property
     def is_dev(self) -> bool:
+        """Check if current value is dev
+
+        :return: if is dev or not
+        :rtype: bool
+        """
         return self is self.DEV
 
     @property
     def is_test(self) -> bool:
+        """Check if current value is test
+
+        :return: if is test or not
+        :rtype: bool
+        """
         return self is self.TEST
 
     @classmethod
     def default(cls) -> 'Environment':
+        """Return default environment
+
+        :return: dev environment
+        :rtype: :py:class:`common.configuration.Environment`
+        """
         return cls.DEV
 
 

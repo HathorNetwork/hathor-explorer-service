@@ -1,5 +1,6 @@
 
-py_sources = common/ daemons/ domain/ gateways/ handlers/ tests/ usecases/ utils/
+pydocstyle_sources = common/ daemons/ domain/ gateways/ usecases/ utils/
+py_sources = $(pydocstyle_sources) handlers/ tests/
 pytest_flags = -p no:warnings --cov=. --cov-report=html --cov-report=term --cov-report=xml --cov-fail-under=90
 mypy_flags = --warn-unused-configs --disallow-incomplete-defs --no-implicit-optional --warn-redundant-casts --warn-unused-ignores
 
@@ -17,12 +18,16 @@ mypy:
 flake8:
 	flake8 $(py_sources)
 
+.PHONY: pydocstyle
+pydocstyle:
+	pydocstyle $(pydocstyle_sources)
+
 .PHONY: isort-check
 isort-check:
 	isort --ac --check-only $(py_sources)
 
 .PHONY: check
-check: flake8 isort-check mypy
+check: flake8 pydocstyle isort-check mypy
 
 .PHONY: yapf
 yapf:
