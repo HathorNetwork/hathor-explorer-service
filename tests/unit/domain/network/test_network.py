@@ -38,6 +38,7 @@ class TestNode:
         assert mainnet.entrypoints[0] == 'tcp://34.218.233.215:40403'
         assert mainnet.connected_peers[0].id == '49c9cdeddc8a5ee94c177628686aba07bca53c481819c921ff16cdd39614bc1c'
         assert mainnet.connected_peers[0].latest_timestamp == 1622151490
+        assert mainnet.connected_peers[0].entrypoints == ['tcp://3.66.218.70:40403']
 
         testnet = Node.from_status_dict(HATHOR_CORE_TESTNET_GET_STATUS)
 
@@ -47,3 +48,4 @@ class TestNode:
         assert testnet.entrypoints[0] == 'tcp://3.21.242.244:40403'
         assert testnet.connected_peers[0].id == '71df2e6c0927491eb439c68d45b3690d22e4c15beaa174e2487a117c46abd944'
         assert testnet.connected_peers[0].latest_timestamp == 1622140105
+        assert testnet.connected_peers[0].entrypoints == []
