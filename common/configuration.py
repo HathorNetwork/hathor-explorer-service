@@ -37,6 +37,7 @@ DATA_AGGREGATOR_LAMBDA_NAME = config('DATA_AGGREGATOR_LAMBDA_NAME', default=None
 HATHOR_CORE_DOMAIN = config('HATHOR_CORE_DOMAIN', default=None)
 
 HATHOR_NODES = config('HATHOR_NODES', default='', cast=Csv())
+NODE_CACHE_TTL = config('NODE_CACHE_TTL', default=5)
 
 REDIS_KEY_PREFIX = config('REDIS_KEY_PREFIX', default=None)
 REDIS_HOST = config('REDIS_HOST', default=None)

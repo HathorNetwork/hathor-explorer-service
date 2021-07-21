@@ -29,6 +29,7 @@ provider:
     REDIS_DB: ${env:REDIS_DB}
     TOKEN_METADATA_BUCKET: ${env:TOKEN_METADATA_BUCKET}
     CORS_ALLOWED_ORIGIN: ${env:CORS_ALLOWED_ORIGIN}
+    NODE_CACHE_TTL: ${env:NODE_CACHE_TTL}
 
 plugins:
   - serverless-s3-local
