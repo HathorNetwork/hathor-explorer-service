@@ -14,9 +14,10 @@ class AggregateNodeData:
         new_network = self.node_gateway.aggregate_network()
         old_network = self.node_gateway.get_network()
 
-        networks_diff = DeepDiff(new_network, old_network)
+        if old_network:
+            networks_diff = DeepDiff(new_network.to_dict(), old_network.to_dict())
 
-        if networks_diff:
+        if (not old_network) or networks_diff:
             return self.node_gateway.save_network(new_network)
 
         return True

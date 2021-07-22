@@ -69,4 +69,5 @@ The disadvantage of this approach is that we must keep polling.
 # Future possibilities
 [future-possibilities]: #future-possibilities
 
-WebSocket. Everytime `Network` have new content and is saved, a handler can be triggered to broadcast new data to connected clients.
+- WebSocket. Everytime `Network` have new content and is saved, a handler can be triggered to broadcast new data to connected clients.
+- World map. We can get all peers and nodes locations and show on map.

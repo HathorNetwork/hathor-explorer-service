@@ -95,7 +95,46 @@ class TestNodeGateway:
         gateway = NodeGateway(cache_client=cache_client)
         network = NetworkFactory()
 
-        result = gateway.save_network(id, network)
+        result = gateway.save_network(network)
 
         cache_client.set.assert_called_once_with('network', 'v1', network.to_dict())
         assert result
+
+    def test_get_network(self, cache_client):
+        network = NetworkFactory()
+
+        cache_client.get = MagicMock(return_value=network.to_dict())
+
+        gateway = NodeGateway(cache_client=cache_client)
+
+        result = gateway.get_network()
+
+        cache_client.get.assert_called_once_with('network', 'v1')
+
+        assert result.peers[0].id == network.peers[0].id
+        assert result.nodes[0].id == network.nodes[0].id
+
+    def test_get_no_network(self, cache_client):
+        cache_client.get = MagicMock(return_value=None)
+
+        gateway = NodeGateway(cache_client=cache_client)
+
+        result = gateway.get_network()
+
+        cache_client.get.assert_called_once_with('network', 'v1')
+
+        assert result is None
+
+    def test_aggregate_network(self):
+        nodes = {node.id: node for node in NodeFactory.create_batch(3)}
+        nodes['obsolete-id'] = None
+
+        gateway = NodeGateway()
+
+        gateway.list_node_keys = MagicMock(return_value=nodes.keys())
+
+        gateway.get_node = MagicMock(side_effect=lambda id: nodes[id])
+
+        result = gateway.aggregate_network()
+
+        assert result.nodes[0].id == nodes[result.nodes[0].id].id

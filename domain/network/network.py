@@ -16,7 +16,7 @@ def uptime_to_up_since(uptime: float) -> int:
     :return: Calculated datetime when server went up in second (rounded down)
     :rtype: int
     """
-    up_since_date = datetime.now() - timedelta(seconds=uptime)
+    up_since_date = datetime.utcnow() - timedelta(seconds=uptime)
     return int(datetime.timestamp(up_since_date))
 
 
