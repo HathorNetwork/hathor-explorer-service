@@ -1,7 +1,8 @@
 from freezegun import freeze_time
-from domain.network.network import uptime_to_up_since, AggregatedPeer, AggregatedNode, Network
+
+from domain.network.network import AggregatedNode, AggregatedPeer, Network, uptime_to_up_since
+from tests.fixtures.network_factory import AggregatedNodeFactory, AggregatedPeerFactory, NetworkFactory
 from tests.fixtures.node_factory import NodeFactory, PeerFactory
-from tests.fixtures.network_factory import AggregatedPeerFactory, AggregatedNodeFactory, NetworkFactory
 
 
 class TestNetwork:

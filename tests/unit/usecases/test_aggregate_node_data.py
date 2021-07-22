@@ -2,8 +2,8 @@ from unittest.mock import MagicMock
 
 from pytest import fixture
 
-from usecases.aggregate_node_data import AggregateNodeData
 from tests.fixtures.network_factory import NetworkFactory
+from usecases.aggregate_node_data import AggregateNodeData
 
 
 class TestAggregateNodeData:
