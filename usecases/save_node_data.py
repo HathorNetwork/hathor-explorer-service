@@ -3,8 +3,6 @@ from typing import Union
 from domain.network.node import Node
 from gateways.node_gateway import NodeGateway
 
-from common.configuration import NODE_CACHE_TTL
-
 
 class SaveNodeData:
 
@@ -13,4 +11,4 @@ class SaveNodeData:
 
     def save(self, payload: dict) -> Union[bool, None]:
         node = Node.from_dict(payload)
-        return self.node_gateway.save_node(node.id, node, NODE_CACHE_TTL)
+        return self.node_gateway.save_node(node.id, node)
