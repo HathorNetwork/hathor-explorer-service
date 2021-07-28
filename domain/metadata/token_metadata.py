@@ -32,17 +32,17 @@ class MetaToken:
     :param id: Token unique id
     :type id: str
 
-    :param verified: If token is verified or not
-    :type verified: bool
+    :param verified: If token is verified or not. None and False are equivalent
+    :type verified: Optional[bool]
 
-    :param banned: If token is banned or not
-    :type banned: bool
+    :param banned: If token is banned or not. None and False are equivalent
+    :type banned: Optional[bool]
 
     :param reason: Bannishment reason
-    :type reason: str
+    :type reason: Optional[str]
 
     :param nft: NFT data, if any.
-    :type nft: :py:class:`domain.metadata.token_metdata.TokenNFT`
+    :type nft: Optional[:py:class:`domain.metadata.token_metdata.TokenNFT`]
     """
     id: str
     verified: Optional[bool] = False

@@ -7,13 +7,14 @@
 # Summary
 [summary]: #summary
 
-Metadata APi will provide metadata information about Hathor Network Entities. It will start with Transactions and Tokens
+Metadata API will provide metadata information about Transactions, Tokens, Blocks and other things on Network.
+It will start with Transactions and Tokens
 
 # Motivation
 [motivation]: #motivation
 
-We need to have some data about Hathor Network Entities that can't be stored on the blockchain.
-So, we store somewhere else and retrieve them through MetadataAPI
+We need to have some data about Transactions, Tokens, Blocks and other things on Network that can't be stored on the
+blockchain. So, we store somewhere else and retrieve them through MetadataAPI
 
 # Guide-level explanation
 [guide-level-explanation]: #guide-level-explanation

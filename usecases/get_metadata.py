@@ -1,14 +1,14 @@
-from typing import Union
+from typing import Optional
 
 from gateways.metadata_gateway import MetadataGateway
 
 
 class GetMetadata:
 
-    def __init__(self, metadata_gateway: Union[MetadataGateway, None] = None) -> None:
+    def __init__(self, metadata_gateway: Optional[MetadataGateway] = None) -> None:
         self.metadata_gateway = metadata_gateway or MetadataGateway()
 
-    def get(self, type: str, id: str) -> Union[dict, None]:
+    def get(self, type: str, id: str) -> Optional[dict]:
         metadata_methods = {
             'token': self.metadata_gateway.get_token_metadata,
             'transaction': self.metadata_gateway.get_transaction_metadata
@@ -18,10 +18,12 @@ class GetMetadata:
 
         method = metadata_methods.get(type, None)
 
-        if method:
-            meta = method(id)
+        if method is None:
+            return None
 
-        if meta:
-            return meta.to_dict()
+        meta = method(id)
 
-        return None
+        if meta is None:
+            return None
+
+        return meta.to_dict()
