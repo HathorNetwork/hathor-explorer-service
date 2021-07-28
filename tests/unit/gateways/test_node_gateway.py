@@ -41,6 +41,7 @@ class TestNodeGateway:
         with pytest.raises(Exception, match=r'No lambda name in config'):
             gateway.send_node_to_data_aggregator(node_data)
 
+    @patch('gateways.node_gateway.NODE_CACHE_TTL', 30)
     def test_save_netowrk(self, cache_client):
         cache_client.set = MagicMock(return_value=True)
 
@@ -50,7 +51,7 @@ class TestNodeGateway:
 
         result = gateway.save_node(id, node)
 
-        cache_client.set.assert_called_once_with('node', id, node.to_dict())
+        cache_client.set.assert_called_once_with('node', id, node.to_dict(), 30)
         assert result
 
     def test_get_node(self, cache_client):
