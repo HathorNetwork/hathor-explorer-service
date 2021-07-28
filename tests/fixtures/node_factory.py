@@ -25,6 +25,7 @@ class PeerFactory(factory.Factory):
     latest_timestamp = lazy_attribute(lambda o: fake.pyint(min_value=10_000, max_value=100_000))
     sync_timestamp = lazy_attribute(lambda o: fake.pyint(min_value=10_000, max_value=100_000))
     warning_flags = lazy_attribute(lambda o: fake.random_elements(['no_entrypoints', 'no_peer_id_url'], unique=True))
+    entrypoints = lazy_attribute(lambda o: [] if 'no_entrypoints' in o.warning_flags else [f"tcp://{entrypoint()}"])
 
 
 class NodeFactory(factory.Factory):

@@ -1,5 +1,5 @@
 import json
-from typing import List, Union
+from typing import List, Optional, Union
 
 from redis import StrictRedis
 
@@ -22,7 +22,7 @@ class CacheClient:
 
         self.client = StrictRedis(**client_args)
 
-    def set(self, collection: str, key: str, value: dict) -> Union[bool, None]:
+    def set(self, collection: str, key: str, value: dict, ttl: Optional[int] = None) -> Union[bool, None]:
         """Saves a dict into cache
 
         :param collection: a name to separate contexts
@@ -31,10 +31,12 @@ class CacheClient:
         :type key: str
         :param value: the dict to be saved
         :type value: dict
+        :param ttl: time to live in seconds
+        :type ttl: Optional[int]
         :return: if it saved successfuly or not
         :rtype: bool
         """
-        return self.client.set(self._get_context_key(collection, key), json.dumps(value))
+        return self.client.set(self._get_context_key(collection, key), json.dumps(value), ttl)
 
     def get(self, collection: str, key: str) -> Union[dict, None]:
         """Retrieves a dict from cache

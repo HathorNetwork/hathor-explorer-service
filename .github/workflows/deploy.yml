@@ -82,6 +82,7 @@ jobs:
           REDIS_DB: 0
           TOKEN_METADATA_BUCKET: token-metadata-testnet
           CORS_ALLOWED_ORIGIN: https://explorer.testnet.hathor.network
+          NODE_CACHE_TTL: 30
       - name: Deploy Lambdas Mainnet
         if: ${{ needs.init.outputs.environment == 'mainnet' }}
         run: |
@@ -96,6 +97,7 @@ jobs:
           REDIS_DB: 0
           TOKEN_METADATA_BUCKET: token-metadata-mainnet
           CORS_ALLOWED_ORIGIN: https://explorer.hathor.network
+          NODE_CACHE_TTL: 30
       - name: Deploy Daemons Testnet
         if: ${{ needs.init.outputs.environment == 'testnet' }}
         run: |

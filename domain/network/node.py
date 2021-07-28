@@ -42,6 +42,8 @@ class Peer:
     :param warning_flags: List of node warnings, if any
     :type warning_flags: List[str]
 
+    :param entrypoints: List of entrypoints, if any
+    :type entrypoints: List[str]
     """
     id: str
     app_version: str
@@ -52,6 +54,7 @@ class Peer:
     latest_timestamp: int
     sync_timestamp: int
     warning_flags: List[str]
+    entrypoints: List[str]
 
 
 @dataclass
@@ -140,7 +143,7 @@ class Node:
         :return: A new Node class built from status data
         :rtype: Node
         """
-        known_peers = [peer['id'] for peer in status['known_peers']]
+        peer_entrypoints = {peer['id']: peer['entrypoints'] for peer in status['known_peers']}
 
         connected_peers = []
 
@@ -154,7 +157,8 @@ class Node:
                 last_message=peer['last_message'],
                 latest_timestamp=peer['plugins']['node-sync-timestamp']['latest_timestamp'],
                 sync_timestamp=peer['plugins']['node-sync-timestamp']['synced_timestamp'],
-                warning_flags=peer['warning_flags']
+                warning_flags=peer['warning_flags'],
+                entrypoints=peer_entrypoints[peer['id']]
             ))
 
         return cls(
@@ -166,6 +170,6 @@ class Node:
             first_timestamp=status['dag']['first_timestamp'],
             latest_timestamp=status['dag']['latest_timestamp'],
             entrypoints=status['server']['entrypoints'],
-            known_peers=known_peers,
+            known_peers=[id for id in peer_entrypoints.keys()],
             connected_peers=connected_peers
         )

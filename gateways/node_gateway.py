@@ -1,6 +1,6 @@
 from typing import Callable, List, Union
 
-from common.configuration import DATA_AGGREGATOR_LAMBDA_NAME
+from common.configuration import DATA_AGGREGATOR_LAMBDA_NAME, NODE_CACHE_TTL
 from domain.network.node import Node
 from gateways.clients.cache_client import NODE_COLLECTION_NAME, CacheClient
 from gateways.clients.hathor_core_client import STATUS_ENDPOINT, HathorCoreAsyncClient
@@ -60,7 +60,7 @@ class NodeGateway:
         :return: If saved successfuly or not
         :rtype: bool
         """
-        return self.cache_client.set(NODE_COLLECTION_NAME, id, node.to_dict())
+        return self.cache_client.set(NODE_COLLECTION_NAME, id, node.to_dict(), NODE_CACHE_TTL)
 
     def get_node(self, id: str) -> Union[Node, None]:
         """Retrives node data for given id
