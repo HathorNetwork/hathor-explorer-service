@@ -78,10 +78,6 @@ functions:
             parameters: 
               paths: 
                 hash: true
-          caching:
-            enabled: true
-            cacheKeyParameters:
-              - name: request.path.hash
 
   list_nodes_handler:
     handler: handlers/list_nodes_handler.handle
@@ -95,10 +91,6 @@ functions:
           path: node/
           method: get
           cors: true
-          # TODO Be careful when adding pagination to this endpoint. We will have to include
-          #  the page as cache key.
-          caching:
-            enabled: true
 
   node_data_aggregator_handler:
     handler: handlers/node_data_aggregator.handle
