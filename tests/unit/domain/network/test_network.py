@@ -1,18 +1,9 @@
-from freezegun import freeze_time
-
-from domain.network.network import AggregatedNode, AggregatedPeer, Network, uptime_to_up_since
+from domain.network.network import AggregatedNode, AggregatedPeer, Network
 from tests.fixtures.network_factory import AggregatedNodeFactory, AggregatedPeerFactory, NetworkFactory
 from tests.fixtures.node_factory import NodeFactory, PeerFactory
 
 
 class TestNetwork:
-
-    @freeze_time('2020-08-28 10:30:00')
-    def test_uptime_to_since(self):
-        uptime = 1000
-        result = uptime_to_up_since(uptime)
-
-        assert result == 1598609600
 
     def test_aggregated_peer_from_peer(self):
         peer = PeerFactory()

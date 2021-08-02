@@ -1,7 +1,5 @@
-from datetime import datetime
 from unittest.mock import MagicMock, patch
 
-from freezegun import freeze_time
 from pytest import fixture
 
 from domain.network.node import Node
@@ -22,7 +20,6 @@ class TestCollectNodesStatuses:
         return MagicMock()
 
     @patch('usecases.collect_nodes_statuses.HATHOR_NODES', ['a', 'b'])
-    @freeze_time(datetime.now())
     async def test_collect(self, node_gateway):
         node = Node.from_status_dict(HATHOR_CORE_MAINNET_GET_STATUS)
 

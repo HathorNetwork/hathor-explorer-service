@@ -1,23 +1,9 @@
 from dataclasses import asdict, dataclass
-from datetime import datetime, timedelta
 from typing import List, Set
 
 from dacite import from_dict
 
 from domain.network.node import Node, NodeState, Peer
-
-
-def uptime_to_up_since(uptime: float) -> int:
-    """ Calculate time when server went up considering server uptime. Remove precision miliseconds to avoid differences
-        between two instances with the same data calculated in different milliseconds
-
-    :param uptime: Time for how long the server is up in seconds
-    :type uptime: float
-    :return: Calculated datetime when server went up in second (rounded down)
-    :rtype: int
-    """
-    up_since_date = datetime.utcnow() - timedelta(seconds=uptime)
-    return int(datetime.timestamp(up_since_date))
 
 
 @dataclass
@@ -30,8 +16,8 @@ class AggregatedPeer:
     :param app_version: version of hathor-core running on peer
     :type app_version: str
 
-    :param up_since: timestamp of when the peer went up
-    :type up_since: int
+    :param uptime: time of activity
+    :type uptime: float
 
     :param address: ip address of peer
     :type address: str
@@ -60,7 +46,7 @@ class AggregatedPeer:
     """
     id: str
     app_version: str
-    up_since: int
+    uptime: float
     address: str
     state: NodeState
     last_message: int
@@ -83,7 +69,7 @@ class AggregatedPeer:
         return cls(
             id=peer.id,
             app_version=peer.app_version,
-            up_since=uptime_to_up_since(peer.uptime),
+            uptime=peer.uptime,
             address=peer.address,
             state=peer.state,
             last_message=int(peer.last_message),
@@ -121,8 +107,8 @@ class AggregatedNode:
     :param app_version: version of hathor-core running on node
     :type app_version: str
 
-    :param up_since: timestamp of when the peer went up
-    :type up_since: int
+    :param uptime: time of activity
+    :type uptime: float
 
     :param state: state of node
     :type state: :py:class:`domain.network.node.NodeState`
@@ -139,7 +125,7 @@ class AggregatedNode:
     """
     id: str
     app_version: str
-    up_since: int
+    uptime: float
     state: NodeState
     latest_timestamp: int
     entrypoints: List[str]
@@ -158,7 +144,7 @@ class AggregatedNode:
         return cls(
             id=node.id,
             app_version=node.app_version,
-            up_since=uptime_to_up_since(node.uptime),
+            uptime=node.uptime,
             state=node.state,
             latest_timestamp=node.latest_timestamp,
             entrypoints=node.entrypoints,

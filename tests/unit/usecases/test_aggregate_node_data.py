@@ -2,6 +2,7 @@ from unittest.mock import MagicMock
 
 from pytest import fixture
 
+from domain.network.network import Network
 from tests.fixtures.network_factory import NetworkFactory
 from usecases.aggregate_node_data import AggregateNodeData
 
@@ -14,7 +15,15 @@ class TestAggregateNodeData:
 
     def test_aggregate_no_diff(self, node_gateway):
         network = NetworkFactory()
-        node_gateway.aggregate_network = MagicMock(return_value=network)
+        network2 = Network.from_dict(network.to_dict())
+
+        for i in range(len(network2.nodes)):
+            network2.nodes[i].uptime += 1
+
+        for i in range(len(network2.peers)):
+            network2.peers[i].uptime += 1
+
+        node_gateway.aggregate_network = MagicMock(return_value=network2)
         node_gateway.get_network = MagicMock(return_value=network)
         node_gateway.save_network = MagicMock()
 
