@@ -1,6 +1,7 @@
 from dataclasses import asdict, dataclass
 from enum import Enum
-from dacite import from_dict, Config
+
+from dacite import Config, from_dict
 
 
 class ReportType(str, Enum):
@@ -10,7 +11,17 @@ class ReportType(str, Enum):
 
 @dataclass
 class Report:
+    """Dataclass for reports
 
+    :param type: Type of the report
+    :type type: :py:class:`domain.report.report.Report`
+
+    :param id: ID (hash) of reported item
+    :type id: str
+
+    :param description: User description of the problem
+    :type description: str
+    """
     type: ReportType
     id: str
     description: str
