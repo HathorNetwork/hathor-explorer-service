@@ -13,7 +13,7 @@ It will start with Transactions and Tokens
 # Motivation
 [motivation]: #motivation
 
-We need to have some data to be used on Public Explore and Wallets that can't be stored on the blockchain about
+We need to have some data to be used on Public Explorer and Wallets that can't be stored on the blockchain about
 Transactions, Tokens, Blocks and other things on Network. 
 So, we store somewhere else and retrieve them through MetadataAPI.
 This data can also be used by community as they please.
@@ -21,9 +21,9 @@ This data can also be used by community as they please.
 # Guide-level explanation
 [guide-level-explanation]: #guide-level-explanation
 
-Information will be stored in S3 in format `(token|transaction)/[hash].json` inside the metadata bucket.
+Information will be stored in S3 in format `(token|transaction)/[id].json` inside the metadata bucket.
 
-A request made to the API passing `hash` and `type` will retrieve the information or `404` if not found.
+A request made to the API passing `id` and `type` will retrieve the information or `404` if not found.
 
 Types can be: `token` and `transaction` for now.  
 
@@ -32,10 +32,10 @@ Types can be: `token` and `transaction` for now.
 
 **Endpoint:**
 
-GET `/metadata/:type/:hash` return `200` | `404`
+GET `/metadata/:type/:id` return `200` | `404`
 
 - `type` - type of the data (`token` or `transaction`)
-- `hash` - hash of the token or transaction
+- `id` - id of the token or transaction
 
 
 `metadata-handler` return the stored metadata in the following json format

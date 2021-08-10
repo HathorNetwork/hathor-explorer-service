@@ -21,7 +21,7 @@ class TokenNFTMedia:
     :param file: Media file of the NFT
     :type file: str
 
-    :param loop: If media will play in loop or not
+    :param loop: If media will play in loop or not. Works for audio and video as well
     :type loop: Optional[bool]
     """
     type: TokenNFTMediaType
@@ -45,8 +45,8 @@ class MetaToken:
     :param reason: Bannishment reason
     :type reason: Optional[str]
 
-    :param nft: If roken is a nft or not. None and False are equivalent
-    :type nft: Optional[:py:class:`domain.metadata.token_metdata.TokenNFTMedia`]
+    :param nft: If token is a nft or not. None and False are equivalent
+    :type nft: Optional[bool]
 
     :param nft_media: NFT media data, if any.
     :type nft_media: Optional[:py:class:`domain.metadata.token_metdata.TokenNFTMedia`]
@@ -79,7 +79,7 @@ class TokenMetadata(Metadata):
             data['nft_media'] = TokenNFTMedia(
                 TokenNFTMediaType(data['nft_media']['type'].upper()),
                 data['nft_media']['file'],
-                data['nft_media']['loop']
+                data['nft_media'].get('loop', None)
             )
 
         return cls(
