@@ -2,7 +2,7 @@ from unittest.mock import MagicMock
 
 from pytest import fixture
 
-from tests.fixtures.metadata_factory import MetaTokenFactory, TokenMetadataFactory, TokenNFTFactory
+from tests.fixtures.metadata_factory import MetaTokenFactory, TokenMetadataFactory, TokenNFTMediaFactory
 from usecases.get_token_metadata import GetTokenMetadata
 
 
@@ -13,8 +13,8 @@ class TestGetTokenMetadata:
         return MagicMock()
 
     def test_get(self, token_gateway):
-        nft = TokenNFTFactory()
-        meta_token = MetaTokenFactory(nft=nft)
+        nft_media = TokenNFTMediaFactory()
+        meta_token = MetaTokenFactory(nft_media=nft_media)
         token_metadata = TokenMetadataFactory(id=meta_token.id, data=meta_token)
 
         token_gateway.get_token_metadata = MagicMock(return_value=token_metadata)
@@ -28,7 +28,8 @@ class TestGetTokenMetadata:
         assert result['id'] == token_metadata.id
         assert result['verified'] == token_metadata.data.verified
         assert result['banned'] == token_metadata.data.banned
-        assert result['nft']['file'] == token_metadata.data.nft.file
+        assert result['nft']['file'] == token_metadata.data.nft_media.file
+        assert result['nft']['loop'] == token_metadata.data.nft_media.loop
 
     def test_get_return_none(self, token_gateway):
         token_gateway.get_token_metadata = MagicMock(return_value=None)

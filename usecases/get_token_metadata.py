@@ -16,6 +16,9 @@ class GetTokenMetadata:
         meta = self.metadata_gateway.get_token_metadata(id)
 
         if meta:
-            return meta.to_dict()['data']
+            data = meta.to_dict()['data']
+            data['nft'] = data.pop('nft_media')
+
+            return data
 
         return None

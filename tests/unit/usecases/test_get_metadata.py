@@ -6,7 +6,7 @@ from tests.fixtures.metadata_factory import (
     MetaTokenFactory,
     MetaTransactionFactory,
     TokenMetadataFactory,
-    TokenNFTFactory,
+    TokenNFTMediaFactory,
     TransactionMetadataFactory,
 )
 from usecases.get_metadata import GetMetadata
@@ -19,8 +19,8 @@ class TestGetMetadata:
         return MagicMock()
 
     def test_get_for_token(self, metadata_gateway):
-        nft = TokenNFTFactory()
-        meta_token = MetaTokenFactory(nft=nft)
+        nft_media = TokenNFTMediaFactory()
+        meta_token = MetaTokenFactory(nft_media=nft_media)
         token_metadata = TokenMetadataFactory(id=meta_token.id, data=meta_token)
 
         metadata_gateway.get_token_metadata = MagicMock(return_value=token_metadata)
@@ -34,7 +34,9 @@ class TestGetMetadata:
         assert result['id'] == token_metadata.id
         assert result['data']['verified'] == token_metadata.data.verified
         assert result['data']['banned'] == token_metadata.data.banned
-        assert result['data']['nft']['file'] == token_metadata.data.nft.file
+        assert result['data']['nft'] == token_metadata.data.nft
+        assert result['data']['nft_media']['file'] == token_metadata.data.nft_media.file
+        assert result['data']['nft_media']['loop'] == token_metadata.data.nft_media.loop
 
     def test_get_for_transaction(self, metadata_gateway):
         meta_transaction = MetaTransactionFactory()
@@ -51,6 +53,13 @@ class TestGetMetadata:
         assert result['id'] == transaction_metadata.id
         assert result['data']['genesis'] == transaction_metadata.data.genesis
         assert result['data']['context'] == transaction_metadata.data.context
+
+    def test_get_for_others(self, metadata_gateway):
+        get_transaction_metadata = GetMetadata(metadata_gateway)
+
+        result = get_transaction_metadata.get('something', 'any-id')
+
+        assert result is None
 
     def test_get_return_none(self, metadata_gateway):
         metadata_gateway.get_token_metadata = MagicMock(return_value=None)

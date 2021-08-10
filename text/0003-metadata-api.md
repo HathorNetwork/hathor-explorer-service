@@ -13,31 +13,98 @@ It will start with Transactions and Tokens
 # Motivation
 [motivation]: #motivation
 
-We need to have some data about Transactions, Tokens, Blocks and other things on Network that can't be stored on the
-blockchain. So, we store somewhere else and retrieve them through MetadataAPI
+We need to have some data to be used on Public Explore and Wallets that can't be stored on the blockchain about
+Transactions, Tokens, Blocks and other things on Network. 
+So, we store somewhere else and retrieve them through MetadataAPI.
+This data can also be used by community as they please.
 
 # Guide-level explanation
 [guide-level-explanation]: #guide-level-explanation
 
-Information will be stored in S3 in format `(token|transaction)/[id_hash].json` inside the metadata bucket.
+Information will be stored in S3 in format `(token|transaction)/[hash].json` inside the metadata bucket.
 
-A request made to the API passing `id` and `type` will retrieve the information or `404` if not found. 
+A request made to the API passing `hash` and `type` will retrieve the information or `404` if not found.
+
+Types can be: `token` and `transaction` for now.  
 
 # Reference-level explanation
 [reference-level-explanation]: #reference-level-explanation
 
 **Endpoint:**
 
-GET `/metadata/:type/:id` return `200` | `404`
+GET `/metadata/:type/:hash` return `200` | `404`
 
-`metadata-handler` return the stored data
+- `type` - type of the data (`token` or `transaction`)
+- `hash` - hash of the token or transaction
+
+
+`metadata-handler` return the stored metadata in the following json format
 
 ```
 {
   "id": string,
   "type": string,
-  "data": object
+  "data": (TokenMeta|TransactionMeta)
 }
+```
+
+```
+TokenMeta {
+  id: string,
+  verified: boolean,
+  banned: boolean,
+  reason: boolean,
+  nft: boolean,
+  nft_media: {
+    type: enum(VIDEO|IMAGE|AUDIO),
+    file: string,
+    loop: boolean
+  }
+}
+
+TransactionMeta {
+  id: string,
+  context: string, // a message to be shown on transaction page
+  genesis: boolean
+}
+
+```
+
+Examples:
+
+** Token Metadata **
+```
+{
+  "id": "00003aa356c9493464c657873b115c5e8667adf58cceeb4b37a1cdae0ddc9536",
+  "data": {
+    "id": "00003aa356c9493464c657873b115c5e8667adf58cceeb4b37a1cdae0ddc9536",
+    "verified": false,
+    "banned": false,
+    "reason": null,
+    "nft": true,
+    "nft_media": {
+      "type": "IMAGE",
+      "file": "http://curtis-white.com/mean/officer.png",
+      "loop": false
+    }
+  },
+  "type": "TOKEN"
+}
+
+```
+
+** Transaction Metadata **
+```
+{
+  "id": "0000ecc7836621f5ee656695f96f561e59d8435904fb989a6b8de62bd2182888",
+  "data": {
+    "id": "0000ecc7836621f5ee656695f96f561e59d8435904fb989a6b8de62bd2182888",
+    "context": "Whose citizen rate lose bar.",
+    "genesis": false
+  },
+  "type": "TRANSACTION"
+}
+
 ```
 
 # Drawbacks

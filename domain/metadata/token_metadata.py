@@ -5,24 +5,28 @@ from typing import Optional
 from domain.metadata.metadata import Metadata, MetadataType
 
 
-class TokenNFTType(str, Enum):
+class TokenNFTMediaType(str, Enum):
     VIDEO = 'VIDEO'
     IMAGE = 'IMAGE'
     AUDIO = 'AUDIO'
 
 
 @dataclass
-class TokenNFT:
+class TokenNFTMedia:
     """Data of token NFT
 
     :param type: NFT Type. image or video.
-    :type type: :py:class:`domain.metadata.token_metdata.TokenNFTType`
+    :type type: :py:class:`domain.metadata.token_metdata.TokenNFTMediaType`
 
     :param file: Media file of the NFT
     :type file: str
+
+    :param loop: If media will play in loop or not
+    :type loop: Optional[bool]
     """
-    type: TokenNFTType
+    type: TokenNFTMediaType
     file: str
+    loop: Optional[bool] = False
 
 
 @dataclass
@@ -41,14 +45,18 @@ class MetaToken:
     :param reason: Bannishment reason
     :type reason: Optional[str]
 
-    :param nft: NFT data, if any.
-    :type nft: Optional[:py:class:`domain.metadata.token_metdata.TokenNFT`]
+    :param nft: If roken is a nft or not. None and False are equivalent
+    :type nft: Optional[:py:class:`domain.metadata.token_metdata.TokenNFTMedia`]
+
+    :param nft_media: NFT media data, if any.
+    :type nft_media: Optional[:py:class:`domain.metadata.token_metdata.TokenNFTMedia`]
     """
     id: str
     verified: Optional[bool] = False
     banned: Optional[bool] = False
     reason: Optional[str] = ''
-    nft: Optional[TokenNFT] = None
+    nft: Optional[bool] = False
+    nft_media: Optional[TokenNFTMedia] = None
 
 
 @dataclass
@@ -67,8 +75,12 @@ class TokenMetadata(Metadata):
         :rtype: :py:class:`domain.metadata.token_metdata.TokenMetadata`
         """
         data = dikt.get('data', {})
-        if data.get('nft'):
-            data['nft'] = TokenNFT(TokenNFTType(data['nft']['type'].upper()), data['nft']['file'])
+        if data.get('nft_media'):
+            data['nft_media'] = TokenNFTMedia(
+                TokenNFTMediaType(data['nft_media']['type'].upper()),
+                data['nft_media']['file'],
+                data['nft_media']['loop']
+            )
 
         return cls(
             id=dikt['id'],
