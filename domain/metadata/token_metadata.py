@@ -23,10 +23,14 @@ class TokenNFTMedia:
 
     :param loop: If media will play in loop or not. Works for audio and video as well
     :type loop: Optional[bool]
+
+    :param autoplay: If media will play automatically or not. Works for audio and video as well
+    :type autoplay: Optional[bool]
     """
     type: TokenNFTMediaType
     file: str
     loop: Optional[bool] = False
+    autoplay: Optional[bool] = False
 
 
 @dataclass
