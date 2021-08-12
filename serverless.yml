@@ -150,11 +150,11 @@ functions:
             cacheKeyParameters:
               - name: request.path.hash
 
-  get_meta_handler:
-    handler: handlers/get_meta_handler.handle
+  get_metadata_handler:
+    handler: handlers/get_metadata_handler.handle
     package:
       patterns:
-        - 'handlers/get_meta_handler.py'
+        - 'handlers/get_metadata_handler.py'
     layers:
       - { Ref: PythonRequirementsLambdaLayer }
     events:
