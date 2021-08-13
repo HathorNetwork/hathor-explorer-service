@@ -42,7 +42,7 @@ GET `/metadata/:type/:id` return `200` | `404`
 
 ```
 {
-  "id": string,                         // hash id of token or transaction 
+  "id": string,                         // token uid or transaction hash
   "type": enum(TOKEN|TRANSACTION),      // type of metadata
   "data": (TokenMeta|TransactionMeta)   // metadata depending on type
 }
@@ -50,12 +50,12 @@ GET `/metadata/:type/:id` return `200` | `404`
 
 ```
 TokenMeta {                             // if type is token
-  id: string,                           // hash id of token or transaction 
+  id: string,                           // token uid
   verified: boolean,                    // if token is verified or not
   banned: boolean,                      // if token is banned
   reason: string,                       // reason of ban
   nft: boolean,                         // if token is a NFT
-  nft_media: {                          // media data of NFT
+  nft_media: {                          // media data of NFT (optional)
     type: enum(VIDEO|IMAGE|AUDIO),      // type of media
     file: string,                       // media file url
     loop: boolean,                      // if media wiil play in loop or not (only for audio and video)
@@ -64,7 +64,7 @@ TokenMeta {                             // if type is token
 }
 
 TransactionMeta {
-  id: string,                           // hash id of token or transaction 
+  id: string,                           // transaction hash
   context: string,                      // a message to be shown on transaction page
   genesis: boolean                      // if transaction is genesis or not
 }
