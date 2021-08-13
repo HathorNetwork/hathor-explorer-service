@@ -23,6 +23,8 @@ class TokenNFTFactory(Factory):
 
     type = lazy_attribute(lambda o: fake.random_element(list(TokenNFTType)))
     file = lazy_attribute(lambda o: f"http://{fake.domain_name()}{fake.file_path(category=o.type.value.lower())}")
+    loop = lazy_attribute(lambda o: fake.boolean(chance_of_getting_true=15))
+    autoplay = lazy_attribute(lambda o: fake.boolean(chance_of_getting_true=15))
 
 
 class TokenMetadataFactory(Factory):
