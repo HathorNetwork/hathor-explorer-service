@@ -20,9 +20,17 @@ class TokenNFT:
 
     :param file: Media file of the NFT
     :type file: str
+
+    :param loop: If must play in loop or not (work for video and audio only)
+    :type loop: bool
+
+    :param file: If must play automatically or not (work for video and audio only)
+    :type file: bool
     """
     type: TokenNFTType
     file: str
+    loop: Optional[bool]
+    autoplay: Optional[bool]
 
 
 @dataclass
@@ -68,8 +76,10 @@ class TokenMetadata:
         :return: The new instance
         :rtype: :py:class:`domain.tx.token.TokenMetadata`
         """
-        if dikt.get('nft'):
-            dikt['nft'] = TokenNFT(TokenNFTType(dikt['nft']['type'].upper()), dikt['nft']['file'])
+        nft = dikt.get('nft')
+        if nft:
+            type = TokenNFTType(nft['type'].upper())
+            dikt['nft'] = TokenNFT(type, nft['file'], nft.get('loop'), nft.get('autoplay'))
 
         return TokenMetadata(**dikt)
 
