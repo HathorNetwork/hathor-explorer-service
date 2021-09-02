@@ -17,16 +17,21 @@ def token_symbol(name):
     return symbol
 
 
+def fake_file(type):
+    ext = 'pdf' if type.lower() == 'pdf' else None
+    category = type.lower()
+    domain = fake.domain_name()
+    file_path = fake.file_path(category=type.lower(), extension=ext)
+    return f"http://{domain}{file_path}"
+
+
 class TokenNFTFactory(Factory):
     class Meta:
         model = TokenNFT
 
-    type = fake.random_element(list(TokenNFTType))
-    # Fake file_path does not handle PDF category, then we need to specifically ask for a pdf extension
-    if type.value == 'PDF':
-        file = lazy_attribute(lambda o: f"http://{fake.domain_name()}{fake.file_path(extension='pdf')}")
-    else:
-        file = lazy_attribute(lambda o: f"http://{fake.domain_name()}{fake.file_path(category=o.type.value.lower())}")
+    type = lazy_attribute(lambda o: fake.random_element(list(TokenNFTType)))
+    # Fake file_path does not handle PDF category, and if we use an extension it will ignore the category
+    file = lazy_attribute(lambda o: fake_file(o.type.value))
     loop = lazy_attribute(lambda o: fake.boolean(chance_of_getting_true=15))
     autoplay = lazy_attribute(lambda o: fake.boolean(chance_of_getting_true=15))
 
