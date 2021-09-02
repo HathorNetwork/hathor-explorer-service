@@ -21,7 +21,7 @@ def fake_file(type):
     ext = 'pdf' if type.lower() == 'pdf' else None
     category = type.lower()
     domain = fake.domain_name()
-    file_path = fake.file_path(category=type.lower(), extension=ext)
+    file_path = fake.file_path(category=category, extension=ext)
     return f"http://{domain}{file_path}"
 
 
