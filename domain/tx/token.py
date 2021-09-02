@@ -9,6 +9,7 @@ class TokenNFTType(str, Enum):
     VIDEO = 'VIDEO'
     IMAGE = 'IMAGE'
     AUDIO = 'AUDIO'
+    PDF = 'PDF'
 
 
 @dataclass
@@ -24,8 +25,8 @@ class TokenNFT:
     :param loop: If must play in loop or not (work for video and audio only)
     :type loop: bool
 
-    :param file: If must play automatically or not (work for video and audio only)
-    :type file: bool
+    :param autoplay: If must play automatically or not (work for video and audio only)
+    :type autoplay: bool
     """
     type: TokenNFTType
     file: str
