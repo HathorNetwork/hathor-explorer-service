@@ -1,17 +1,28 @@
-from typing import Union
+import json
+from typing import Optional
 
-from gateways.token_gateway import TokenGateway
+from gateways.metadata_gateway import MetadataGateway
 
 
 class GetTokenMetadata:
+    """Get token metadata
 
-    def __init__(self, token_gateway: Union[TokenGateway, None] = None) -> None:
-        self.token_gateway = token_gateway or TokenGateway()
+    :deprecated:
+    """
 
-    def get(self, id: str) -> Union[dict, None]:
-        meta = self.token_gateway.get_token_metadata_from_s3(f"{id}.json")
+    def __init__(self, metadata_gateway: Optional[MetadataGateway] = None) -> None:
+        self.metadata_gateway = metadata_gateway or MetadataGateway()
 
+    def get(self, id: str) -> Optional[dict]:
+        meta_raw = self.metadata_gateway.get_dag_metadata(id)
+        if meta_raw is None:
+            return None
+
+        meta = json.loads(meta_raw)
         if meta:
-            return meta.to_dict()
+            data = meta[id]
+            data['nft'] = data.pop('nft_media')
+
+            return data
 
         return None

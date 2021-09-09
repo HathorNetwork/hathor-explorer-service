@@ -6,7 +6,7 @@ from botocore.response import StreamingBody
 from botocore.stub import Stubber
 
 from gateways.clients.s3_client import S3Client
-from tests.fixtures.token_factory import TokenMetadataFactory
+from tests.fixtures.metadata_factory import TokenMetadataFactory
 
 
 class TestS3Client:
@@ -22,7 +22,7 @@ class TestS3Client:
             'Key': 'c-minor'
         }
 
-        file = json.dumps(TokenMetadataFactory().to_dict())
+        file = json.dumps(TokenMetadataFactory())
         s3_response = {
             'Body': StreamingBody(BytesIO(file.encode()), len(file))
         }
