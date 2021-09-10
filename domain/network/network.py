@@ -1,7 +1,7 @@
 from dataclasses import asdict, dataclass
 from typing import List, Set
 
-from dacite import from_dict, Config
+from dacite import Config, from_dict
 
 from domain.network.node import Node, NodeState, Peer
 

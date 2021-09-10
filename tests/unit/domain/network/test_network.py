@@ -21,7 +21,7 @@ class TestNetwork:
 
         assert agp_dict['id'] == aggregated_peer.id
         assert agp_dict['address'] == aggregated_peer.address
-        assert agp_dict['connected_to'] == set()
+        assert agp_dict['connected_to'] == []
 
     def test_aggregated_peer_add_connected_to(self):
         aggregated_peer = AggregatedPeerFactory()
