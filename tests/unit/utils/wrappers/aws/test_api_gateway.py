@@ -159,6 +159,7 @@ class TestApiGateway:
         function.assert_called()
         assert result['headers']
 
+    @patch('utils.wrappers.aws.api_gateway.CORS_ALLOWED_ORIGIN', None)
     def test_no_headers_with_no_config(self):
         function = MagicMock(return_value={'statusCode': 200})
         api_gateway = ApiGateway()
