@@ -80,9 +80,7 @@ AggregatedPeer:
 
 Three new dataclasses will be created: `AggregatedNode`, `AggregatedPeer` and `Network`.
 
-- `AggregatedNode` and `AggregatedPeer` will be a bit smaller version of `Node` and `Peer` respectively, having `up_since` as the main change.
-  As `uptime` is always changing as time goes by, `up_since` remains the same.
-  Also, `up_since` is an integer to avoid problems with microseconds calculations (`/v1a/status` returns only `uptime` and we have to calculate everytime).
+- `AggregatedNode` and `AggregatedPeer` will be a bit smaller version of `Node` and `Peer` respectively.
 - `AggregatedPeer` also have a list of nodes that it is connected to.
 - `Network` have the list of `AggregatedNode` and `AggregatedPeer`
 
