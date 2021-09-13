@@ -27,7 +27,7 @@ provider:
     REDIS_HOST: ${env:REDIS_HOST}
     REDIS_PORT: ${env:REDIS_PORT}
     REDIS_DB: ${env:REDIS_DB}
-    TOKEN_METADATA_BUCKET: ${env:TOKEN_METADATA_BUCKET}
+    METADATA_BUCKET: ${env:METADATA_BUCKET}
     CORS_ALLOWED_ORIGIN: ${env:CORS_ALLOWED_ORIGIN}
     NODE_CACHE_TTL: ${env:NODE_CACHE_TTL}
 
@@ -74,9 +74,9 @@ functions:
           path: node/{hash}
           method: get
           cors: true
-          request: 
-            parameters: 
-              paths: 
+          request:
+            parameters:
+              paths:
                 hash: true
 
   list_nodes_handler:
@@ -112,9 +112,9 @@ functions:
           path: token/{hash}
           method: get
           cors: true
-          request: 
-            parameters: 
-              paths: 
+          request:
+            parameters:
+              paths:
                 hash: true
           caching:
             enabled: true
@@ -134,11 +134,28 @@ functions:
           path: token/{hash}/meta
           method: get
           cors: true
-          request: 
-            parameters: 
-              paths: 
+          request:
+            parameters:
+              paths:
                 hash: true
           caching:
             enabled: true
             cacheKeyParameters:
               - name: request.path.hash
+
+  get_dag_metadata_handler:
+    handler: handlers/get_dag_metadata_handler.handle
+    package:
+      patterns:
+        - 'handlers/get_dag_metadata_handler.py'
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: metadata/dag
+          method: get
+          cors: true
+          caching:
+            enabled: true
+            cacheKeyParameters:
+              - name: request.querystring.id
