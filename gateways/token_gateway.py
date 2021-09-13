@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Optional
 
 from domain.tx.token import Token
 from gateways.clients.hathor_core_client import TOKEN_ENDPOINT, HathorCoreClient
@@ -11,10 +11,10 @@ class TokenGateway:
     :param hathor_core_client: Client for make hathor-core requests, default to domain HathorCoreClient
     :type hathor_core_client:
     """
-    def __init__(self, hathor_core_client: Union[HathorCoreClient, None] = None) -> None:
+    def __init__(self, hathor_core_client: Optional[HathorCoreClient] = None) -> None:
         self.hathor_core_client = hathor_core_client or HathorCoreClient()
 
-    def get_token(self, id: str) -> Union[Token, None]:
+    def get_token(self, id: str) -> Optional[Token]:
         response = self.hathor_core_client.get(TOKEN_ENDPOINT, {'id': id})
 
         if response is None:

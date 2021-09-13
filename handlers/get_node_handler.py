@@ -3,6 +3,7 @@ from typing import Union
 
 from aws_lambda_context import LambdaContext
 
+from common.errors import ApiError
 from usecases.get_node import GetNode
 from utils.wrappers.aws.api_gateway import ApiGateway, ApiGatewayEvent
 
@@ -14,7 +15,7 @@ def handle(event: ApiGatewayEvent, __: LambdaContext, get_node: Union[GetNode, N
     response = get_node.get(event.path['hash'])
 
     if response is None:
-        raise Exception('not_found')
+        raise ApiError('not_found')
 
     return {
         "statusCode": 200,
