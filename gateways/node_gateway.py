@@ -1,6 +1,7 @@
 from typing import Callable, List, Union
 
 from common.configuration import DATA_AGGREGATOR_LAMBDA_NAME, NODE_CACHE_TTL
+from common.errors import ConfigError
 from domain.network.node import Node
 from gateways.clients.cache_client import NODE_COLLECTION_NAME, CacheClient
 from gateways.clients.hathor_core_client import STATUS_ENDPOINT, HathorCoreAsyncClient
@@ -48,7 +49,7 @@ class NodeGateway:
         if lambda_name is not None:
             return self.lambda_client.invoke_async(lambda_name, payload.to_dict())
 
-        raise Exception('No lambda name in config')
+        raise ConfigError('No lambda name in config')
 
     def save_node(self, id: str, node: Node) -> Union[bool, None]:
         """Saves Node data into cache with id as key

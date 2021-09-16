@@ -3,6 +3,7 @@ from typing import List, Optional
 
 from dacite import from_dict
 
+from common.errors import HathorCoreMalformedToken, HathorCoreUnknownToken
 from domain.tx.token import Token
 
 
@@ -24,7 +25,7 @@ class HathorCoreTokenResponse:
 
     def to_token(self, id: str) -> Token:
         if not self.success:
-            raise Exception('unknown_token')
+            raise HathorCoreUnknownToken('unknown_token')
 
         try:
             return Token(
@@ -37,4 +38,4 @@ class HathorCoreTokenResponse:
                 can_mint=len(self.mint) > 0  # type: ignore
             )
         except Exception:
-            raise Exception('malformed_token')
+            raise HathorCoreMalformedToken('malformed_token')
