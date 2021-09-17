@@ -48,7 +48,7 @@ class MetadataGateway:
         try:
             return json.loads(raw_metadata)
         except ValueError:
-            logging.warning('Metadata object {} is not a valid json'.format(s3_object_name))
+            logger.warning('Metadata object {} is not a valid json'.format(s3_object_name))
             return None
 
     def _metadata_bucket(self) -> str:
