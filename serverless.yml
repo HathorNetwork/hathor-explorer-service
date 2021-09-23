@@ -151,3 +151,21 @@ functions:
             enabled: true
             cacheKeyParameters:
               - name: request.querystring.id
+
+  node_api_get_address_balance:
+    handler: handlers/node_api.get_address_balance
+    package:
+      patterns:
+        - 'handlers/node_api.py'
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: node_api/thin_wallet/address_balance
+          method: get
+          cors: true
+          caching:
+            enabled: true
+            ttlInSeconds: 300
+            cacheKeyParameters:
+              - name: request.querystring.address
