@@ -169,3 +169,21 @@ functions:
             ttlInSeconds: 300
             cacheKeyParameters:
               - name: request.querystring.address
+
+  node_api_get_address_search:
+    handler: handlers/node_api.get_address_search
+    package:
+      patterns:
+        - 'handlers/node_api.py'
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: node_api/thin_wallet/address_search
+          method: get
+          cors: true
+          caching:
+            enabled: true
+            ttlInSeconds: 300
+            cacheKeyParameters:
+              - name: request.querystring.address
