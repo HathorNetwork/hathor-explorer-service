@@ -1,24 +1,17 @@
 from dataclasses import asdict, dataclass
-from typing import Dict, Optional
+from typing import List, Optional
 
 from dacite import from_dict
 
 
 @dataclass
-class AddressBalanceTokenData:
-    name: str
-    symbol: str
-    received: int
-    spent: int
-
-
-@dataclass
-class AddressBalance:
+class AddressSearch:
 
     success: bool
-    # The next fields are optional to parse when success is False
-    tokens_data: Optional[Dict[str, AddressBalanceTokenData]] = None
-    total_transactions: Optional[int] = None
+    # TODO: make a more detailed transaction
+    transactions: Optional[List[dict]] = None
+    has_more: Optional[bool] = None
+    total: Optional[int] = None
     message: Optional[str] = None
 
     def to_dict(self) -> dict:
@@ -33,5 +26,5 @@ class AddressBalance:
         return dikt
 
     @classmethod
-    def from_dict(cls, dikt: dict) -> 'AddressBalance':
+    def from_dict(cls, dikt: dict) -> 'AddressSearch':
         return from_dict(data_class=cls, data=dikt)

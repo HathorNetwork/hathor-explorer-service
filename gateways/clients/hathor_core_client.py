@@ -1,10 +1,13 @@
-from typing import Callable, Optional, Any
+import logging
+from typing import Any, Callable, Optional
 from urllib import parse
 
 import aiohttp
 import requests
 
 from common.configuration import HATHOR_CORE_DOMAIN
+
+logger = logging.getLogger(__name__)
 
 STATUS_ENDPOINT = '/v1a/status'
 TOKEN_ENDPOINT = '/v1a/thin_wallet/token'
@@ -68,6 +71,7 @@ class HathorCoreClient:
         try:
             response = requests.get(url, params=params, **kwargs)
             if response.status_code != 200:
+                logger.warning(f'Hathor Core Unexpected response ({response.status_code}): {response.text}')
                 return None
 
             return response.json()
