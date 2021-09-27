@@ -66,8 +66,8 @@ class NodeApiGateway:
                 address))
 
     def get_address_search(
-            self, address: str, count: int, page: Optional[str],
-            hash: Optional[str], token: Optional[str] = None) -> Optional[AddressSearch]:
+            self, address: str, count: int, page: Optional[str] = None,
+            hash: Optional[str] = None, token: Optional[str] = None) -> Optional[AddressSearch]:
         """Retrieve address balance from full-node
 
         :param address: address to get balance for
