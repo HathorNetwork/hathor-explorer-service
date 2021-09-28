@@ -3,13 +3,15 @@ from typing import List, Optional
 
 from dacite import from_dict
 
+from domain.node_api.transaction import Transaction
+
 
 @dataclass
 class AddressSearch:
 
     success: bool
     # TODO: make a more detailed transaction
-    transactions: Optional[List[dict]] = None
+    transactions: Optional[List[Transaction]] = None
     has_more: Optional[bool] = None
     total: Optional[int] = None
     message: Optional[str] = None

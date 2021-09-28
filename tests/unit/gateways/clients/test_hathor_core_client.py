@@ -1,5 +1,6 @@
 from unittest.mock import MagicMock, patch
 
+import requests
 from pytest import raises
 
 from gateways.clients.hathor_core_client import HathorCoreClient
@@ -44,3 +45,13 @@ class TestHathorCoreClient:
 
             assert result
             assert result['error'] == 'Boom!'
+
+    @patch('gateways.clients.hathor_core_client.requests.get')
+    def test_get_timeout(self, mocked_get):
+        mocked_get.side_effect = requests.ReadTimeout('reason')
+
+        client = HathorCoreClient('mydomain.com')
+
+        with raises(Exception, match=r'timeout'):
+            client.get('/some/path', {'page': 69})
+        mocked_get.assert_called_once_with('https://mydomain.com/some/path', params={'page': 69})

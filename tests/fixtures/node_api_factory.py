@@ -5,8 +5,40 @@ from faker import Faker
 
 from domain.node_api.address_balance import AddressBalance, AddressBalanceTokenData
 from domain.node_api.address_search import AddressSearch
+from domain.node_api.transaction import Transaction, TxInput, TxOutput
 
 fake = Faker()
+
+
+class TxInputFactory(factory.Factory):
+    class Meta:
+        model = TxInput
+    # tx_id = factory.lazy_attribute(lambda o: f"0000{fake.sha256()}"[:64])
+    tx_id = factory.Faker('sha256')
+    index = factory.Faker('random_int')
+    data = factory.Faker('pystr')
+
+
+class TxOutputFactory(factory.Factory):
+    class Meta:
+        model = TxOutput
+    value = factory.Faker('random_int')
+    script = factory.Faker('pystr')
+
+
+class TransactionFactory(factory.Factory):
+    class Meta:
+        model = Transaction
+
+    # tx_id = factory.lazy_attribute(lambda o: f"0000{fake.sha256()}"[:64])
+    tx_id = factory.Faker('sha256')
+    timestamp = factory.Faker('random_int', min=0, max=999999999)
+    version = factory.Faker('random_int', min=1, max=2)
+    weight = factory.Faker('pyfloat', positive=True)
+    parents = factory.List([factory.Faker('sha256')]*2)
+    inputs = factory.LazyFunction(lambda: [TxInputFactory() for _ in range(fake.random_int(min=1, max=20))])
+    outputs = factory.LazyFunction(lambda: [TxOutputFactory() for _ in range(fake.random_int(min=1, max=20))])
+    tokens = factory.LazyFunction(lambda: [fake.sha256() for _ in range(fake.random_int(min=1, max=20))])
 
 
 def token_symbol(name):
@@ -24,7 +56,7 @@ class AddressBalanceTokenDataFactory(factory.Factory):
     name = factory.lazy_attribute(lambda o: f"{fake.word().capitalize()} Token")
     symbol = factory.lazy_attribute(lambda o: token_symbol(o.name))
     received = factory.Faker('random_int', min=1, max=999999)
-    spent = factory.lazy_attribute(lambda o: fake.random_int(min=1, max=999999))
+    spent = factory.lazy_attribute(lambda o: fake.random_int(min=1, max=o.received))
 
 
 def gen_tokens_data(qty=1):
@@ -69,4 +101,4 @@ class AddressSearchFactory(factory.Factory):
     message = None
     has_more = factory.Faker('boolean')
     total = factory.Faker('random_int', min=1, max=999999)
-    transactions = factory.List([{}])  # TODO: mock txs
+    transactions = factory.LazyFunction(lambda: [TransactionFactory() for _ in range(fake.random_int(min=1, max=20))])
