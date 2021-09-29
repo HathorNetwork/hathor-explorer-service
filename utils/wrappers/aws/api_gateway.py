@@ -1,9 +1,13 @@
 import json
+import logging
 from typing import Any, Callable
 
 from aws_lambda_context import LambdaContext
 
 from common.configuration import CORS_ALLOWED_ORIGIN
+from common.errors import ApiError
+
+logger = logging.getLogger(__name__)
 
 
 def parse_body(event: dict) -> dict:
@@ -55,15 +59,25 @@ class ApiGateway:
                 result['headers'].update(headers)
 
                 return result
-            except Exception as error:
+            except ApiError as error:
                 error_key = str(error)
 
                 if error_key not in errors_status.keys():
+                    logger.exception(error)
                     error_key = 'internal_error'
 
                 return {
                     'headers': headers,
                     'statusCode': errors_status[error_key],
+                    'body': json.dumps({
+                        'error': str(error)
+                    })
+                }
+            except Exception as error:
+                logger.exception(error)
+                return {
+                    'headers': headers,
+                    'statusCode': 500,
                     'body': json.dumps({
                         'error': str(error)
                     })

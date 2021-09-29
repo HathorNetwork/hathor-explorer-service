@@ -1,8 +1,12 @@
 import json
+import logging
 from typing import Optional
 
 from common.configuration import METADATA_BUCKET
+from common.errors import ConfigError
 from gateways.clients.s3_client import S3Client
+
+logger = logging.getLogger(__name__)
 
 
 class MetadataGateway:
@@ -15,7 +19,7 @@ class MetadataGateway:
 
         :param id: dag entity hash id
         :type id: str
-        :raises Exception: The name of the bucket used to store the jsons must be on config
+        :raises ConfigError: The name of the bucket used to store the jsons must be on config
         :return: metadata json file contents or None if not found
         :rtype: str | None
         """
@@ -30,7 +34,7 @@ class MetadataGateway:
         :param s3_object_name: name of object
         :type s3_object_name: str
 
-        :raises Exception: The name of the bucket used to store the jsons must be on config
+        :raises ConfigError: The name of the bucket used to store the jsons must be on config
 
         :return: parsed file content (from `json`)
         :rtype: Optional[dict]
@@ -44,12 +48,20 @@ class MetadataGateway:
         try:
             return json.loads(raw_metadata)
         except ValueError:
+            logger.warning('Metadata object {} is not a valid json'.format(s3_object_name))
             return None
 
     def _metadata_bucket(self) -> str:
+        """Get metadata bucket name
+
+        :raises ConfigError: The name of the bucket used to store the jsons must be on config
+
+        :return: metadata bucket name
+        :rtype: str
+        """
         metadata_bucket = METADATA_BUCKET
 
         if metadata_bucket is None:
-            raise Exception('No bucket name in config')
+            raise ConfigError('No bucket name in config')
 
         return metadata_bucket

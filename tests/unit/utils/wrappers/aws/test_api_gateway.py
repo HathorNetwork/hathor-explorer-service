@@ -2,6 +2,7 @@ from unittest.mock import MagicMock, patch
 
 from aws_lambda_context import LambdaContext
 
+from common.errors import ApiError
 from utils.wrappers.aws.api_gateway import ApiGateway
 
 
@@ -24,7 +25,7 @@ class TestApiGateway:
         assert result['statusCode'] == 200
 
     def test_returning_error(self):
-        function = MagicMock(side_effect=Exception('not_authorized'))
+        function = MagicMock(side_effect=ApiError('not_authorized'))
         api_gateway = ApiGateway()
 
         event = {
@@ -38,6 +39,22 @@ class TestApiGateway:
 
         function.assert_called()
         assert result['statusCode'] == 401
+
+    def test_return_500_on_unkown_apierror(self):
+        function = MagicMock(side_effect=ApiError('Boom!'))
+        api_gateway = ApiGateway()
+
+        event = {
+            'body': '{}',
+            'headers': {}
+        }
+
+        context = LambdaContext()
+        result = api_gateway.__call__(function)(event, context)
+
+        function.assert_called()
+        assert result['statusCode'] == 500
+        assert result['body'] == '{"error": "Boom!"}'
 
     def test_return_500_on_unkown_exception(self):
         function = MagicMock(side_effect=Exception('Boom!'))
@@ -74,6 +91,24 @@ class TestApiGateway:
     @patch('utils.wrappers.aws.api_gateway.CORS_ALLOWED_ORIGIN', 'explorer.hathor.network')
     def test_returning_cors_headers(self):
         function = MagicMock(return_value={'statusCode': 200, 'headers': {}})
+        api_gateway = ApiGateway()
+
+        event = {
+            'body': '{}',
+            'headers': {}
+        }
+
+        context = LambdaContext()
+
+        result = api_gateway.__call__(function)(event, context)
+
+        function.assert_called()
+        assert result['headers']['Access-Control-Allow-Origin']
+        assert result['headers']['Access-Control-Allow-Credentials']
+
+    @patch('utils.wrappers.aws.api_gateway.CORS_ALLOWED_ORIGIN', 'explorer.hathor.network')
+    def test_returning_cors_on_apierror(self):
+        function = MagicMock(side_effect=ApiError('Boom!'))
         api_gateway = ApiGateway()
 
         event = {

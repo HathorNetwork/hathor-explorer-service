@@ -3,6 +3,7 @@ from typing import Union
 
 from aws_lambda_context import LambdaContext
 
+from common.errors import ApiError
 from usecases.get_token import GetToken
 from utils.wrappers.aws.api_gateway import ApiGateway, ApiGatewayEvent
 
@@ -18,7 +19,7 @@ def handle(
     response = get_token.get(event.path['hash'])
 
     if response is None:
-        raise Exception('not_found')
+        raise ApiError('not_found')
 
     return {
         "statusCode": 200,
