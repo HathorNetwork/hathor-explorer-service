@@ -14,7 +14,7 @@ class NodeApi:
 
     def get_address_balance(self, address: str) -> Optional[dict]:
         # check if blacklisted
-        if self.node_api_gateway.is_blacklisted_address_balance(address):
+        if self.node_api_gateway.is_blacklisted_address(address):
             return ADDRESS_BLACKLIST_RESPONSE
 
         try:
@@ -25,7 +25,7 @@ class NodeApi:
         except Exception as ex:
             if str(ex) == 'timeout':
                 # blacklist address
-                self.node_api_gateway.blacklist_address_balance(address)
+                self.node_api_gateway.blacklist_address(address)
                 return ADDRESS_BLACKLIST_RESPONSE
             raise ex
 
@@ -33,7 +33,7 @@ class NodeApi:
             self, address: str, count: int, page: Optional[str] = None,
             hash: Optional[str] = None, token: Optional[str] = None) -> Optional[dict]:
         # check if blacklisted
-        if self.node_api_gateway.is_blacklisted_address_search(address):
+        if self.node_api_gateway.is_blacklisted_address(address):
             return ADDRESS_BLACKLIST_RESPONSE
 
         try:
@@ -49,6 +49,6 @@ class NodeApi:
         except Exception as ex:
             if str(ex) == 'timeout':
                 # blacklist address
-                self.node_api_gateway.blacklist_address_search(address)
+                self.node_api_gateway.blacklist_address(address)
                 return ADDRESS_BLACKLIST_RESPONSE
             raise ex

@@ -3,11 +3,7 @@ from typing import Optional
 
 from domain.node_api.address_balance import AddressBalance
 from domain.node_api.address_search import AddressSearch
-from gateways.clients.cache_client import (
-    ADDRESS_BALANCE_BLACKLIST_COLLECTION_NAME,
-    ADDRESS_SEARCH_BLACKLIST_COLLECTION_NAME,
-    CacheClient,
-)
+from gateways.clients.cache_client import ADDRESS_BLACKLIST_COLLECTION_NAME, CacheClient
 from gateways.clients.hathor_core_client import ADDRESS_BALANCE_ENDPOINT, ADDRESS_SEARCH_ENDPOINT, HathorCoreClient
 
 logger = logging.getLogger(__name__)
@@ -26,15 +22,25 @@ class NodeApiGateway:
 
     # /thin_wallet/address_balance
 
-    def blacklist_address_balance(self, address: str) -> Optional[bool]:
+    def blacklist_address(self, address: str) -> Optional[bool]:
+        """ Blacklist address from calling full-node apis
+
+        :param address: address to blacklist
+        :type address: str
+        """
         # No expiration on blacklist
         return self.cache_client.set(
-                ADDRESS_BALANCE_BLACKLIST_COLLECTION_NAME,
+                ADDRESS_BLACKLIST_COLLECTION_NAME,
                 address, 1)
 
-    def is_blacklisted_address_balance(self, address: str) -> bool:
+    def is_blacklisted_address(self, address: str) -> bool:
+        """ Check if address is on the blacklist
+
+        :param address: address to check
+        :type address: str
+        """
         return bool(self.cache_client.get(
-                ADDRESS_BALANCE_BLACKLIST_COLLECTION_NAME,
+                ADDRESS_BLACKLIST_COLLECTION_NAME,
                 address))
 
     def get_address_balance(self, address: str) -> Optional[AddressBalance]:
@@ -51,19 +57,6 @@ class NodeApiGateway:
         if value is None:
             return None
         return AddressBalance.from_dict(value)
-
-    # /thin_wallet/address_search
-
-    def blacklist_address_search(self, address: str) -> Optional[bool]:
-        # No expiration on blacklist
-        return self.cache_client.set(
-                ADDRESS_SEARCH_BLACKLIST_COLLECTION_NAME,
-                address, 1)
-
-    def is_blacklisted_address_search(self, address: str) -> bool:
-        return bool(self.cache_client.get(
-                ADDRESS_SEARCH_BLACKLIST_COLLECTION_NAME,
-                address))
 
     def get_address_search(
             self, address: str, count: int, page: Optional[str] = None,

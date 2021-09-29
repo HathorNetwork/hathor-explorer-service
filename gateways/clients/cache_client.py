@@ -7,8 +7,7 @@ from common.configuration import REDIS_DB, REDIS_HOST, REDIS_KEY_PREFIX, REDIS_P
 
 NODE_COLLECTION_NAME = 'node'
 NETWORK_COLLECTION_NAME = 'network'
-ADDRESS_BALANCE_BLACKLIST_COLLECTION_NAME = 'thin_wallet:address_balance:blacklist'
-ADDRESS_SEARCH_BLACKLIST_COLLECTION_NAME = 'thin_wallet:address_search:blacklist'
+ADDRESS_BLACKLIST_COLLECTION_NAME = 'node_api:address:blacklist'
 
 
 class CacheClient:

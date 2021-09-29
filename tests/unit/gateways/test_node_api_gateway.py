@@ -16,19 +16,19 @@ class TestNodeApiGateway:
     def hathor_client(self):
         return MagicMock()
 
-    @patch('gateways.node_api_gateway.ADDRESS_BALANCE_BLACKLIST_COLLECTION_NAME', 'mock-collection')
-    def test_blacklist_address_balance(self, cache_client):
+    @patch('gateways.node_api_gateway.ADDRESS_BLACKLIST_COLLECTION_NAME', 'mock-collection')
+    def test_blacklist_address(self, cache_client):
         cache_client.set = MagicMock(return_value=True)
         gateway = NodeApiGateway(cache_client=cache_client)
-        result = gateway.blacklist_address_balance('mock-address')
+        result = gateway.blacklist_address('mock-address')
         cache_client.set.assert_called_once_with('mock-collection', 'mock-address', 1)
         assert result is True
 
-    @patch('gateways.node_api_gateway.ADDRESS_BALANCE_BLACKLIST_COLLECTION_NAME', 'mock-collection')
-    def test_is_blacklisted_address_balance(self, cache_client):
+    @patch('gateways.node_api_gateway.ADDRESS_BLACKLIST_COLLECTION_NAME', 'mock-collection')
+    def test_is_blacklisted_address(self, cache_client):
         cache_client.get = MagicMock(return_value='1')
         gateway = NodeApiGateway(cache_client=cache_client)
-        result = gateway.is_blacklisted_address_balance('mock-address')
+        result = gateway.is_blacklisted_address('mock-address')
         cache_client.get.assert_called_once_with('mock-collection', 'mock-address')
         assert result is True
 
@@ -42,22 +42,6 @@ class TestNodeApiGateway:
         assert result
         assert result.success == obj.success
         assert result.total_transactions == obj.total_transactions
-
-    @patch('gateways.node_api_gateway.ADDRESS_SEARCH_BLACKLIST_COLLECTION_NAME', 'mock-collection')
-    def test_blacklist_address_search(self, cache_client):
-        cache_client.set = MagicMock(return_value=True)
-        gateway = NodeApiGateway(cache_client=cache_client)
-        result = gateway.blacklist_address_search('mock-address')
-        cache_client.set.assert_called_once_with('mock-collection', 'mock-address', 1)
-        assert result is True
-
-    @patch('gateways.node_api_gateway.ADDRESS_SEARCH_BLACKLIST_COLLECTION_NAME', 'mock-collection')
-    def test_is_blacklisted_address_search(self, cache_client):
-        cache_client.get = MagicMock(return_value='1')
-        gateway = NodeApiGateway(cache_client=cache_client)
-        result = gateway.is_blacklisted_address_search('mock-address')
-        cache_client.get.assert_called_once_with('mock-collection', 'mock-address')
-        assert result is True
 
     @patch('gateways.node_api_gateway.ADDRESS_SEARCH_ENDPOINT', 'mock-endpoint')
     def test_get_address_search(self, hathor_client):
