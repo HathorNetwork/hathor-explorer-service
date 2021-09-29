@@ -15,6 +15,7 @@ aws-lambda-context = "^1.1.0"
 python-decouple = "^3.4"
 dacite = "^1.6.0"
 requests = "^2.25.1"
+structlog = "^21.1.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.4"
