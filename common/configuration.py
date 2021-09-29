@@ -1,5 +1,5 @@
-from typing import Any
 from enum import Enum
+from typing import Any
 
 from decouple import Csv, config
 
@@ -34,10 +34,10 @@ class LogRenderer(Enum):
     def renderer_class(self) -> Any:
         import structlog
         class_mapping = {
-            self.JSON: structlog.processors.JSONRenderer,
-            self.CONSOLE: structlog.dev.ConsoleRenderer,
+            'json': structlog.processors.JSONRenderer,
+            'console': structlog.dev.ConsoleRenderer,
         }
-        return class_mapping[self]
+        return class_mapping[self.value]
 
     @classmethod
     def default(cls) -> 'LogRenderer':
