@@ -15,6 +15,11 @@ class TokenGateway:
         self.hathor_core_client = hathor_core_client or HathorCoreClient()
 
     def get_token(self, id: str) -> Optional[Token]:
+        """Retrieve a token from the full-node by it's id
+
+        :param id: Token UID
+        :type id: str
+        """
         response = self.hathor_core_client.get(TOKEN_ENDPOINT, {'id': id})
 
         if response is None:
