@@ -12,3 +12,7 @@ class HathorCoreUnknownToken(Exception):
 
 class HathorCoreMalformedToken(Exception):
     pass
+
+
+class HathorCoreTimeout(Exception):
+    pass

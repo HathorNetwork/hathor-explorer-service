@@ -3,6 +3,7 @@ from typing import Optional
 
 from aws_lambda_context import LambdaContext
 
+from common.errors import ApiError
 from usecases.node_api import NodeApi
 from utils.wrappers.aws.api_gateway import ApiGateway, ApiGatewayEvent
 
@@ -16,7 +17,7 @@ def get_address_balance(
     node_api = node_api or NodeApi()
     address = event.query.get("address")
     if address is None:
-        raise Exception("invalid_parameters")
+        raise ApiError("invalid_parameters")
 
     response = node_api.get_address_balance(address)
     if response is None:
@@ -51,11 +52,11 @@ def get_address_search(
     hash = event.query.get("hash")
     token = event.query.get("token")
     if address is None or count is None:
-        raise Exception("invalid_parameters")
+        raise ApiError("invalid_parameters")
 
     if hash is not None and page is None:
         # If hash exists, it"s a paginated request and page is required
-        raise Exception("invalid_parameters")
+        raise ApiError("invalid_parameters")
 
     response = node_api.get_address_search(address, count, page, hash, token)
 

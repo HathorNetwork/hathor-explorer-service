@@ -6,6 +6,7 @@ import aiohttp
 import requests
 
 from common.configuration import HATHOR_CORE_DOMAIN
+from common.errors import HathorCoreTimeout
 
 logger = logging.getLogger(__name__)
 
@@ -76,6 +77,6 @@ class HathorCoreClient:
 
             return response.json()
         except requests.ReadTimeout:
-            raise Exception('timeout')
+            raise HathorCoreTimeout('timeout')
         except Exception as e:
             return {'error': repr(e)}

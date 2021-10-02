@@ -2,6 +2,7 @@ from unittest.mock import MagicMock, patch
 
 from pytest import fixture, raises
 
+from common.errors import HathorCoreTimeout
 from tests.fixtures.node_api_factory import AddressBalanceFactory, AddressSearchFactory
 from usecases.node_api import NodeApi
 
@@ -49,7 +50,7 @@ class TestNodeApiAddressBalance:
     @patch('usecases.node_api.ADDRESS_BLACKLIST_RESPONSE', 'mock-response')
     def test_address_balance_timeout(self, node_api_gateway):
         node_api_gateway.is_blacklisted_address = MagicMock(return_value=False)
-        node_api_gateway.get_address_balance = MagicMock(side_effect=Exception('timeout'))
+        node_api_gateway.get_address_balance = MagicMock(side_effect=HathorCoreTimeout('timeout'))
         node_api_gateway.blacklist_address = MagicMock(return_value=None)
 
         node_api = NodeApi(node_api_gateway)
@@ -127,7 +128,7 @@ class TestNodeApiAddressSearch:
     @patch('usecases.node_api.ADDRESS_BLACKLIST_RESPONSE', 'mock-response')
     def test_address_search_timeout(self, node_api_gateway):
         node_api_gateway.is_blacklisted_address = MagicMock(return_value=False)
-        node_api_gateway.get_address_search = MagicMock(side_effect=Exception('timeout'))
+        node_api_gateway.get_address_search = MagicMock(side_effect=HathorCoreTimeout('timeout'))
         node_api_gateway.blacklist_address = MagicMock(return_value=None)
 
         node_api = NodeApi(node_api_gateway)

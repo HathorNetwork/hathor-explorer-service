@@ -1,5 +1,6 @@
 from typing import Optional
 
+from common.errors import HathorCoreTimeout
 from gateways.node_api_gateway import NodeApiGateway
 
 ADDRESS_BLACKLIST_RESPONSE = {
@@ -22,12 +23,9 @@ class NodeApi:
             if result is None:
                 return None
             return result.to_dict()
-        except Exception as ex:
-            if str(ex) == 'timeout':
-                # blacklist address
-                self.node_api_gateway.blacklist_address(address)
-                return ADDRESS_BLACKLIST_RESPONSE
-            raise ex
+        except HathorCoreTimeout:
+            self.node_api_gateway.blacklist_address(address)
+            return ADDRESS_BLACKLIST_RESPONSE
 
     def get_address_search(
             self, address: str, count: int, page: Optional[str] = None,
@@ -46,9 +44,6 @@ class NodeApi:
             if result is None:
                 return None
             return result.to_dict()
-        except Exception as ex:
-            if str(ex) == 'timeout':
-                # blacklist address
-                self.node_api_gateway.blacklist_address(address)
-                return ADDRESS_BLACKLIST_RESPONSE
-            raise ex
+        except HathorCoreTimeout:
+            self.node_api_gateway.blacklist_address(address)
+            return ADDRESS_BLACKLIST_RESPONSE
