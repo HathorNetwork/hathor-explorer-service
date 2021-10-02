@@ -3,7 +3,7 @@ from unittest.mock import MagicMock, patch
 from pytest import fixture
 
 from gateways.node_api_gateway import NodeApiGateway
-from tests.fixtures.node_api_factory import AddressBalanceFactory, AddressSearchFactory
+from tests.fixtures.node_api_factory import AddressBalanceFactory, AddressSearchFactory, VersionResourceFactory
 
 
 class TestNodeApiGateway:
@@ -42,6 +42,13 @@ class TestNodeApiGateway:
         assert result
         assert sorted(result) == sorted(obj)
 
+    @patch('gateways.node_api_gateway.ADDRESS_BALANCE_ENDPOINT', 'mock-endpoint')
+    def test_get_address_balance_fail(self, hathor_client):
+        hathor_client.get = MagicMock(return_value=None)
+        gateway = NodeApiGateway(hathor_core_client=hathor_client)
+        result = gateway.get_address_balance('mock-address')
+        assert result is None
+
     @patch('gateways.node_api_gateway.ADDRESS_SEARCH_ENDPOINT', 'mock-endpoint')
     def test_get_address_search(self, hathor_client):
         obj = AddressSearchFactory()
@@ -68,5 +75,142 @@ class TestNodeApiGateway:
                     'hash': 'a-hash',
                     'page': 'next'},
                 timeout=10)
+        assert result
+        assert sorted(result) == sorted(obj)
+
+    @patch('gateways.node_api_gateway.ADDRESS_SEARCH_ENDPOINT', 'mock-endpoint')
+    def test_get_address_search_fail(self, hathor_client):
+        hathor_client.get = MagicMock(return_value=None)
+        gateway = NodeApiGateway(hathor_core_client=hathor_client)
+        result = gateway.get_address_search('mock-address', 99)
+        assert result is None
+
+    @patch('gateways.node_api_gateway.VERSION_ENDPOINT', 'mock-endpoint')
+    def test_get_version(self, hathor_client):
+        obj = VersionResourceFactory()
+        hathor_client.get = MagicMock(return_value=obj)
+        gateway = NodeApiGateway(hathor_core_client=hathor_client)
+        result = gateway.get_version()
+        hathor_client.get.assert_called_once_with('mock-endpoint')
+        assert result
+        assert sorted(result) == sorted(obj)
+
+    @patch('gateways.node_api_gateway.DASHBOARD_TX_ENDPOINT', 'mock-endpoint')
+    def test_get_dashboard_tx(self, hathor_client):
+        obj = {'foo': 'bar'}
+        hathor_client.get = MagicMock(return_value=obj)
+        gateway = NodeApiGateway(hathor_core_client=hathor_client)
+        result = gateway.get_dashboard_tx(15, 5)
+        hathor_client.get.assert_called_once_with('mock-endpoint', params={'tx': 5, 'block': 15})
+        assert result
+        assert sorted(result) == sorted(obj)
+
+    @patch('gateways.node_api_gateway.TX_ACC_WEIGHT_ENDPOINT', 'mock-endpoint')
+    def test_get_transaction_acc_weight(self, hathor_client):
+        obj = {'foo': 'bar'}
+        hathor_client.get = MagicMock(return_value=obj)
+        gateway = NodeApiGateway(hathor_core_client=hathor_client)
+        result = gateway.get_transaction_acc_weight('mock-txid')
+        hathor_client.get.assert_called_once_with('mock-endpoint', params={'id': 'mock-txid'})
+        assert result
+        assert sorted(result) == sorted(obj)
+
+    @patch('gateways.node_api_gateway.TOKEN_HISTORY_ENDPOINT', 'mock-endpoint')
+    def test_get_token_history(self, hathor_client):
+        obj = {'foo': 'bar'}
+        hathor_client.get = MagicMock(return_value=obj)
+        gateway = NodeApiGateway(hathor_core_client=hathor_client)
+        result = gateway.get_token_history('mock-id-1', 1)
+        hathor_client.get.assert_called_once_with(
+                'mock-endpoint', params={'id': 'mock-id-1', 'count': 1})
+        assert result
+        assert sorted(result) == sorted(obj)
+
+        result = gateway.get_token_history('mock-id-2', 2, '123')
+        hathor_client.get.assert_called_with(
+                'mock-endpoint', params={
+                    'id': 'mock-id-2',
+                    'count': 2,
+                    'hash': '123',
+                    'page': None,
+                    'timestamp': None,
+                })
+        assert result
+        assert sorted(result) == sorted(obj)
+
+        result = gateway.get_token_history('mock-id-3', 15, 'a-hash', 'next', 123)
+        hathor_client.get.assert_called_with(
+                'mock-endpoint', params={
+                    'id': 'mock-id-3',
+                    'count': 15,
+                    'hash': 'a-hash',
+                    'page': 'next',
+                    'timestamp': 123,
+                })
+        assert result
+        assert sorted(result) == sorted(obj)
+
+    @patch('gateways.node_api_gateway.TRANSACTION_ENDPOINT', 'mock-endpoint')
+    def test_get_transaction(self, hathor_client):
+        obj = {'foo': 'bar'}
+        hathor_client.get = MagicMock(return_value=obj)
+        gateway = NodeApiGateway(hathor_core_client=hathor_client)
+        result = gateway.get_transaction('mock-txid')
+        hathor_client.get.assert_called_once_with('mock-endpoint', params={'id': 'mock-txid'})
+        assert result
+        assert sorted(result) == sorted(obj)
+
+    @patch('gateways.node_api_gateway.TRANSACTION_ENDPOINT', 'mock-endpoint')
+    def test_list_transactions(self, hathor_client):
+        obj = {'foo': 'bar'}
+        hathor_client.get = MagicMock(return_value=obj)
+        gateway = NodeApiGateway(hathor_core_client=hathor_client)
+        result = gateway.list_transactions('type-1', 1)
+        hathor_client.get.assert_called_once_with(
+                'mock-endpoint', params={'type': 'type-1', 'count': 1})
+        assert result
+        assert sorted(result) == sorted(obj)
+
+        result = gateway.list_transactions('type-2', 2, '123')
+        hathor_client.get.assert_called_with(
+                'mock-endpoint', params={
+                    'type': 'type-2',
+                    'count': 2,
+                    'hash': '123',
+                    'page': None,
+                    'timestamp': None,
+                })
+        assert result
+        assert sorted(result) == sorted(obj)
+
+        result = gateway.list_transactions('type-3', 15, 'a-hash', 'next', 123)
+        hathor_client.get.assert_called_with(
+                'mock-endpoint', params={
+                    'type': 'type-3',
+                    'count': 15,
+                    'hash': 'a-hash',
+                    'page': 'next',
+                    'timestamp': 123,
+                })
+        assert result
+        assert sorted(result) == sorted(obj)
+
+    @patch('gateways.node_api_gateway.TOKEN_ENDPOINT', 'mock-endpoint')
+    def test_get_token(self, hathor_client):
+        obj = {'foo': 'bar'}
+        hathor_client.get = MagicMock(return_value=obj)
+        gateway = NodeApiGateway(hathor_core_client=hathor_client)
+        result = gateway.get_token('mock-token-uid')
+        hathor_client.get.assert_called_once_with('mock-endpoint', params={'id': 'mock-token-uid'})
+        assert result
+        assert sorted(result) == sorted(obj)
+
+    @patch('gateways.node_api_gateway.TOKEN_ENDPOINT', 'mock-endpoint')
+    def test_list_tokens(self, hathor_client):
+        obj = {'foo': 'bar'}
+        hathor_client.get = MagicMock(return_value=obj)
+        gateway = NodeApiGateway(hathor_core_client=hathor_client)
+        result = gateway.list_tokens()
+        hathor_client.get.assert_called_once_with('mock-endpoint')
         assert result
         assert sorted(result) == sorted(obj)

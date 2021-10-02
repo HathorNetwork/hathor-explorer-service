@@ -10,10 +10,15 @@ from common.logging import get_logger
 
 logger = get_logger()
 
-STATUS_ENDPOINT = '/v1a/status'
-TOKEN_ENDPOINT = '/v1a/thin_wallet/token'
 ADDRESS_BALANCE_ENDPOINT = '/v1a/thin_wallet/address_balance'
 ADDRESS_SEARCH_ENDPOINT = '/v1a/thin_wallet/address_search'
+DASHBOARD_TX_ENDPOINT = '/v1a/dashboard_tx'
+STATUS_ENDPOINT = '/v1a/status'
+TOKEN_ENDPOINT = '/v1a/thin_wallet/token'
+TOKEN_HISTORY_ENDPOINT = '/v1a/thin_wallet/token_history'
+TRANSACTION_ENDPOINT = '/v1a/transaction'
+TX_ACC_WEIGHT_ENDPOINT = '/v1a/transaction_acc_weight'
+VERSION_ENDPOINT = '/v1a/version'
 
 
 class HathorCoreAsyncClient:
