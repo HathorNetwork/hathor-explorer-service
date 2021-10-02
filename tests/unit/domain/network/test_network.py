@@ -1,51 +1,70 @@
-from domain.network.node import Node, NodeState
-from tests.fixtures.hathor_core_fixtures import HATHOR_CORE_MAINNET_GET_STATUS, HATHOR_CORE_TESTNET_GET_STATUS
-from tests.fixtures.node_factory import NodeFactory
+from domain.network.network import AggregatedNode, AggregatedPeer, Network
+from tests.fixtures.network_factory import AggregatedNodeFactory, AggregatedPeerFactory, NetworkFactory
+from tests.fixtures.node_factory import NodeFactory, PeerFactory
 
 
-class TestNode:
+class TestNetwork:
 
-    def test_to_dict(self):
+    def test_aggregated_peer_from_peer(self):
+        peer = PeerFactory()
+        aggregated_peer = AggregatedPeer.from_peer(peer)
+
+        assert aggregated_peer.id == peer.id
+        assert aggregated_peer.app_version == peer.app_version
+        assert aggregated_peer.entrypoints == peer.entrypoints
+        assert aggregated_peer.warning_flags == peer.warning_flags
+
+    def test_aggregated_peer_to_dict(self):
+        aggregated_peer = AggregatedPeerFactory()
+
+        agp_dict = aggregated_peer.to_dict()
+
+        assert agp_dict['id'] == aggregated_peer.id
+        assert agp_dict['address'] == aggregated_peer.address
+        assert agp_dict['connected_to'] == []
+
+    def test_aggregated_peer_add_connected_to(self):
+        aggregated_peer = AggregatedPeerFactory()
+
+        assert aggregated_peer.connected_to == set()
+
+        aggregated_peer.add_connected_to('abcde123')
+
+        assert aggregated_peer.connected_to == set(['abcde123'])
+
+    def test_aggregated_node_from_node(self):
         node = NodeFactory()
+        aggregated_node = AggregatedNode.from_node(node)
 
-        node_dict = node.to_dict()
+        assert aggregated_node.id == node.id
+        assert aggregated_node.entrypoints == node.entrypoints
+        assert aggregated_node.connected_peers[0] == node.connected_peers[0].id
 
-        assert node_dict
-        assert node_dict['id'] == node.id
-        assert node_dict['state'] in list(NodeState)
-        assert node_dict['entrypoints'][0] == node.entrypoints[0]
-        assert node_dict['connected_peers'][0]['id'] == node.connected_peers[0].id
+    def test_aggregated_node_to_dict(self):
+        aggregated_node = AggregatedNodeFactory()
 
-    def test_from_dict(self):
-        node = NodeFactory()
+        agn_dict = aggregated_node.to_dict()
 
-        node_dict = node.to_dict()
+        assert agn_dict['id'] == aggregated_node.id
+        assert agn_dict['app_version'] == aggregated_node.app_version
+        assert agn_dict['connected_peers'] == aggregated_node.connected_peers
 
-        new_node = Node.from_dict(node_dict)
+    def test_network_to_dict(self):
+        network = NetworkFactory()
 
-        assert new_node
-        assert new_node.id == node.id
-        assert new_node.state == node.state
-        assert new_node.entrypoints == node.entrypoints
-        assert new_node.connected_peers[0].id == node.connected_peers[0].id
+        network_dict = network.to_dict()
 
-    def test_from_status_dict(self):
-        mainnet = Node.from_status_dict(HATHOR_CORE_MAINNET_GET_STATUS)
+        assert network_dict['nodes'][0]['id'] == network.nodes[0].id
+        assert network_dict['peers'][0]['id'] == network.peers[0].id
 
-        assert mainnet
-        assert mainnet.id == '847b9f9979514e33b8713c8d63f0c0cc0ccba9aff067d62a4679f20439595631'
-        assert mainnet.state == NodeState('READY')
-        assert mainnet.entrypoints[0] == 'tcp://34.218.233.215:40403'
-        assert mainnet.connected_peers[0].id == '49c9cdeddc8a5ee94c177628686aba07bca53c481819c921ff16cdd39614bc1c'
-        assert mainnet.connected_peers[0].latest_timestamp == 1622151490
-        assert mainnet.connected_peers[0].entrypoints == ['tcp://3.66.218.70:40403']
+    def test_network_from_dict(self):
+        network = NetworkFactory()
+        network_dict = network.to_dict()
 
-        testnet = Node.from_status_dict(HATHOR_CORE_TESTNET_GET_STATUS)
+        new_network = Network.from_dict(network_dict)
 
-        assert testnet
-        assert testnet.id == '4277ccbd10c5b3aec608e5cc8888d612ff275d8645d1069cef24178c5619d17a'
-        assert testnet.state == NodeState('READY')
-        assert testnet.entrypoints[0] == 'tcp://3.21.242.244:40403'
-        assert testnet.connected_peers[0].id == '71df2e6c0927491eb439c68d45b3690d22e4c15beaa174e2487a117c46abd944'
-        assert testnet.connected_peers[0].latest_timestamp == 1622140105
-        assert testnet.connected_peers[0].entrypoints == []
+        assert network.nodes[0].id == new_network.nodes[0].id
+        assert network.nodes[0].app_version == new_network.nodes[0].app_version
+
+        assert network.peers[0].id == new_network.peers[0].id
+        assert network.peers[0].app_version == new_network.peers[0].app_version

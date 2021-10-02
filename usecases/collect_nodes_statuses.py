@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Optional
 
 from common.configuration import HATHOR_NODES
 from domain.network.node import Node
@@ -9,7 +9,7 @@ from gateways.node_gateway import NodeGateway
 class CollectNodesStatuses:
     """ Usecase class to collect nodes statuses
     """
-    def __init__(self, node_gateway: Union[NodeGateway, None] = None) -> None:
+    def __init__(self, node_gateway: Optional[NodeGateway] = None) -> None:
         self.node_gateway = node_gateway or NodeGateway()
 
     async def collect(self) -> None:

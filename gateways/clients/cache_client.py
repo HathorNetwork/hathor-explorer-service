@@ -6,6 +6,7 @@ from redis import StrictRedis
 from common.configuration import REDIS_DB, REDIS_HOST, REDIS_KEY_PREFIX, REDIS_PORT
 
 NODE_COLLECTION_NAME = 'node'
+NETWORK_COLLECTION_NAME = 'network'
 
 
 class CacheClient:

@@ -4,6 +4,7 @@ import pytest
 from pytest import fixture
 
 from gateways.node_gateway import NodeGateway
+from tests.fixtures.network_factory import NetworkFactory
 from tests.fixtures.node_factory import NodeFactory
 
 
@@ -42,7 +43,7 @@ class TestNodeGateway:
             gateway.send_node_to_data_aggregator(node_data)
 
     @patch('gateways.node_gateway.NODE_CACHE_TTL', 30)
-    def test_save_netowrk(self, cache_client):
+    def test_save_node(self, cache_client):
         cache_client.set = MagicMock(return_value=True)
 
         gateway = NodeGateway(cache_client=cache_client)
@@ -87,3 +88,53 @@ class TestNodeGateway:
 
         cache_client.keys.assert_called_once_with('node')
         assert result == keys
+
+    def test_save_network(self, cache_client):
+        cache_client.set = MagicMock(return_value=True)
+
+        gateway = NodeGateway(cache_client=cache_client)
+        network = NetworkFactory()
+
+        result = gateway.save_network(network)
+
+        cache_client.set.assert_called_once_with('network', 'v1', network.to_dict())
+        assert result
+
+    def test_get_network(self, cache_client):
+        network = NetworkFactory()
+
+        cache_client.get = MagicMock(return_value=network.to_dict())
+
+        gateway = NodeGateway(cache_client=cache_client)
+
+        result = gateway.get_network()
+
+        cache_client.get.assert_called_once_with('network', 'v1')
+
+        assert result.peers[0].id == network.peers[0].id
+        assert result.nodes[0].id == network.nodes[0].id
+
+    def test_get_no_network(self, cache_client):
+        cache_client.get = MagicMock(return_value=None)
+
+        gateway = NodeGateway(cache_client=cache_client)
+
+        result = gateway.get_network()
+
+        cache_client.get.assert_called_once_with('network', 'v1')
+
+        assert result is None
+
+    def test_aggregate_network(self):
+        nodes = {node.id: node for node in NodeFactory.create_batch(3)}
+        nodes['obsolete-id'] = None
+
+        gateway = NodeGateway()
+
+        gateway.list_node_keys = MagicMock(return_value=nodes.keys())
+
+        gateway.get_node = MagicMock(side_effect=lambda id: nodes[id])
+
+        result = gateway.aggregate_network()
+
+        assert result.nodes[0].id == nodes[result.nodes[0].id].id
