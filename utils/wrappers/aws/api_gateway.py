@@ -1,13 +1,13 @@
 import json
-import logging
 from typing import Any, Callable
 
 from aws_lambda_context import LambdaContext
 
 from common.configuration import CORS_ALLOWED_ORIGIN
 from common.errors import ApiError
+from common.logging import get_logger
 
-logger = logging.getLogger(__name__)
+logger = get_logger()
 
 
 def parse_body(event: dict) -> dict:

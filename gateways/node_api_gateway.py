@@ -1,12 +1,9 @@
-import logging
 from typing import Optional
 
 from domain.node_api.address_balance import AddressBalance
 from domain.node_api.address_search import AddressSearch
 from gateways.clients.cache_client import ADDRESS_BLACKLIST_COLLECTION_NAME, CacheClient
 from gateways.clients.hathor_core_client import ADDRESS_BALANCE_ENDPOINT, ADDRESS_SEARCH_ENDPOINT, HathorCoreClient
-
-logger = logging.getLogger(__name__)
 
 
 class NodeApiGateway:

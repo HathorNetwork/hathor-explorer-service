@@ -1,4 +1,3 @@
-import logging
 from typing import Any, Callable, Optional
 from urllib import parse
 
@@ -7,8 +6,9 @@ import requests
 
 from common.configuration import HATHOR_CORE_DOMAIN
 from common.errors import HathorCoreTimeout
+from common.logging import get_logger
 
-logger = logging.getLogger(__name__)
+logger = get_logger()
 
 STATUS_ENDPOINT = '/v1a/status'
 TOKEN_ENDPOINT = '/v1a/thin_wallet/token'
