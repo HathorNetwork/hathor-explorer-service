@@ -17,6 +17,7 @@ class AddressBalance:
 
     success: bool
     # The next fields are optional to parse when success is False
+    # tokens_data key: token uid, value: address balance for token
     tokens_data: Optional[Dict[str, AddressBalanceTokenData]] = None
     total_transactions: Optional[int] = None
     message: Optional[str] = None
