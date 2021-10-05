@@ -161,7 +161,7 @@ functions:
       - { Ref: PythonRequirementsLambdaLayer }
     events:
       - http:
-          path: node_api/thin_wallet/address_balance
+          path: node_api/address_balance
           method: get
           cors: true
           caching:
@@ -179,7 +179,7 @@ functions:
       - { Ref: PythonRequirementsLambdaLayer }
     events:
       - http:
-          path: node_api/thin_wallet/address_search
+          path: node_api/address_search
           method: get
           cors: true
           caching:
