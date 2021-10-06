@@ -1,12 +1,12 @@
 import json
-import logging
 from typing import Optional
 
 from common.configuration import METADATA_BUCKET
 from common.errors import ConfigError
+from common.logging import get_logger
 from gateways.clients.s3_client import S3Client
 
-logger = logging.getLogger(__name__)
+logger = get_logger()
 
 
 class MetadataGateway:
