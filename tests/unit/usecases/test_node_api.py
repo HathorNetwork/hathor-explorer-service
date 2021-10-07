@@ -24,10 +24,7 @@ class TestNodeApiAddressBalance:
         node_api_gateway.get_address_balance.assert_called_once_with('fake-address')
         node_api_gateway.blacklist_address.assert_not_called()
         assert result
-        assert result['success'] is True
-        assert result['total_transactions'] == obj.total_transactions
-        assert sorted(result['tokens_data']) == sorted(obj.tokens_data)
-        assert 'message' not in result
+        assert sorted(result) == sorted(obj)
 
     def test_address_balance_fail(self, node_api_gateway):
         obj = AddressBalanceFactory(fail=True)
@@ -40,12 +37,7 @@ class TestNodeApiAddressBalance:
         node_api_gateway.get_address_balance.assert_called_once_with('fake-address')
         node_api_gateway.blacklist_address.assert_not_called()
         assert result
-        assert result['success'] is False
-        assert result['message'] == obj.message
-        assert result['total_transactions'] is None
-        assert result['total_transactions'] == obj.total_transactions
-        assert result['tokens_data'] is None
-        assert result['tokens_data'] == obj.tokens_data
+        assert sorted(result) == sorted(obj)
 
     @patch('usecases.node_api.ADDRESS_BLACKLIST_RESPONSE', 'mock-response')
     def test_address_balance_timeout(self, node_api_gateway):
@@ -102,10 +94,7 @@ class TestNodeApiAddressSearch:
         node_api_gateway.get_address_search.assert_called_once_with('fake-address', 1, None, None, None)
         node_api_gateway.blacklist_address.assert_not_called()
         assert result
-        assert result['success'] is True
-        assert result['has_more'] == obj.has_more
-        assert result['total'] == obj.total
-        assert 'message' not in result
+        assert sorted(result) == sorted(obj)
 
     def test_address_search_fail(self, node_api_gateway):
         obj = AddressSearchFactory(fail=True)
@@ -118,12 +107,7 @@ class TestNodeApiAddressSearch:
         node_api_gateway.get_address_search.assert_called_once_with('fake-address', 5, None, None, None)
         node_api_gateway.blacklist_address.assert_not_called()
         assert result
-        assert result['success'] is False
-        assert result['message'] == obj.message
-        assert result['total'] is None
-        assert result['total'] == obj.total
-        assert result['has_more'] is None
-        assert result['has_more'] == obj.has_more
+        assert sorted(result) == sorted(obj)
 
     @patch('usecases.node_api.ADDRESS_BLACKLIST_RESPONSE', 'mock-response')
     def test_address_search_timeout(self, node_api_gateway):

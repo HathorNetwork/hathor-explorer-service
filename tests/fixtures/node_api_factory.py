@@ -3,33 +3,37 @@ import re
 import factory
 from faker import Faker
 
-from domain.node_api.address_balance import AddressBalance, AddressBalanceTokenData
-from domain.node_api.address_search import AddressSearch
-from domain.node_api.transaction import Transaction, TxInput, TxOutput
-
 fake = Faker()
 
 
-class TxInputFactory(factory.Factory):
-    class Meta:
-        model = TxInput
+class DecodedOutputFactory(factory.DictFactory):
+    # tx_id = factory.lazy_attribute(lambda o: f"0000{fake.sha256()}"[:64])
+    type = factory.Faker('word')
+    address = factory.Faker('pystr')
+    timelock = factory.Faker('random_int')
+
+
+class TxInputFactory(factory.DictFactory):
     # tx_id = factory.lazy_attribute(lambda o: f"0000{fake.sha256()}"[:64])
     tx_id = factory.Faker('sha256')
     index = factory.Faker('random_int')
-    data = factory.Faker('pystr')
+    script = factory.Faker('pystr')
+    token_data = factory.Faker('random_int', max=255)
+    token = factory.Faker('sha256')
+    value = factory.Faker('random_int')
+    decoded = factory.SubFactory(DecodedOutputFactory)
 
 
-class TxOutputFactory(factory.Factory):
-    class Meta:
-        model = TxOutput
+class TxOutputFactory(factory.DictFactory):
     value = factory.Faker('random_int')
     script = factory.Faker('pystr')
+    token = factory.Faker('sha256')
+    spent_by = factory.Faker('sha256')
+    decoded = factory.SubFactory(DecodedOutputFactory)
+    token_data = factory.Faker('random_int', max=255)
 
 
-class TransactionFactory(factory.Factory):
-    class Meta:
-        model = Transaction
-
+class TransactionFactory(factory.DictFactory):
     # tx_id = factory.lazy_attribute(lambda o: f"0000{fake.sha256()}"[:64])
     tx_id = factory.Faker('sha256')
     timestamp = factory.Faker('random_int', min=0, max=999999999)
@@ -38,7 +42,6 @@ class TransactionFactory(factory.Factory):
     parents = factory.List([factory.Faker('sha256')]*2)
     inputs = factory.LazyFunction(lambda: [TxInputFactory() for _ in range(fake.random_int(min=1, max=20))])
     outputs = factory.LazyFunction(lambda: [TxOutputFactory() for _ in range(fake.random_int(min=1, max=20))])
-    tokens = factory.LazyFunction(lambda: [fake.sha256() for _ in range(fake.random_int(min=1, max=20))])
 
 
 def token_symbol(name):
@@ -50,9 +53,7 @@ def token_symbol(name):
     return symbol
 
 
-class AddressBalanceTokenDataFactory(factory.Factory):
-    class Meta:
-        model = AddressBalanceTokenData
+class AddressBalanceTokenDataFactory(factory.DictFactory):
     name = factory.lazy_attribute(lambda o: f"{fake.word().capitalize()} Token")
     symbol = factory.lazy_attribute(lambda o: token_symbol(o.name))
     received = factory.Faker('random_int', min=1, max=999999)
@@ -66,10 +67,7 @@ def gen_tokens_data(qty=1):
     return tokens
 
 
-class AddressBalanceFactory(factory.Factory):
-    class Meta:
-        model = AddressBalance
-
+class AddressBalanceFactory(factory.DictFactory):
     class Params:
         fail = factory.Trait(
             success=False,
@@ -84,10 +82,7 @@ class AddressBalanceFactory(factory.Factory):
     message = None
 
 
-class AddressSearchFactory(factory.Factory):
-    class Meta:
-        model = AddressSearch
-
+class AddressSearchFactory(factory.DictFactory):
     class Params:
         fail = factory.Trait(
             success=False,
