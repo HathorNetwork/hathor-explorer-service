@@ -35,30 +35,29 @@ class TestNodeApiGateway:
     @patch('gateways.node_api_gateway.ADDRESS_BALANCE_ENDPOINT', 'mock-endpoint')
     def test_get_address_balance(self, hathor_client):
         obj = AddressBalanceFactory()
-        hathor_client.get = MagicMock(return_value=obj.to_dict())
+        hathor_client.get = MagicMock(return_value=obj)
         gateway = NodeApiGateway(hathor_core_client=hathor_client)
         result = gateway.get_address_balance('mock-address')
         hathor_client.get.assert_called_once_with('mock-endpoint', params={'address': 'mock-address'}, timeout=10)
         assert result
-        assert result.success == obj.success
-        assert result.total_transactions == obj.total_transactions
+        assert sorted(result) == sorted(obj)
 
     @patch('gateways.node_api_gateway.ADDRESS_SEARCH_ENDPOINT', 'mock-endpoint')
     def test_get_address_search(self, hathor_client):
         obj = AddressSearchFactory()
-        hathor_client.get = MagicMock(return_value=obj.to_dict())
+        hathor_client.get = MagicMock(return_value=obj)
         gateway = NodeApiGateway(hathor_core_client=hathor_client)
         result = gateway.get_address_search('mock-address', 1)
         hathor_client.get.assert_called_once_with(
                 'mock-endpoint', params={'address': 'mock-address', 'count': 1}, timeout=10)
         assert result
-        assert result.success == obj.success
+        assert sorted(result) == sorted(obj)
 
         result = gateway.get_address_search('mock-address', 5, token='mock-token')
         hathor_client.get.assert_called_with(
                 'mock-endpoint', params={'address': 'mock-address', 'count': 5, 'token': 'mock-token'}, timeout=10)
         assert result
-        assert result.success == obj.success
+        assert sorted(result) == sorted(obj)
 
         result = gateway.get_address_search('mock-address', 10, hash='a-hash', page='next')
         hathor_client.get.assert_called_with(
@@ -70,4 +69,4 @@ class TestNodeApiGateway:
                     'page': 'next'},
                 timeout=10)
         assert result
-        assert result.success == obj.success
+        assert sorted(result) == sorted(obj)

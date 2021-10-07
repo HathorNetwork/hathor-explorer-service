@@ -19,10 +19,7 @@ class NodeApi:
             return ADDRESS_BLACKLIST_RESPONSE
 
         try:
-            result = self.node_api_gateway.get_address_balance(address)
-            if result is None:
-                return None
-            return result.to_dict()
+            return self.node_api_gateway.get_address_balance(address)
         except HathorCoreTimeout:
             self.node_api_gateway.blacklist_address(address)
             return ADDRESS_BLACKLIST_RESPONSE
@@ -35,15 +32,12 @@ class NodeApi:
             return ADDRESS_BLACKLIST_RESPONSE
 
         try:
-            result = self.node_api_gateway.get_address_search(
+            return self.node_api_gateway.get_address_search(
                     address,
                     count,
                     page,
                     hash,
                     token)
-            if result is None:
-                return None
-            return result.to_dict()
         except HathorCoreTimeout:
             self.node_api_gateway.blacklist_address(address)
             return ADDRESS_BLACKLIST_RESPONSE

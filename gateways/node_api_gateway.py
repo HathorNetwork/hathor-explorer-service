@@ -1,7 +1,5 @@
 from typing import Optional
 
-from domain.node_api.address_balance import AddressBalance
-from domain.node_api.address_search import AddressSearch
 from gateways.clients.cache_client import ADDRESS_BLACKLIST_COLLECTION_NAME, CacheClient
 from gateways.clients.hathor_core_client import ADDRESS_BALANCE_ENDPOINT, ADDRESS_SEARCH_ENDPOINT, HathorCoreClient
 
@@ -40,24 +38,21 @@ class NodeApiGateway:
                 ADDRESS_BLACKLIST_COLLECTION_NAME,
                 address))
 
-    def get_address_balance(self, address: str) -> Optional[AddressBalance]:
+    def get_address_balance(self, address: str) -> Optional[dict]:
         """Retrieve address balance from full-node
 
         :param address: address to get balance for
         :type address: str
         """
-        value = self.hathor_core_client.get(
+        return self.hathor_core_client.get(
                 ADDRESS_BALANCE_ENDPOINT,
                 params={'address': address},
                 timeout=10,
             )
-        if value is None:
-            return None
-        return AddressBalance.from_dict(value)
 
     def get_address_search(
             self, address: str, count: int, page: Optional[str] = None,
-            hash: Optional[str] = None, token: Optional[str] = None) -> Optional[AddressSearch]:
+            hash: Optional[str] = None, token: Optional[str] = None) -> Optional[dict]:
         """Retrieve address balance from full-node
 
         :param address: address to get balance for
@@ -74,11 +69,8 @@ class NodeApiGateway:
         if page:
             params['page'] = page
 
-        value = self.hathor_core_client.get(
+        return self.hathor_core_client.get(
                 ADDRESS_SEARCH_ENDPOINT,
                 params=params,
                 timeout=10,
             )
-        if value is None:
-            return None
-        return AddressSearch.from_dict(value)
