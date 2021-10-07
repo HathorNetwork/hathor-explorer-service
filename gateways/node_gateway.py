@@ -1,8 +1,10 @@
-from typing import Callable, List, Union
+from typing import Callable, Dict, List, Union
 
 from common.configuration import DATA_AGGREGATOR_LAMBDA_NAME, NODE_CACHE_TTL
+from common.errors import ConfigError
+from domain.network.network import AggregatedNode, AggregatedPeer, Network
 from domain.network.node import Node
-from gateways.clients.cache_client import NODE_COLLECTION_NAME, CacheClient
+from gateways.clients.cache_client import NETWORK_COLLECTION_NAME, NODE_COLLECTION_NAME, CacheClient
 from gateways.clients.hathor_core_client import STATUS_ENDPOINT, HathorCoreAsyncClient
 from gateways.clients.lambda_client import LambdaClient
 
@@ -48,7 +50,7 @@ class NodeGateway:
         if lambda_name is not None:
             return self.lambda_client.invoke_async(lambda_name, payload.to_dict())
 
-        raise Exception('No lambda name in config')
+        raise ConfigError('No lambda name in config')
 
     def save_node(self, id: str, node: Node) -> Union[bool, None]:
         """Saves Node data into cache with id as key
@@ -77,6 +79,29 @@ class NodeGateway:
 
         return None
 
+    def save_network(self, network: Network) -> Union[bool, None]:
+        """Saves Network data into cache with '1' as key
+
+        :param network: Network object with data
+        :type network: :py:class:`domain.network.network.Network`
+        :return: If saved successfuly or not
+        :rtype: bool
+        """
+        return self.cache_client.set(NETWORK_COLLECTION_NAME, 'v1', network.to_dict())
+
+    def get_network(self) -> Union[Network, None]:
+        """Retrives network data
+
+        :return: Network data or None if nothing found
+        :rtype: Union[Node, None]
+        """
+        value = self.cache_client.get(NETWORK_COLLECTION_NAME, 'v1')
+
+        if value is not None:
+            return Network.from_dict(value)
+
+        return None
+
     def list_node_keys(self) -> List[str]:
         """List current ids of saved nodes
 
@@ -84,3 +109,21 @@ class NodeGateway:
         :rtype: List[str]
         """
         return self.cache_client.keys(NODE_COLLECTION_NAME)
+
+    def aggregate_network(self) -> Network:
+        peers: Dict[str, AggregatedPeer] = {}
+        nodes = []
+
+        for node_id in self.list_node_keys():
+            node = self.get_node(node_id)
+            if not node:
+                continue
+            for peer in node.connected_peers:
+                if not peers.get(peer.id, None):
+                    peers[peer.id] = AggregatedPeer.from_peer(peer)
+
+                peers[peer.id].add_connected_to(node.id)
+
+            nodes.append(AggregatedNode.from_node(node))
+
+        return Network(nodes=nodes, peers=[peer for id, peer in peers.items()])

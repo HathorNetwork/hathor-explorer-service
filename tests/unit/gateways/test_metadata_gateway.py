@@ -3,6 +3,7 @@ from unittest.mock import MagicMock, patch
 
 from pytest import fixture, raises
 
+from common.errors import ConfigError
 from gateways.metadata_gateway import MetadataGateway
 from tests.fixtures.metadata_factory import TokenMetadataFactory, TransactionMetadataFactory
 
@@ -82,5 +83,5 @@ class TestMetadataGateway:
     def test_get_dag_metadata_raises_exception(self):
         gateway = MetadataGateway()
 
-        with raises(Exception, match=r'No bucket name in config'):
+        with raises(ConfigError, match=r'No bucket name in config'):
             gateway.get_dag_metadata('token-id')

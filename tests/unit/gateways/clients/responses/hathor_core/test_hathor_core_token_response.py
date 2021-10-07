@@ -1,5 +1,6 @@
 import pytest
 
+from common.errors import HathorCoreMalformedToken, HathorCoreUnknownToken
 from gateways.clients.responses.hathor_core.hathor_core_token_response import HathorCoreTokenResponse
 from tests.fixtures.hathor_core_fixtures import HATHOR_CORE_GET_TOKEN, HATHOR_CORE_GET_TOKEN_INVALID
 
@@ -54,7 +55,7 @@ class TestHathorCoreTokenResponse:
 
         token_id = '0058dacaa9cb6e120e825fa40f738273f3bf87e82c8b376158695a4fb42abcde'
 
-        with pytest.raises(Exception, match=r'unknown_token'):
+        with pytest.raises(HathorCoreUnknownToken, match=r'unknown_token'):
             token_response.to_token(token_id)
 
     def test_to_token_weird_response(self):
@@ -64,5 +65,5 @@ class TestHathorCoreTokenResponse:
 
         token_id = '0058dacaa9cb6e120e825fa40f738273f3bf87e82c8b376158695a4fb42abcde'
 
-        with pytest.raises(Exception, match=r'malformed_token'):
+        with pytest.raises(HathorCoreMalformedToken, match=r'malformed_token'):
             token_response.to_token(token_id)

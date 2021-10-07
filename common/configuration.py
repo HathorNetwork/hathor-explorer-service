@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import Any
 
 from decouple import Csv, config
 
@@ -25,6 +26,24 @@ class Environment(Enum):
         return cls.DEV
 
 
+class LogRenderer(Enum):
+    JSON = 'json'
+    CONSOLE = 'console'
+
+    @property
+    def renderer_class(self) -> Any:
+        import structlog
+        class_mapping = {
+            'json': structlog.processors.JSONRenderer,
+            'console': structlog.dev.ConsoleRenderer,
+        }
+        return class_mapping[self.value]
+
+    @classmethod
+    def default(cls) -> 'LogRenderer':
+        return cls.JSON
+
+
 ENVIRONMENT = Environment(config('ENVIRONMENT', default=Environment.default().value).upper())
 
 API_PORT = config('API_PORT', default=None)
@@ -47,3 +66,5 @@ REDIS_DB = config('REDIS_DB', default='0', cast=int)
 METADATA_BUCKET = config('METADATA_BUCKET', default=None)
 
 CORS_ALLOWED_ORIGIN = config('CORS_ALLOWED_ORIGIN', default=None)
+
+LOG_RENDERER = LogRenderer(config('LOG_RENDERER', default=LogRenderer.default().value))

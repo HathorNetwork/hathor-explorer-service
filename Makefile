@@ -9,6 +9,19 @@ default: help
 help:
 	@echo "Use 'make build' to generate the docker image and 'make run' to launch it."
 
+.PHONY: clean
+clean:
+	find . -name __pycache__ -exec rm -rf {} \;
+	find . -name \.pytest_cache -exec rm -rf {} \;
+	find . -name \.mypy_cache -exec rm -rf {} \;
+	find . -name \*\.py[cod] -exec rm -rf {} \;
+	rm -rf htmlcov coverage
+	rm .coverage coverage.xml
+
+.PHONY: clean-all
+clean-all: clean
+	rm -rf .serverless node_modules .vscode .env
+
 .PHONY: mypy
 mypy:
 	mypy $(mypy_flags) ${py_sources}
