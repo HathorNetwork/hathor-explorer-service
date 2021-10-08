@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "hathor-explorer-service"
-version = "0.1.7"
+version = "0.1.8"
 description = ""
 authors = ["Hathor Labs <contact@hathor.network>"]
 license = "MIT"
@@ -17,7 +17,6 @@ dacite = "^1.6.0"
 requests = "^2.25.1"
 structlog = "^21.1.0"
 deepdiff = "^5.5.0"
-asyncio = "^3.4.3"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.4"
