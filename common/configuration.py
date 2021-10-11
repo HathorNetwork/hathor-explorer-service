@@ -62,6 +62,7 @@ REDIS_KEY_PREFIX = config('REDIS_KEY_PREFIX', default=None)
 REDIS_HOST = config('REDIS_HOST', default=None)
 REDIS_PORT = config('REDIS_PORT', default=None)
 REDIS_DB = config('REDIS_DB', default='0', cast=int)
+REDIS_TIMEOUT = config('REDIS_TIMEOUT', default='2', cast=int)
 
 METADATA_BUCKET = config('METADATA_BUCKET', default=None)
 
