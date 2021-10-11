@@ -155,6 +155,7 @@ functions:
   node_api_get_address_balance:
     handler: handlers/node_api.get_address_balance
     timeout: 15
+    maximumRetryAttempts: 0
     package:
       patterns:
         - 'handlers/node_api.py'
@@ -174,6 +175,7 @@ functions:
   node_api_get_address_search:
     handler: handlers/node_api.get_address_search
     timeout: 15
+    maximumRetryAttempts: 0
     package:
       patterns:
         - 'handlers/node_api.py'
