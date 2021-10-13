@@ -93,6 +93,9 @@ def get_dashboard_tx(
     block = event.query.get("block")
     tx = event.query.get("tx")
 
+    if block is None or tx is None:
+        raise ApiError("invalid_parameters")
+
     response = node_api.get_dashboard_tx(block, tx)
 
     return {
@@ -112,6 +115,10 @@ def get_transaction_acc_weight(
 ) -> dict:
     node_api = node_api or NodeApi()
     id = event.query.get("id")
+
+    if id is None:
+        raise ApiError("invalid_parameters")
+
     response = node_api.get_transaction_acc_weight(id)
 
     return {
@@ -163,6 +170,9 @@ def get_transaction(
 ) -> dict:
     node_api = node_api or NodeApi()
     id = event.query.get("id")
+
+    if id is None:
+        raise ApiError("invalid_parameters")
     response = node_api.get_transaction(id)
 
     return {
@@ -214,6 +224,9 @@ def get_token(
 ) -> dict:
     node_api = node_api or NodeApi()
     id = event.query.get("id")
+
+    if id is None:
+        raise ApiError("invalid_parameters")
     response = node_api.get_token(id)
 
     return {
