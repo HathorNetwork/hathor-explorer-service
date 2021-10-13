@@ -198,6 +198,7 @@ functions:
 
   node_api_get_version:
     handler: handlers/node_api.get_version
+    maximumRetryAttempts: 0
     package:
       patterns:
         - 'handlers/node_api.py'
@@ -214,6 +215,7 @@ functions:
 
   node_api_get_dashboard_tx:
     handler: handlers/node_api.get_dashboard_tx
+    maximumRetryAttempts: 0
     package:
       patterns:
         - 'handlers/node_api.py'
@@ -233,6 +235,7 @@ functions:
 
   node_api_get_transaction_acc_weight:
     handler: handlers/node_api.get_transaction_acc_weight
+    maximumRetryAttempts: 0
     package:
       patterns:
         - 'handlers/node_api.py'
@@ -251,6 +254,7 @@ functions:
 
   node_api_get_token_history:
     handler: handlers/node_api.get_token_history
+    maximumRetryAttempts: 0
     package:
       patterns:
         - 'handlers/node_api.py'
@@ -273,6 +277,7 @@ functions:
 
   node_api_get_transaction:
     handler: handlers/node_api.get_transaction
+    maximumRetryAttempts: 0
     package:
       patterns:
         - 'handlers/node_api.py'
@@ -291,6 +296,7 @@ functions:
 
   node_api_list_transactions:
     handler: handlers/node_api.list_transactions
+    maximumRetryAttempts: 0
     package:
       patterns:
         - 'handlers/node_api.py'
@@ -313,6 +319,7 @@ functions:
 
   node_api_get_token:
     handler: handlers/node_api.get_token
+    maximumRetryAttempts: 0
     package:
       patterns:
         - 'handlers/node_api.py'
@@ -331,6 +338,7 @@ functions:
 
   node_api_list_tokens:
     handler: handlers/node_api.list_tokens
+    maximumRetryAttempts: 0
     package:
       patterns:
         - 'handlers/node_api.py'
