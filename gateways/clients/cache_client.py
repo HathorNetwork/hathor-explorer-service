@@ -3,7 +3,7 @@ from typing import Any, List, Optional
 
 from redis import StrictRedis
 
-from common.configuration import REDIS_DB, REDIS_HOST, REDIS_KEY_PREFIX, REDIS_PORT
+from common.configuration import REDIS_DB, REDIS_HOST, REDIS_KEY_PREFIX, REDIS_PORT, REDIS_TIMEOUT
 
 NODE_COLLECTION_NAME = 'node'
 NETWORK_COLLECTION_NAME = 'network'
@@ -17,7 +17,8 @@ class CacheClient:
         client_args = {
             'host': REDIS_HOST,
             'port': REDIS_PORT,
-            'db': REDIS_DB
+            'db': REDIS_DB,
+            'socket_timeout': REDIS_TIMEOUT,
         }
 
         client_args = {k: v for k, v in client_args.items() if v is not None}

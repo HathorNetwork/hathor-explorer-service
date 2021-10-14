@@ -1,6 +1,6 @@
 {
   "name": "hathor-explorer-service",
-  "version": "0.1.8",
+  "version": "0.1.10",
   "description": "Hathor Explorer Service Serverless deps",
   "dependencies": {
     "serverless": "^2.44.0",
