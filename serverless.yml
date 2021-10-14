@@ -191,3 +191,7 @@ functions:
             ttlInSeconds: 300
             cacheKeyParameters:
               - name: request.querystring.address
+              - name: request.querystring.count
+              - name: request.querystring.token
+              - name: request.querystring.page
+              - name: request.querystring.hash
