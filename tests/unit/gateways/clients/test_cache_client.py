@@ -23,15 +23,20 @@ class TestCacheClient:
         assert cache_client.get('lightsaber', 'purple') is None
 
     def test_keys(self, cache_client):
+        cache_client.set('planet', 'tatooine', {'where': 'Middle of nowhere'})
+        cache_client.set('planet-system', 'kamino', {'where': 'Not in archives'})
+
         cache_client.set('spaceships', 'millenium-falcon', {'owner': 'Han Solo'})
         cache_client.set('spaceships', 'deathstar', {'owner': 'Darth Vader'})
         cache_client.set('spaceships', 'x-wing', {'owner': 'Alliance'})
         cache_client.set('darth-vader-children', 'luke', {'surname': 'skywalker'})
         cache_client.set('darth-vader-children', 'leia', {'surname': 'organa'})
 
+        expected_planet_keys = ['tatooine']
         expected_spaceships_keys = ['millenium-falcon', 'deathstar', 'x-wing']
         expected_vader_chidren_keys = ['luke', 'leia']
 
-        assert cache_client.keys('spaceships') == expected_spaceships_keys
-        assert cache_client.keys('darth-vader-children') == expected_vader_chidren_keys
-        assert cache_client.keys('crash-sound') == []
+        assert sorted(cache_client.keys('planet')) == sorted(expected_planet_keys)
+        assert sorted(cache_client.keys('spaceships')) == sorted(expected_spaceships_keys)
+        assert sorted(cache_client.keys('darth-vader-children')) == sorted(expected_vader_chidren_keys)
+        assert sorted(cache_client.keys('crash-sound')) == []

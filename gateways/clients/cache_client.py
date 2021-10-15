@@ -65,8 +65,10 @@ class CacheClient:
         :return: the list of keys
         :rtype: List[str]
         """
-        return [self._extract_key_from_context(key.decode()) for key in self.client.keys()
-                if key.decode().startswith(self._get_context_collection(collection))]
+        return [
+            self._extract_key_from_context(key.decode())
+            for key in self.client.scan_iter(self._get_context_collection(collection)+'.*')
+        ]
 
     def _extract_key_from_context(self, key: str) -> str:
         """Returns the simple key from a raw key. This is the reverse operation of `_get_context_key`
