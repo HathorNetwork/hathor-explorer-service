@@ -16,6 +16,10 @@ def get_address_balance(
     _context: LambdaContext,
     node_api: Optional[NodeApi] = None
 ) -> dict:
+    """Get the token balance of a given address.
+
+        *IMPORTANT: Any changes on the parameters should be reflected on the `cacheKeyParameters` for this method.
+    """
     node_api = node_api or NodeApi()
     address = event.query.get("address")
     if address is None:
@@ -38,6 +42,10 @@ def get_address_search(
     _context: LambdaContext,
     node_api: Optional[NodeApi] = None
 ) -> dict:
+    """Get a paginated list of transactions for a given address.
+
+        *IMPORTANT: Any changes on the parameters should be reflected on the `cacheKeyParameters` for this method.
+    """
     node_api = node_api or NodeApi()
 
     address = event.query.get("address")
@@ -69,6 +77,10 @@ def get_version(
     _context: LambdaContext,
     node_api: Optional[NodeApi] = None
 ) -> dict:
+    """Get the node version settings.
+
+        *IMPORTANT: Any changes on the parameters should be reflected on the `cacheKeyParameters` for this method.
+    """
     node_api = node_api or NodeApi()
 
     response = node_api.get_version()
@@ -88,6 +100,10 @@ def get_dashboard_tx(
     _context: LambdaContext,
     node_api: Optional[NodeApi] = None
 ) -> dict:
+    """Get the txs and blocks to be shown on the dashboard.
+
+        *IMPORTANT: Any changes on the parameters should be reflected on the `cacheKeyParameters` for this method.
+    """
     node_api = node_api or NodeApi()
 
     block = event.query.get("block")
@@ -113,6 +129,10 @@ def get_transaction_acc_weight(
     _context: LambdaContext,
     node_api: Optional[NodeApi] = None
 ) -> dict:
+    """Get a tx accumulated weight data.
+
+        *IMPORTANT: Any changes on the parameters should be reflected on the `cacheKeyParameters` for this method.
+    """
     node_api = node_api or NodeApi()
     id = event.query.get("id")
 
@@ -136,6 +156,10 @@ def get_token_history(
     _context: LambdaContext,
     node_api: Optional[NodeApi] = None
 ) -> dict:
+    """Get a paginated history of transactions for a given token id.
+
+        *IMPORTANT: Any changes on the parameters should be reflected on the `cacheKeyParameters` for this method.
+    """
     node_api = node_api or NodeApi()
 
     id = event.query.get("id")
@@ -168,6 +192,10 @@ def get_transaction(
     _context: LambdaContext,
     node_api: Optional[NodeApi] = None
 ) -> dict:
+    """Get transaction details given a tx_id.
+
+        *IMPORTANT: Any changes on the parameters should be reflected on the `cacheKeyParameters` for this method.
+    """
     node_api = node_api or NodeApi()
     id = event.query.get("id")
 
@@ -190,6 +218,10 @@ def list_transactions(
     _context: LambdaContext,
     node_api: Optional[NodeApi] = None
 ) -> dict:
+    """Get a pagination on blocks or transactions with details.
+
+        *IMPORTANT: Any changes on the parameters should be reflected on the `cacheKeyParameters` for this method.
+    """
     node_api = node_api or NodeApi()
 
     type = event.query.get("type")
@@ -222,6 +254,10 @@ def get_token(
     _context: LambdaContext,
     node_api: Optional[NodeApi] = None
 ) -> dict:
+    """Get token details given a token uid.
+
+        *IMPORTANT: Any changes on the parameters should be reflected on the `cacheKeyParameters` for this method.
+    """
     node_api = node_api or NodeApi()
     id = event.query.get("id")
 
@@ -244,6 +280,10 @@ def list_tokens(
     _context: LambdaContext,
     node_api: Optional[NodeApi] = None
 ) -> dict:
+    """Get a list of tokens with details.
+
+        *IMPORTANT: Any changes on the parameters should be reflected on the `cacheKeyParameters` for this method.
+    """
     node_api = node_api or NodeApi()
     response = node_api.list_tokens()
     return {
