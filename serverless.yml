@@ -195,3 +195,160 @@ functions:
               - name: request.querystring.token
               - name: request.querystring.page
               - name: request.querystring.hash
+
+  node_api_get_version:
+    handler: handlers/node_api.get_version
+    maximumRetryAttempts: 0
+    package:
+      patterns:
+        - 'handlers/node_api.py'
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: node_api/version
+          method: get
+          cors: true
+          caching:
+            enabled: true
+            ttlInSeconds: 3600
+
+  node_api_get_dashboard_tx:
+    handler: handlers/node_api.get_dashboard_tx
+    maximumRetryAttempts: 0
+    package:
+      patterns:
+        - 'handlers/node_api.py'
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: node_api/dashboard_tx
+          method: get
+          cors: true
+          caching:
+            enabled: true
+            ttlInSeconds: 10
+            cacheKeyParameters:
+              - name: request.querystring.block
+              - name: request.querystring.tx
+
+  node_api_get_transaction_acc_weight:
+    handler: handlers/node_api.get_transaction_acc_weight
+    maximumRetryAttempts: 0
+    package:
+      patterns:
+        - 'handlers/node_api.py'
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: node_api/transaction_acc_weight
+          method: get
+          cors: true
+          caching:
+            enabled: true
+            ttlInSeconds: 5
+            cacheKeyParameters:
+              - name: request.querystring.id
+
+  node_api_get_token_history:
+    handler: handlers/node_api.get_token_history
+    maximumRetryAttempts: 0
+    package:
+      patterns:
+        - 'handlers/node_api.py'
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: node_api/token_history
+          method: get
+          cors: true
+          caching:
+            enabled: true
+            ttlInSeconds: 10
+            cacheKeyParameters:
+              - name: request.querystring.id
+              - name: request.querystring.count
+              - name: request.querystring.hash
+              - name: request.querystring.page
+              - name: request.querystring.timestamp
+
+  node_api_get_transaction:
+    handler: handlers/node_api.get_transaction
+    maximumRetryAttempts: 0
+    package:
+      patterns:
+        - 'handlers/node_api.py'
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: node_api/transaction
+          method: get
+          cors: true
+          caching:
+            enabled: true
+            ttlInSeconds: 10
+            cacheKeyParameters:
+              - name: request.querystring.id
+
+  node_api_list_transactions:
+    handler: handlers/node_api.list_transactions
+    maximumRetryAttempts: 0
+    package:
+      patterns:
+        - 'handlers/node_api.py'
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: node_api/transactions
+          method: get
+          cors: true
+          caching:
+            enabled: true
+            ttlInSeconds: 10
+            cacheKeyParameters:
+              - name: request.querystring.type
+              - name: request.querystring.count
+              - name: request.querystring.hash
+              - name: request.querystring.page
+              - name: request.querystring.timestamp
+
+  node_api_get_token:
+    handler: handlers/node_api.get_token
+    maximumRetryAttempts: 0
+    package:
+      patterns:
+        - 'handlers/node_api.py'
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: node_api/token
+          method: get
+          cors: true
+          caching:
+            enabled: true
+            ttlInSeconds: 10
+            cacheKeyParameters:
+              - name: request.querystring.id
+
+  node_api_list_tokens:
+    handler: handlers/node_api.list_tokens
+    maximumRetryAttempts: 0
+    package:
+      patterns:
+        - 'handlers/node_api.py'
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: node_api/tokens
+          method: get
+          cors: true
+          caching:
+            enabled: true
+            ttlInSeconds: 3600

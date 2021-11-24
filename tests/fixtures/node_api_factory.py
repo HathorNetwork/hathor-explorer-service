@@ -97,3 +97,16 @@ class AddressSearchFactory(factory.DictFactory):
     has_more = factory.Faker('boolean')
     total = factory.Faker('random_int', min=1, max=999999)
     transactions = factory.LazyFunction(lambda: [TransactionFactory() for _ in range(fake.random_int(min=1, max=20))])
+
+
+class VersionResourceFactory(factory.DictFactory):
+    version = factory.Faker('ipv4')  # not actuallt ipv4, but it generated some dot separated numbers
+    network = factory.Faker('word')
+    min_weight = factory.Faker('random_int', max=100)
+    min_tx_weight = factory.Faker('random_int', max=100)
+    min_tx_weight_coefficient = factory.Faker('pyfloat', positive=True)
+    token_deposit_percentage = factory.Faker('pyfloat', positive=True, max_value=1)
+    min_tx_weight_k = factory.Faker('random_int', max=999)
+    reward_spend_min_blocks = factory.Faker('random_int')
+    max_number_inputs = factory.Faker('random_int')
+    max_number_outputs = factory.Faker('random_int')
