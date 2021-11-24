@@ -149,6 +149,7 @@ functions:
           cors: true
           caching:
             enabled: true
+            ttlInSeconds: 10
             cacheKeyParameters:
               - name: request.querystring.id
 
