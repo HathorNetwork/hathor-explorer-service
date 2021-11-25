@@ -85,3 +85,13 @@ class TestMetadataGateway:
 
         with raises(ConfigError, match=r'No bucket name in config'):
             gateway.get_dag_metadata('token-id')
+
+    @patch('gateways.metadata_gateway.json.loads', side_effect=ValueError('mock-error'))
+    @patch('gateways.metadata_gateway.METADATA_BUCKET', 'metadata')
+    def test_get_dag_metadata_return_non_json(self, s3_client):
+        s3_client.load_file = MagicMock(return_value='{"foo":"bar"}')
+
+        gateway = MetadataGateway(s3_client=s3_client)
+
+        result = gateway._get_metadata('obj_name')
+        assert result is None

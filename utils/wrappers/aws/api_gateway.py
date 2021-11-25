@@ -21,10 +21,10 @@ def parse_body(event: dict) -> dict:
 class ApiGatewayEvent:
 
     def __init__(self, event: dict, context: LambdaContext) -> None:
-        self.query = event.get('queryStringParameters', {})
-        self.path = event.get('pathParameters', {})
+        self.query = event.get('queryStringParameters') or {}
+        self.path = event.get('pathParameters') or {}
         self.body = parse_body(event)
-        self.headers = event.get('headers', {})
+        self.headers = event.get('headers') or {}
 
 
 class ApiGateway:

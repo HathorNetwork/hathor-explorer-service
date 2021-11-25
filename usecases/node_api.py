@@ -41,3 +41,39 @@ class NodeApi:
         except HathorCoreTimeout:
             self.node_api_gateway.blacklist_address(address)
             return ADDRESS_BLACKLIST_RESPONSE
+
+    def get_version(self) -> Optional[dict]:
+        return self.node_api_gateway.get_version()
+
+    def get_dashboard_tx(self, block: int, tx: int) -> Optional[dict]:
+        return self.node_api_gateway.get_dashboard_tx(block, tx)
+
+    def get_transaction_acc_weight(self, id: str) -> Optional[dict]:
+        return self.node_api_gateway.get_transaction_acc_weight(id)
+
+    def get_token_history(
+            self,
+            id: str,
+            count: int,
+            hash: Optional[str] = None,
+            page: Optional[str] = None,
+            timestamp: Optional[int] = None) -> Optional[dict]:
+        return self.node_api_gateway.get_token_history(id, count, hash, page, timestamp)
+
+    def get_transaction(self, id: str) -> Optional[dict]:
+        return self.node_api_gateway.get_transaction(id)
+
+    def list_transactions(
+            self,
+            type: str,
+            count: int,
+            hash: Optional[str] = None,
+            page: Optional[str] = None,
+            timestamp: Optional[int] = None) -> Optional[dict]:
+        return self.node_api_gateway.list_transactions(type, count, hash, page, timestamp)
+
+    def get_token(self, id: str) -> Optional[dict]:
+        return self.node_api_gateway.get_token(id)
+
+    def list_tokens(self) -> Optional[dict]:
+        return self.node_api_gateway.list_tokens()
