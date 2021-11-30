@@ -234,7 +234,7 @@ functions:
               - name: request.querystring.block
               - name: request.querystring.tx
 
-  node_api_get_transaction_acc_weight:
+  node_api_get_tx_acc_w:
     handler: handlers/node_api.get_transaction_acc_weight
     maximumRetryAttempts: 0
     package:
