@@ -253,3 +253,30 @@ class TestNodeApiCommon:
         node_api_gateway.list_tokens.assert_called_once()
         assert result
         assert sorted(result) == sorted(obj)
+
+    def test_decode_tx(self, node_api_gateway):
+        obj = {"foo": "bar"}
+        node_api_gateway.decode_tx = MagicMock(return_value=obj)
+        node_api = NodeApi(node_api_gateway)
+        result = node_api.decode_tx('mock-tx-hex')
+        node_api_gateway.decode_tx.assert_called_once_with('mock-tx-hex')
+        assert result
+        assert sorted(result) == sorted(obj)
+
+    def test_push_tx(self, node_api_gateway):
+        obj = {"foo": "bar"}
+        node_api_gateway.push_tx = MagicMock(return_value=obj)
+        node_api = NodeApi(node_api_gateway)
+        result = node_api.push_tx('mock-tx-hex')
+        node_api_gateway.push_tx.assert_called_once_with('mock-tx-hex')
+        assert result
+        assert sorted(result) == sorted(obj)
+
+    def test_graphviz_dot_neighbors(self, node_api_gateway):
+        obj = {"foo": "bar"}
+        node_api_gateway.graphviz_dot_neighbors = MagicMock(return_value=obj)
+        node_api = NodeApi(node_api_gateway)
+        result = node_api.graphviz_dot_neighbors('123', '456', 789)
+        node_api_gateway.graphviz_dot_neighbors.assert_called_once_with('123', '456', 789)
+        assert result
+        assert sorted(result) == sorted(obj)
