@@ -348,7 +348,7 @@ def graphviz_dot_neighbors(
     """Generate file with the graph of neighbours of a tx in dot format."""
     node_api = node_api or NodeApi()
     tx = event.query.get("tx")
-    graph_type = event.query.get("graph_type") # verification, funds
+    graph_type = event.query.get("graph_type")  # verification, funds
     max_level = event.query.get("max_level")
 
     if tx is None or graph_type is None or max_level is None:

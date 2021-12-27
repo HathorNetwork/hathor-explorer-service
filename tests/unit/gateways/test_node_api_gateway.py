@@ -226,7 +226,7 @@ class TestNodeApiGateway:
         assert sorted(result) == sorted(obj)
 
     @patch('gateways.node_api_gateway.PUSH_TX_ENDPOINT', 'mock-endpoint')
-    def test_decode_tx(self, hathor_client):
+    def test_push_tx(self, hathor_client):
         obj = {'foo': 'bar'}
         hathor_client.get = MagicMock(return_value=obj)
         gateway = NodeApiGateway(hathor_core_client=hathor_client)
