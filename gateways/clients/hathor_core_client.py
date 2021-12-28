@@ -1,3 +1,4 @@
+import json
 from typing import Any, Callable, Optional
 from urllib import parse
 
@@ -71,7 +72,7 @@ class HathorCoreClient:
         self.domain = domain or HATHOR_CORE_DOMAIN
         self.log = logger.new(client="sync")
 
-    def get(self, path: str, params: Optional[dict] = None, is_json: bool = True, **kwargs: Any) -> Optional[dict]:
+    def get_text(self, path: str, params: Optional[dict] = None, **kwargs: Any) -> Optional[str]:
         """Make a get request
 
         :param path: path to be requested
@@ -81,7 +82,7 @@ class HathorCoreClient:
         :param **kwargs: kwargs for `requests.get`
         :type **kwargs: Any
         :return: request response
-        :rtype: Optional[dict]
+        :rtype: Optional[str]
         """
         url = parse.urljoin(f"https://{self.domain}", path)
 
@@ -100,13 +101,31 @@ class HathorCoreClient:
                     status=response.status_code,
                     body=response.text)
 
-            if is_json:
-                return response.json()
-            else:
-                return response.text
+            return response.text
         except requests.ReadTimeout:
             self.log.error("hathor_core_error", error="timeout", path=path)
             raise HathorCoreTimeout('timeout')
         except Exception as e:
+            self.log.error("hathor_core_error", error=repr(e), path=path)
+            return json.dumps({'error': repr(e)})
+
+    def get(self, path: str, params: Optional[dict] = None, **kwargs: Any) -> Optional[dict]:
+        """Make a get request expecting a json encoded response
+
+        :param path: path to be requested
+        :type path: str
+        :param params: params to be sent
+        :type params: Optional[dict]
+        :param **kwargs: kwargs for `requests.get`
+        :type **kwargs: Any
+        :return: request response
+        :rtype: Optional[dict]
+        """
+        text = self.get_text(path, params=params, **kwargs)
+        if not text:
+            return None
+        try:
+            return json.loads(text)
+        except json.JSONDecodeError as e:
             self.log.error("hathor_core_error", error=repr(e), path=path)
             return {'error': repr(e)}

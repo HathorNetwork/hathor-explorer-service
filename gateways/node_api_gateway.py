@@ -144,7 +144,7 @@ class NodeApiGateway:
             "graph_type": graph_type,
             "max_level": max_level,
         }
-        return self.hathor_core_client.get(GRAPHVIZ_DOT_NEIGHBORS_ENDPOINT, params=data, is_json=False)
+        return self.hathor_core_client.get_text(GRAPHVIZ_DOT_NEIGHBORS_ENDPOINT, params=data)
 
     def list_transactions(
             self,

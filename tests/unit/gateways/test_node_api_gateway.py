@@ -1,3 +1,4 @@
+import json
 from unittest.mock import MagicMock, patch
 
 from pytest import fixture
@@ -237,15 +238,15 @@ class TestNodeApiGateway:
 
     @patch('gateways.node_api_gateway.GRAPHVIZ_DOT_NEIGHBORS_ENDPOINT', 'mock-endpoint')
     def test_graphviz_dot_neighbors(self, hathor_client):
-        obj = {'foo': 'bar'}
+        obj = json.dumps({'foo': 'bar'})
         data = {
             "tx": "123",
             "graph_type": "456",
             "max_level": 789,
         }
-        hathor_client.get = MagicMock(return_value=obj)
+        hathor_client.get_text = MagicMock(return_value=obj)
         gateway = NodeApiGateway(hathor_core_client=hathor_client)
         result = gateway.graphviz_dot_neighbors(**data)
-        hathor_client.get.assert_called_once_with('mock-endpoint', params=data)
+        hathor_client.get_text.assert_called_once_with('mock-endpoint', params=data)
         assert result
-        assert sorted(result) == sorted(obj)
+        assert result == obj

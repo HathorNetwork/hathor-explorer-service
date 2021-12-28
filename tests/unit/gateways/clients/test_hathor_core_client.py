@@ -1,4 +1,5 @@
-from unittest.mock import MagicMock, patch
+import json
+from unittest.mock import patch
 
 import requests
 from pytest import raises
@@ -9,9 +10,23 @@ from gateways.clients.hathor_core_client import HathorCoreClient
 class TestHathorCoreClient:
 
     @patch('gateways.clients.hathor_core_client.requests.get')
+    def test_get_text(self, mocked_get):
+        mocked_get.return_value.status_code = 200
+        expected = json.dumps({'success': True})
+        mocked_get.return_value.text = expected
+
+        client = HathorCoreClient('mydomain.com')
+
+        result = client.get_text('/some/path', {'page': 2})
+
+        mocked_get.assert_called_once_with('https://mydomain.com/some/path', params={'page': 2})
+        assert result
+        assert result == expected
+
+    @patch('gateways.clients.hathor_core_client.requests.get')
     def test_get(self, mocked_get):
         mocked_get.return_value.status_code = 200
-        mocked_get.return_value.json = MagicMock(return_value={'success': True})
+        mocked_get.return_value.text = json.dumps({'success': True})
 
         client = HathorCoreClient('mydomain.com')
 
