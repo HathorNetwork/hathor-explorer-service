@@ -71,7 +71,7 @@ class HathorCoreClient:
         self.domain = domain or HATHOR_CORE_DOMAIN
         self.log = logger.new(client="sync")
 
-    def get(self, path: str, params: Optional[dict] = None, **kwargs: Any) -> Optional[dict]:
+    def get(self, path: str, params: Optional[dict] = None, is_json: bool = True, **kwargs: Any) -> Optional[dict]:
         """Make a get request
 
         :param path: path to be requested
@@ -100,7 +100,10 @@ class HathorCoreClient:
                     status=response.status_code,
                     body=response.text)
 
-            return response.json()
+            if is_json:
+                return response.json()
+            else:
+                return response.text
         except requests.ReadTimeout:
             self.log.error("hathor_core_error", error="timeout", path=path)
             raise HathorCoreTimeout('timeout')

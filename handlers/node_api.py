@@ -356,7 +356,7 @@ def graphviz_dot_neighbors(
     response = node_api.graphviz_dot_neighbors(tx, graph_type, max_level)
     return {
         "statusCode": 200,
-        "body": json.dumps(response or {}),
+        "body": response,
         "headers": {
             "Content-Type": "application/json"
         }

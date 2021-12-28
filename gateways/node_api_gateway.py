@@ -137,14 +137,14 @@ class NodeApiGateway:
         """Push a transaction from it's hex encoded struct data."""
         return self.hathor_core_client.get(PUSH_TX_ENDPOINT, params={'hex_tx': hex_tx})
 
-    def graphviz_dot_neighbors(self, tx: str, graph_type: str, max_level: int) -> Optional[dict]:
+    def graphviz_dot_neighbors(self, tx: str, graph_type: str, max_level: int) -> Optional[str]:
         """Generate file with the graph of neighbours of a tx in dot format."""
         data = {
             "tx": tx,
             "graph_type": graph_type,
             "max_level": max_level,
         }
-        return self.hathor_core_client.get(GRAPHVIZ_DOT_NEIGHBORS_ENDPOINT, params=data)
+        return self.hathor_core_client.get(GRAPHVIZ_DOT_NEIGHBORS_ENDPOINT, params=data, is_json=False)
 
     def list_transactions(
             self,
