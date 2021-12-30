@@ -353,3 +353,62 @@ functions:
           caching:
             enabled: true
             ttlInSeconds: 3600
+
+  node_api_decode_tx:
+    handler: handlers/node_api.decode_tx
+    maximumRetryAttempts: 0
+    package:
+      patterns:
+        - 'handlers/node_api.py'
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: node_api/decode_tx
+          method: get
+          cors: true
+          caching:
+            enabled: true
+            ttlInSeconds: 300
+            cacheKeyParameters:
+              - name: request.querystring.hex_tx
+
+  node_api_push_tx:
+    handler: handlers/node_api.push_tx
+    maximumRetryAttempts: 0
+    package:
+      patterns:
+        - 'handlers/node_api.py'
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: node_api/push_tx
+          method: get
+          cors: true
+          caching:
+            enabled: true
+            ttlInSeconds: 5
+            cacheKeyParameters:
+              - name: request.querystring.hex_tx
+
+  node_api_gviz_dot_neighbors:
+    handler: handlers/node_api.graphviz_dot_neighbors
+    maximumRetryAttempts: 0
+    package:
+      patterns:
+        - 'handlers/node_api.py'
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: node_api/graphviz/neighbours.dot
+          method: get
+          cors: true
+          caching:
+            enabled: true
+            ttlInSeconds: 10
+            cacheKeyParameters:
+              - name: request.querystring.tx
+              - name: request.querystring.graph_type
+              - name: request.querystring.max_level

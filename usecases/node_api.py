@@ -63,6 +63,15 @@ class NodeApi:
     def get_transaction(self, id: str) -> Optional[dict]:
         return self.node_api_gateway.get_transaction(id)
 
+    def decode_tx(self, hex_tx: str) -> Optional[dict]:
+        return self.node_api_gateway.decode_tx(hex_tx)
+
+    def push_tx(self, hex_tx: str) -> Optional[dict]:
+        return self.node_api_gateway.push_tx(hex_tx)
+
+    def graphviz_dot_neighbors(self, tx: str, graph_type: str, max_level: int) -> Optional[str]:
+        return self.node_api_gateway.graphviz_dot_neighbors(tx, graph_type, max_level)
+
     def list_transactions(
             self,
             type: str,
