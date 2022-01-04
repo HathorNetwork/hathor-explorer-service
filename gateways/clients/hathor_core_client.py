@@ -1,3 +1,4 @@
+import json
 from typing import Any, Callable, Optional
 from urllib import parse
 
@@ -13,6 +14,9 @@ logger = get_logger()
 ADDRESS_BALANCE_ENDPOINT = '/v1a/thin_wallet/address_balance'
 ADDRESS_SEARCH_ENDPOINT = '/v1a/thin_wallet/address_search'
 DASHBOARD_TX_ENDPOINT = '/v1a/dashboard_tx'
+DECODE_TX_ENDPOINT = '/v1a/decode_tx'
+PUSH_TX_ENDPOINT = '/v1a/push_tx'
+GRAPHVIZ_DOT_NEIGHBORS_ENDPOINT = '/v1a/graphviz/neighbours.dot/'
 STATUS_ENDPOINT = '/v1a/status'
 TOKEN_ENDPOINT = '/v1a/thin_wallet/token'
 TOKEN_HISTORY_ENDPOINT = '/v1a/thin_wallet/token_history'
@@ -68,7 +72,7 @@ class HathorCoreClient:
         self.domain = domain or HATHOR_CORE_DOMAIN
         self.log = logger.new(client="sync")
 
-    def get(self, path: str, params: Optional[dict] = None, **kwargs: Any) -> Optional[dict]:
+    def get_text(self, path: str, params: Optional[dict] = None, **kwargs: Any) -> Optional[str]:
         """Make a get request
 
         :param path: path to be requested
@@ -78,7 +82,7 @@ class HathorCoreClient:
         :param **kwargs: kwargs for `requests.get`
         :type **kwargs: Any
         :return: request response
-        :rtype: Optional[dict]
+        :rtype: Optional[str]
         """
         url = parse.urljoin(f"https://{self.domain}", path)
 
@@ -97,10 +101,31 @@ class HathorCoreClient:
                     status=response.status_code,
                     body=response.text)
 
-            return response.json()
+            return response.text
         except requests.ReadTimeout:
             self.log.error("hathor_core_error", error="timeout", path=path)
             raise HathorCoreTimeout('timeout')
         except Exception as e:
+            self.log.error("hathor_core_error", error=repr(e), path=path)
+            return json.dumps({'error': repr(e)})
+
+    def get(self, path: str, params: Optional[dict] = None, **kwargs: Any) -> Optional[dict]:
+        """Make a get request expecting a json encoded response
+
+        :param path: path to be requested
+        :type path: str
+        :param params: params to be sent
+        :type params: Optional[dict]
+        :param **kwargs: kwargs for `requests.get`
+        :type **kwargs: Any
+        :return: request response
+        :rtype: Optional[dict]
+        """
+        text = self.get_text(path, params=params, **kwargs)
+        if not text:
+            return None
+        try:
+            return json.loads(text)
+        except json.JSONDecodeError as e:
             self.log.error("hathor_core_error", error=repr(e), path=path)
             return {'error': repr(e)}

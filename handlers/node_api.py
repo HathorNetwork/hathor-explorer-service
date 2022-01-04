@@ -293,3 +293,71 @@ def list_tokens(
             "Content-Type": "application/json"
         }
     }
+
+
+@ApiGateway()
+def decode_tx(
+    event: ApiGatewayEvent,
+    _context: LambdaContext,
+    node_api: Optional[NodeApi] = None
+) -> dict:
+    """Decode a tx by it's struct data hex encoded."""
+    node_api = node_api or NodeApi()
+    hex_tx = event.query.get("hex_tx")
+
+    if hex_tx is None:
+        raise ApiError("invalid_parameters")
+    response = node_api.decode_tx(hex_tx)
+    return {
+        "statusCode": 200,
+        "body": json.dumps(response or {}),
+        "headers": {
+            "Content-Type": "application/json"
+        }
+    }
+
+
+@ApiGateway()
+def push_tx(
+    event: ApiGatewayEvent,
+    _context: LambdaContext,
+    node_api: Optional[NodeApi] = None
+) -> dict:
+    """Push a transaction by it's struct data hex encoded."""
+    node_api = node_api or NodeApi()
+    hex_tx = event.query.get("hex_tx")
+
+    if hex_tx is None:
+        raise ApiError("invalid_parameters")
+    response = node_api.push_tx(hex_tx)
+    return {
+        "statusCode": 200,
+        "body": json.dumps(response or {}),
+        "headers": {
+            "Content-Type": "application/json"
+        }
+    }
+
+
+@ApiGateway()
+def graphviz_dot_neighbors(
+    event: ApiGatewayEvent,
+    _context: LambdaContext,
+    node_api: Optional[NodeApi] = None
+) -> dict:
+    """Generate file with the graph of neighbours of a tx in dot format."""
+    node_api = node_api or NodeApi()
+    tx = event.query.get("tx")
+    graph_type = event.query.get("graph_type")  # verification, funds
+    max_level = event.query.get("max_level")
+
+    if tx is None or graph_type is None or max_level is None:
+        raise ApiError("invalid_parameters")
+    response = node_api.graphviz_dot_neighbors(tx, graph_type, max_level)
+    return {
+        "statusCode": 200,
+        "body": response,
+        "headers": {
+            "Content-Type": "application/json"
+        }
+    }

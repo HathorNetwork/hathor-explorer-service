@@ -5,6 +5,9 @@ from gateways.clients.hathor_core_client import (
     ADDRESS_BALANCE_ENDPOINT,
     ADDRESS_SEARCH_ENDPOINT,
     DASHBOARD_TX_ENDPOINT,
+    DECODE_TX_ENDPOINT,
+    GRAPHVIZ_DOT_NEIGHBORS_ENDPOINT,
+    PUSH_TX_ENDPOINT,
     TOKEN_ENDPOINT,
     TOKEN_HISTORY_ENDPOINT,
     TRANSACTION_ENDPOINT,
@@ -125,6 +128,23 @@ class NodeApiGateway:
         """Retrieve transaction by id
         """
         return self.hathor_core_client.get(TRANSACTION_ENDPOINT, params={'id': id})
+
+    def decode_tx(self, hex_tx: str) -> Optional[dict]:
+        """Decode a transaction from it's hex encoded struct data."""
+        return self.hathor_core_client.get(DECODE_TX_ENDPOINT, params={'hex_tx': hex_tx})
+
+    def push_tx(self, hex_tx: str) -> Optional[dict]:
+        """Push a transaction from it's hex encoded struct data."""
+        return self.hathor_core_client.get(PUSH_TX_ENDPOINT, params={'hex_tx': hex_tx})
+
+    def graphviz_dot_neighbors(self, tx: str, graph_type: str, max_level: int) -> Optional[str]:
+        """Generate file with the graph of neighbours of a tx in dot format."""
+        data = {
+            "tx": tx,
+            "graph_type": graph_type,
+            "max_level": max_level,
+        }
+        return self.hathor_core_client.get_text(GRAPHVIZ_DOT_NEIGHBORS_ENDPOINT, params=data)
 
     def list_transactions(
             self,
