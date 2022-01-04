@@ -917,7 +917,7 @@ HATHOR_CORE_TESTNET_GET_STATUS = {
         "id": "4277ccbd10c5b3aec608e5cc8888d612ff275d8645d1069cef24178c5619d17a",
         "app_version": "Hathor v0.39.0",
         "state": "READY",
-        "network": "testnet-foxtrot",
+        "network": "testnet-golf",
         "uptime": 166938.68822145462,
         "entrypoints": [
             "tcp://3.21.242.244:40403"
