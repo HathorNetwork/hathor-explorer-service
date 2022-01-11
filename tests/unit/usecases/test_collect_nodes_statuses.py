@@ -22,6 +22,11 @@ class TestCollectNodesStatuses:
     @patch('usecases.collect_nodes_statuses.HATHOR_NODES', ['a', 'b'])
     async def test_collect(self, node_gateway):
         node = Node.from_status_dict(HATHOR_CORE_MAINNET_GET_STATUS)
+        # XXX: filtering known_peers based on connected_peers
+        connected_peer_ids = map(lambda p: p.id, node.connected_peers)
+        node.known_peers = [
+            peer_id for peer_id in connected_peer_ids if peer_id in node.known_peers
+        ]
 
         node_gateway.get_node_status_async = AsyncMock(side_effect=lambda x: x(HATHOR_CORE_MAINNET_GET_STATUS))
         with patch.object(NodeGateway, 'get_node_status_async', new=node_gateway.get_node_status_async):
