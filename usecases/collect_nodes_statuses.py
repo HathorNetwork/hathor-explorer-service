@@ -1,4 +1,5 @@
 from typing import Optional
+from copy import copy
 
 from common.configuration import HATHOR_NODES
 from common.logging import get_logger
@@ -29,4 +30,11 @@ class CollectNodesStatuses:
             self.log.warning("collect_status_error", error=data['error'])
             return
         node = Node.from_status_dict(data)
+        # XXX: a big enough known_peers list can reach the limit of data passed to a lambda.
+        # This filters the unnecessary peer ids.
+        old_known_peers = copy(node.known_peers)
+        connected_peer_ids = map(lambda p: p.id, node.connected_peers)
+        node.known_peers = [
+            peer_id for peer_id in connected_peer_ids if peer_id in old_known_peers
+        ]
         self.node_gateway.send_node_to_data_aggregator(node)
