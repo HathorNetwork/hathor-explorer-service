@@ -29,7 +29,8 @@ class CollectNodesStatuses:
             self.log.warning("collect_status_error", error=data['error'])
             return
         node = Node.from_status_dict(data)
-        # XXX: a big enough known_peers list can reach the limit of data passed to a lambda.
+        # XXX: https://github.com/HathorNetwork/internal-issues/issues/73
+        # A big enough known_peers list can reach the limit of data passed to a lambda.
         # This filters the unnecessary peer ids.
         connected_peer_ids = map(lambda p: p.id, node.connected_peers)
         node.known_peers = [
