@@ -337,23 +337,6 @@ functions:
             cacheKeyParameters:
               - name: request.querystring.id
 
-  node_api_list_tokens:
-    handler: handlers/node_api.list_tokens
-    maximumRetryAttempts: 0
-    package:
-      patterns:
-        - 'handlers/node_api.py'
-    layers:
-      - { Ref: PythonRequirementsLambdaLayer }
-    events:
-      - http:
-          path: node_api/tokens
-          method: get
-          cors: true
-          caching:
-            enabled: true
-            ttlInSeconds: 3600
-
   node_api_decode_tx:
     handler: handlers/node_api.decode_tx
     maximumRetryAttempts: 0

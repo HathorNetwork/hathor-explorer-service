@@ -206,16 +206,6 @@ class TestNodeApiGateway:
         assert result
         assert sorted(result) == sorted(obj)
 
-    @patch('gateways.node_api_gateway.TOKEN_ENDPOINT', 'mock-endpoint')
-    def test_list_tokens(self, hathor_client):
-        obj = {'foo': 'bar'}
-        hathor_client.get = MagicMock(return_value=obj)
-        gateway = NodeApiGateway(hathor_core_client=hathor_client)
-        result = gateway.list_tokens()
-        hathor_client.get.assert_called_once_with('mock-endpoint')
-        assert result
-        assert sorted(result) == sorted(obj)
-
     @patch('gateways.node_api_gateway.DECODE_TX_ENDPOINT', 'mock-endpoint')
     def test_decode_tx(self, hathor_client):
         obj = {'foo': 'bar'}
