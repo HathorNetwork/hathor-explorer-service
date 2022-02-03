@@ -83,6 +83,3 @@ class NodeApi:
 
     def get_token(self, id: str) -> Optional[dict]:
         return self.node_api_gateway.get_token(id)
-
-    def list_tokens(self) -> Optional[dict]:
-        return self.node_api_gateway.list_tokens()
