@@ -88,7 +88,7 @@ class TestApiGateway:
         function.assert_called()
         assert result['statusCode'] == 200
 
-    @patch('utils.wrappers.aws.api_gateway.CORS_ALLOWED_REGEX', 'https?://([a-z0-9])*[.]*hathor[.]network')
+    @patch('utils.wrappers.aws.api_gateway.CORS_ALLOWED_REGEX', r'https?://([a-z0-9]*\.){0,5}hathor\.network')
     def test_returning_cors_headers(self):
         function = MagicMock(return_value={'statusCode': 200, 'headers': {}})
         api_gateway = ApiGateway()
@@ -105,8 +105,8 @@ class TestApiGateway:
         result = api_gateway.__call__(function)(event, context)
 
         function.assert_called()
-        assert result['headers']['Access-Control-Allow-Origin']
-        assert result['headers']['Access-Control-Allow-Credentials']
+        assert result['headers']['Access-Control-Allow-Origin'] == 'https://explorer.hathor.network'
+        assert result['headers']['Access-Control-Allow-Credentials'] is True
 
     @patch('utils.wrappers.aws.api_gateway.CORS_ALLOWED_REGEX', 'https?://([a-z0-9]+[.])*hathor[.]network')
     def test_returning_cors_headers_testnet(self):
@@ -125,8 +125,8 @@ class TestApiGateway:
         result = api_gateway.__call__(function)(event, context)
 
         function.assert_called()
-        assert result['headers']['Access-Control-Allow-Origin']
-        assert result['headers']['Access-Control-Allow-Credentials']
+        assert result['headers']['Access-Control-Allow-Origin'] == 'https://explorer.testnet.hathor.network'
+        assert result['headers']['Access-Control-Allow-Credentials'] is True
 
     @patch('utils.wrappers.aws.api_gateway.CORS_ALLOWED_REGEX', 'https?://([a-z0-9]+[.])*hathor[.]network')
     def test_returning_cors_headers_golf(self):
@@ -145,10 +145,10 @@ class TestApiGateway:
         result = api_gateway.__call__(function)(event, context)
 
         function.assert_called()
-        assert result['headers']['Access-Control-Allow-Origin']
-        assert result['headers']['Access-Control-Allow-Credentials']
+        assert result['headers']['Access-Control-Allow-Origin'] == 'https://explorer.golf.hathor.network'
+        assert result['headers']['Access-Control-Allow-Credentials'] is True
 
-    @patch('utils.wrappers.aws.api_gateway.CORS_ALLOWED_REGEX', 'https?://([a-z0-9])*[.]*hathor[.]network')
+    @patch('utils.wrappers.aws.api_gateway.CORS_ALLOWED_REGEX', r'https?://([a-z0-9]*\.){0,5}hathor\.network')
     def test_cors_fail_regex_not_matching(self):
         function = MagicMock(return_value={'statusCode': 200, 'headers': {}})
         api_gateway = ApiGateway()
@@ -167,7 +167,7 @@ class TestApiGateway:
         function.assert_called()
         assert result['headers'] == {}
 
-    @patch('utils.wrappers.aws.api_gateway.CORS_ALLOWED_REGEX', 'https?://([a-z0-9])*[.]*hathor[.]network')
+    @patch('utils.wrappers.aws.api_gateway.CORS_ALLOWED_REGEX', r'https?://([a-z0-9]*\.){0,5}hathor\.network')
     def test_returning_cors_on_apierror(self):
         function = MagicMock(side_effect=ApiError('Boom!'))
         api_gateway = ApiGateway()
@@ -184,10 +184,10 @@ class TestApiGateway:
         result = api_gateway.__call__(function)(event, context)
 
         function.assert_called()
-        assert result['headers']['Access-Control-Allow-Origin']
-        assert result['headers']['Access-Control-Allow-Credentials']
+        assert result['headers']['Access-Control-Allow-Origin'] == 'https://explorer.hathor.network'
+        assert result['headers']['Access-Control-Allow-Credentials'] is True
 
-    @patch('utils.wrappers.aws.api_gateway.CORS_ALLOWED_REGEX', 'https?://([a-z0-9])*[.]*hathor[.]network')
+    @patch('utils.wrappers.aws.api_gateway.CORS_ALLOWED_REGEX', r'https?://([a-z0-9]*\.){0,5}hathor\.network')
     def test_returning_cors_on_error(self):
         function = MagicMock(side_effect=Exception('Boom!'))
         api_gateway = ApiGateway()
@@ -204,10 +204,10 @@ class TestApiGateway:
         result = api_gateway.__call__(function)(event, context)
 
         function.assert_called()
-        assert result['headers']['Access-Control-Allow-Origin']
-        assert result['headers']['Access-Control-Allow-Credentials']
+        assert result['headers']['Access-Control-Allow-Origin'] == 'https://explorer.hathor.network'
+        assert result['headers']['Access-Control-Allow-Credentials'] is True
 
-    @patch('utils.wrappers.aws.api_gateway.CORS_ALLOWED_REGEX', 'https?://([a-z0-9])*[.]*hathor[.]network')
+    @patch('utils.wrappers.aws.api_gateway.CORS_ALLOWED_REGEX', r'https?://([a-z0-9]*\.){0,5}hathor\.network')
     def test_works_with_no_headers_from_function(self):
         function = MagicMock(return_value={'statusCode': 200})
         api_gateway = ApiGateway()
@@ -225,6 +225,8 @@ class TestApiGateway:
 
         function.assert_called()
         assert result['headers']
+        assert result['headers']['Access-Control-Allow-Origin'] == 'https://explorer.hathor.network'
+        assert result['headers']['Access-Control-Allow-Credentials'] is True
 
     @patch('utils.wrappers.aws.api_gateway.CORS_ALLOWED_REGEX', None)
     def test_no_headers_with_no_config(self):
