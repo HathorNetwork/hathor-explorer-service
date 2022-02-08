@@ -3,8 +3,12 @@
 !daemons
 !domain
 !gateways
+!handlers
 !usecases
 !utils
 !daemons_runner.py
 !poetry.lock
 !pyproject.toml
+!package.json
+!serverless-local.yml
+!.env.example

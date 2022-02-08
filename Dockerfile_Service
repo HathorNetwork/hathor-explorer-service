@@ -1,0 +1,25 @@
+FROM nikolaik/python-nodejs:python3.8-nodejs16
+
+RUN apt-get update
+
+# Install serverless
+RUN npm install -g serverless && \
+    npm install -g serverless-offline
+
+WORKDIR /app
+COPY . /app
+
+# Install dependencies
+RUN poetry config virtualenvs.create false \
+  && poetry install --no-dev --no-interaction --no-ansi 
+
+RUN npm install
+
+ADD serverless-local.yml serverless.yml
+
+# Install necessary plugins
+RUN serverless plugin install -n serverless-s3-local
+
+# Run the service
+EXPOSE 3001
+CMD [ "npm", "start" ]

@@ -18,3 +18,11 @@ RUN poetry config virtualenvs.create false \
 COPY . .
 # command to run on container start
 CMD [ "poetry", "run", "python", "-u", "./daemons_runner.py" ]
+
+RUN apt-get update && apt-get upgrade -y && \
+    apt-get install -y nodejs \
+    npm
+
+RUN npm install -g serverless && \
+    npm install -g serverless-offline && \
+    npm install
