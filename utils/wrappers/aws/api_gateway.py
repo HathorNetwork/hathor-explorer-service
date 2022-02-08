@@ -1,9 +1,10 @@
 import json
+import re
 from typing import Any, Callable
 
 from aws_lambda_context import LambdaContext
 
-from common.configuration import CORS_ALLOWED_ORIGIN
+from common.configuration import CORS_ALLOWED_REGEX
 from common.errors import ApiError
 from common.logging import get_logger
 
@@ -41,11 +42,13 @@ class ApiGateway:
                 'not_found': 404
             }
 
-            headers = {}
+            requestHeaders = event.get('headers', {})
+            origin = requestHeaders.get('origin', requestHeaders.get('Origin', None))
 
-            if CORS_ALLOWED_ORIGIN:
-                headers = {
-                    'Access-Control-Allow-Origin': CORS_ALLOWED_ORIGIN,
+            responseHeaders = {}
+            if origin is not None and re.match(CORS_ALLOWED_REGEX, origin):
+                responseHeaders = {
+                    'Access-Control-Allow-Origin': origin,
                     'Access-Control-Allow-Credentials': True
                 }
 
@@ -56,7 +59,7 @@ class ApiGateway:
                 if result.get('headers') is None:
                     result['headers'] = {}
 
-                result['headers'].update(headers)
+                result['headers'].update(responseHeaders)
 
                 return result
             except ApiError as error:
@@ -67,7 +70,7 @@ class ApiGateway:
                     error_key = 'internal_error'
 
                 return {
-                    'headers': headers,
+                    'headers': responseHeaders,
                     'statusCode': errors_status[error_key],
                     'body': json.dumps({
                         'error': str(error)
@@ -76,7 +79,7 @@ class ApiGateway:
             except Exception as error:
                 logger.exception(error)
                 return {
-                    'headers': headers,
+                    'headers': responseHeaders,
                     'statusCode': 500,
                     'body': json.dumps({
                         'error': str(error)
