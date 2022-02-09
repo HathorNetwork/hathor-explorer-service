@@ -51,11 +51,12 @@ class HathorCoreAsyncClient:
         try:
             async with aiohttp.ClientSession() as session:
                 async with session.get(url, params=params) as response:
-                    self.log.info(
-                        "hathor_core_response",
-                        path=path,
-                        status=response.status,
-                        body=await response.text())
+                    if response.status > 299:
+                        self.log.warning(
+                            "hathor_core_error",
+                            path=path,
+                            status=response.status,
+                            body=await response.text())
                     callback(await response.json())
         except Exception as e:
             self.log.error("hathor_core_error", path=path, error=repr(e))
@@ -95,11 +96,6 @@ class HathorCoreClient:
                         status=response.status_code,
                         body=response.text)
                 return None
-            self.log.info(
-                    "hathor_core_response",
-                    path=path,
-                    status=response.status_code,
-                    body=response.text)
 
             return response.text
         except requests.ReadTimeout:
