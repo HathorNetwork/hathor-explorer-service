@@ -168,8 +168,3 @@ class NodeApiGateway:
         """Retrieve token by id
         """
         return self.hathor_core_client.get(TOKEN_ENDPOINT, params={'id': id})
-
-    def list_tokens(self) -> Optional[dict]:
-        """Retrieve list of tokens
-        """
-        return self.hathor_core_client.get(TOKEN_ENDPOINT)

@@ -275,27 +275,6 @@ def get_token(
 
 
 @ApiGateway()
-def list_tokens(
-    event: ApiGatewayEvent,
-    _context: LambdaContext,
-    node_api: Optional[NodeApi] = None
-) -> dict:
-    """Get a list of tokens with details.
-
-        *IMPORTANT: Any changes on the parameters should be reflected on the `cacheKeyParameters` for this method.
-    """
-    node_api = node_api or NodeApi()
-    response = node_api.list_tokens()
-    return {
-        "statusCode": 200,
-        "body": json.dumps(response or {}),
-        "headers": {
-            "Content-Type": "application/json"
-        }
-    }
-
-
-@ApiGateway()
 def decode_tx(
     event: ApiGatewayEvent,
     _context: LambdaContext,

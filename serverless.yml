@@ -28,7 +28,7 @@ provider:
     REDIS_PORT: ${env:REDIS_PORT}
     REDIS_DB: ${env:REDIS_DB}
     METADATA_BUCKET: ${env:METADATA_BUCKET}
-    CORS_ALLOWED_ORIGIN: ${env:CORS_ALLOWED_ORIGIN}
+    CORS_ALLOWED_REGEX: ${env:CORS_ALLOWED_REGEX}
     NODE_CACHE_TTL: ${env:NODE_CACHE_TTL}
 
 plugins:
@@ -336,23 +336,6 @@ functions:
             ttlInSeconds: 10
             cacheKeyParameters:
               - name: request.querystring.id
-
-  node_api_list_tokens:
-    handler: handlers/node_api.list_tokens
-    maximumRetryAttempts: 0
-    package:
-      patterns:
-        - 'handlers/node_api.py'
-    layers:
-      - { Ref: PythonRequirementsLambdaLayer }
-    events:
-      - http:
-          path: node_api/tokens
-          method: get
-          cors: true
-          caching:
-            enabled: true
-            ttlInSeconds: 3600
 
   node_api_decode_tx:
     handler: handlers/node_api.decode_tx
