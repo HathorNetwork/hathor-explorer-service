@@ -10,5 +10,6 @@
 !poetry.lock
 !pyproject.toml
 !package.json
-!serverless-local.yml
+!package-lock.json
+!serverless.yml
 !.env.example

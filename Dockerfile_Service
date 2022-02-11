@@ -1,24 +1,21 @@
 FROM nikolaik/python-nodejs:python3.8-nodejs16
 
-RUN apt-get update
-
-# Install serverless
-RUN npm install -g serverless && \
-    npm install -g serverless-offline
-
 WORKDIR /app
-COPY . /app
 
-# Install dependencies
-RUN poetry config virtualenvs.create false \
-  && poetry install --no-dev --no-interaction --no-ansi 
+RUN apt-get update && apt-get install -y wget
+
+# copy the dependencies file to the working directory
+COPY package-lock.json package.json /app/
 
 RUN npm install
 
-ADD serverless-local.yml serverless.yml
+COPY poetry.lock pyproject.toml /app/
 
-# Install necessary plugins
-RUN serverless plugin install -n serverless-s3-local
+# Install dependencies
+RUN poetry config virtualenvs.create false \
+  && poetry install --no-interaction --no-ansi 
+
+COPY . /app
 
 # Run the service
 EXPOSE 3001
