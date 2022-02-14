@@ -52,13 +52,10 @@ fmt: yapf isort
 test:
 	ENVIRONMENT=test pytest $(pytest_flags) ./tests
 
-.PHONY: deploy-lambdas-testnet
-deploy-lambdas-testnet:
-	serverless deploy --stage testnet --region eu-central-1
-
-.PHONY: deploy-lambdas-mainnet
-deploy-lambdas-mainnet:
-	serverless deploy --stage mainnet --region eu-central-1
+stage=dev
+.PHONY: deploy-lambdas
+deploy-lambdas:
+	serverless deploy --stage $(stage) --region eu-central-1
 
 .PHONY: install
 install:
