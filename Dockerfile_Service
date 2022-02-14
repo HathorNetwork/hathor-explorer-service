@@ -19,4 +19,6 @@ COPY . /app
 
 # Run the service
 EXPOSE 3001
+EXPOSE 3002
+EXPOSE 4569
 CMD [ "npm", "start" ]

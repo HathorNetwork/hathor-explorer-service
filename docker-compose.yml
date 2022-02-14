@@ -5,7 +5,6 @@ services:
       context: .
       dockerfile: Dockerfile_Daemons 
     stdin_open: true
-    network_mode: host
     env_file:
       - .env.example
   redis:
@@ -18,5 +17,7 @@ services:
       dockerfile: Dockerfile_Service
     ports: 
       - 3001:3001
+      - 3002:3002
+      - 4569:4569
     env_file:
       - .env.example
