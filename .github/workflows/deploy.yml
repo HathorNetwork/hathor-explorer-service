@@ -71,7 +71,7 @@ jobs:
       - name: Deploy Lambdas Testnet
         if: ${{ needs.init.outputs.environment == 'testnet' }}
         run: |
-          npx make deploy-lambdas-testnet
+          npx make deploy-lambdas stage=testnet
         env:
           API_PORT: 3001
           HATHOR_CORE_DOMAIN: node1.testnet.hathor.network
@@ -86,7 +86,7 @@ jobs:
       - name: Deploy Lambdas Mainnet
         if: ${{ needs.init.outputs.environment == 'mainnet' }}
         run: |
-          npx make deploy-lambdas-mainnet
+          npx make deploy-lambdas stage=mainnet
         env:
           API_PORT: 3001
           HATHOR_CORE_DOMAIN: node.explorer.hathor.network

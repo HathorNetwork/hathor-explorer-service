@@ -36,6 +36,7 @@ plugins:
   - serverless-offline
   - serverless-python-requirements
   - serverless-api-gateway-caching
+  - serverless-plugin-aws-alerts
 
 package:
   individually: true
@@ -60,6 +61,49 @@ custom:
   apiGatewayCaching:
     enabled: true
     ttlInSeconds: 300
+  alerts:
+    stages: # Select which stages to deploy alarms to
+      - mainnet
+      - testnet
+    topics: # SNS Topics to send alerts to
+      major:
+        alarm:
+          topic: arn:aws:sns:${self:provider.region}:${env:AWS_ACCOUNT_ID}:aws-chatbot-slack-alerts-major
+        ok:
+          topic: arn:aws:sns:${self:provider.region}:${env:AWS_ACCOUNT_ID}:aws-chatbot-slack-alerts-major
+      minor:
+        alarm:
+          topic: arn:aws:sns:${self:provider.region}:${env:AWS_ACCOUNT_ID}:aws-chatbot-slack-alerts-minor
+        ok:
+          topic: arn:aws:sns:${self:provider.region}:${env:AWS_ACCOUNT_ID}:aws-chatbot-slack-alerts-minor
+    definitions: # Definition of alarms
+      majorFunctionErrors:
+        namespace: 'AWS/Lambda'
+        metric: Errors
+        threshold: 10
+        statistic: Sum
+        period: 60
+        evaluationPeriods: 5
+        comparisonOperator: GreaterThanOrEqualToThreshold
+        okActions:
+          - major
+        alarmActions:
+          - major
+      minorFunctionErrors:
+        namespace: 'AWS/Lambda'
+        metric: Errors
+        threshold: 2
+        statistic: Sum
+        period: 60
+        evaluationPeriods: 1
+        comparisonOperator: GreaterThanOrEqualToThreshold
+        okActions:
+          - minor
+        alarmActions:
+          - minor
+    alarms: # Alarms that will be applied to all functions
+      - majorFunctionErrors
+      - minorFunctionErrors
 
 functions:
   get_node_handler:
