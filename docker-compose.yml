@@ -6,7 +6,7 @@ services:
       dockerfile: Dockerfile_Daemons 
     stdin_open: true
     env_file:
-      - .env.example
+      - .env
   redis:
     image: "redis:6-alpine"
     ports: 
@@ -20,4 +20,4 @@ services:
       - 3002:3002
       - 4569:4569
     env_file:
-      - .env.example
+      - .env

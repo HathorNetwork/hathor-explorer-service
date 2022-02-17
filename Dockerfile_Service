@@ -1,10 +1,22 @@
-FROM nikolaik/python-nodejs:python3.8-nodejs16
+FROM python:3.8.12
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y wget
+RUN apt-get update
 
-# copy the dependencies file to the working directory
+# Install Node
+ENV NODE_VERSION=16.13.0
+RUN apt install -y curl
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+ENV NVM_DIR=/root/.nvm
+RUN . "$NVM_DIR/nvm.sh" && nvm install ${NODE_VERSION}
+RUN . "$NVM_DIR/nvm.sh" && nvm use v${NODE_VERSION}
+RUN . "$NVM_DIR/nvm.sh" && nvm alias default v${NODE_VERSION}
+ENV PATH="/root/.nvm/versions/node/v${NODE_VERSION}/bin/:${PATH}"
+
+RUN pip install poetry
+
+# Copy the dependencies file to the working directory
 COPY package-lock.json package.json /app/
 
 RUN npm install
