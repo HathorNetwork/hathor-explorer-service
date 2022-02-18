@@ -85,6 +85,7 @@ custom:
         period: 60
         evaluationPeriods: 5
         comparisonOperator: GreaterThanOrEqualToThreshold
+        treatMissingData: notBreaching
         okActions:
           - major
         alarmActions:
@@ -97,6 +98,7 @@ custom:
         period: 60
         evaluationPeriods: 1
         comparisonOperator: GreaterThanOrEqualToThreshold
+        treatMissingData: notBreaching
         okActions:
           - minor
         alarmActions:
