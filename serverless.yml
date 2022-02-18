@@ -53,6 +53,7 @@ package:
 custom:
   serverless-offline:
     httpPort: ${env:API_PORT}
+    host: 0.0.0.0
   pythonRequirements:
     layer: true
   s3:
