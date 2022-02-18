@@ -260,6 +260,8 @@ functions:
           caching:
             enabled: true
             ttlInSeconds: 3600
+            cacheKeyParameters:
+              - name: request.header.Origin
 
   node_api_get_dashboard_tx:
     handler: handlers/node_api.get_dashboard_tx
