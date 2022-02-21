@@ -125,6 +125,9 @@ functions:
             parameters:
               paths:
                 hash: true
+          caching:
+            cacheKeyParameters:
+              - name: request.header.origin
 
   list_nodes_handler:
     handler: handlers/list_nodes_handler.handle
@@ -138,6 +141,9 @@ functions:
           path: node/
           method: get
           cors: true
+          caching:
+            cacheKeyParameters:
+              - name: request.header.origin
 
   get_network_handler:
     handler: handlers/get_network_handler.handle
@@ -151,6 +157,9 @@ functions:
           path: network/
           method: get
           cors: true
+          caching:
+            cacheKeyParameters:
+              - name: request.header.origin
 
   node_data_aggregator_handler:
     handler: handlers/node_data_aggregator.handle
@@ -181,6 +190,7 @@ functions:
             ttlInSeconds: 15
             cacheKeyParameters:
               - name: request.path.hash
+              - name: request.header.origin
 
   get_dag_metadata_handler:
     handler: handlers/get_dag_metadata_handler.handle
@@ -199,6 +209,7 @@ functions:
             ttlInSeconds: 10
             cacheKeyParameters:
               - name: request.querystring.id
+              - name: request.header.origin
 
   node_api_get_address_balance:
     handler: handlers/node_api.get_address_balance
@@ -219,6 +230,7 @@ functions:
             ttlInSeconds: 300
             cacheKeyParameters:
               - name: request.querystring.address
+              - name: request.header.origin
 
   node_api_get_address_search:
     handler: handlers/node_api.get_address_search
@@ -243,6 +255,7 @@ functions:
               - name: request.querystring.token
               - name: request.querystring.page
               - name: request.querystring.hash
+              - name: request.header.origin
 
   node_api_get_version:
     handler: handlers/node_api.get_version
@@ -261,7 +274,7 @@ functions:
             enabled: true
             ttlInSeconds: 3600
             cacheKeyParameters:
-              - name: request.header.Origin
+              - name: request.header.origin
 
   node_api_get_dashboard_tx:
     handler: handlers/node_api.get_dashboard_tx
@@ -282,6 +295,7 @@ functions:
             cacheKeyParameters:
               - name: request.querystring.block
               - name: request.querystring.tx
+              - name: request.header.origin
 
   node_api_get_tx_acc_w:
     handler: handlers/node_api.get_transaction_acc_weight
@@ -301,6 +315,7 @@ functions:
             ttlInSeconds: 5
             cacheKeyParameters:
               - name: request.querystring.id
+              - name: request.header.origin
 
   node_api_get_token_history:
     handler: handlers/node_api.get_token_history
@@ -324,6 +339,7 @@ functions:
               - name: request.querystring.hash
               - name: request.querystring.page
               - name: request.querystring.timestamp
+              - name: request.header.origin
 
   node_api_get_transaction:
     handler: handlers/node_api.get_transaction
@@ -343,6 +359,7 @@ functions:
             ttlInSeconds: 10
             cacheKeyParameters:
               - name: request.querystring.id
+              - name: request.header.origin
 
   node_api_list_transactions:
     handler: handlers/node_api.list_transactions
@@ -366,6 +383,7 @@ functions:
               - name: request.querystring.hash
               - name: request.querystring.page
               - name: request.querystring.timestamp
+              - name: request.header.origin
 
   node_api_get_token:
     handler: handlers/node_api.get_token
@@ -385,6 +403,7 @@ functions:
             ttlInSeconds: 10
             cacheKeyParameters:
               - name: request.querystring.id
+              - name: request.header.origin
 
   node_api_decode_tx:
     handler: handlers/node_api.decode_tx
@@ -404,6 +423,7 @@ functions:
             ttlInSeconds: 300
             cacheKeyParameters:
               - name: request.querystring.hex_tx
+              - name: request.header.origin
 
   node_api_push_tx:
     handler: handlers/node_api.push_tx
@@ -423,6 +443,7 @@ functions:
             ttlInSeconds: 5
             cacheKeyParameters:
               - name: request.querystring.hex_tx
+              - name: request.header.origin
 
   node_api_gviz_dot_neighbors:
     handler: handlers/node_api.graphviz_dot_neighbors
@@ -444,3 +465,4 @@ functions:
               - name: request.querystring.tx
               - name: request.querystring.graph_type
               - name: request.querystring.max_level
+              - name: request.header.origin
