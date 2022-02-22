@@ -125,9 +125,6 @@ functions:
             parameters:
               paths:
                 hash: true
-          caching:
-            cacheKeyParameters:
-              - name: request.header.origin
 
   list_nodes_handler:
     handler: handlers/list_nodes_handler.handle
@@ -141,9 +138,6 @@ functions:
           path: node/
           method: get
           cors: true
-          caching:
-            cacheKeyParameters:
-              - name: request.header.origin
 
   get_network_handler:
     handler: handlers/get_network_handler.handle
@@ -157,9 +151,6 @@ functions:
           path: network/
           method: get
           cors: true
-          caching:
-            cacheKeyParameters:
-              - name: request.header.origin
 
   node_data_aggregator_handler:
     handler: handlers/node_data_aggregator.handle
