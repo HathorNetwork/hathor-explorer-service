@@ -8,6 +8,10 @@ Then, run `docker-compose up -d` to enable explorer-service, Redis, and daemons 
 
 Explorer service will be exposed on port 3001.
 
+## Adding a new API
+
+If you add a new API, be careful to add ```request.header.origin``` as cacheKey, if applicable. Otherwise, you may see CORS error when accessing the same resource from different domains.
+
 ## Deploying
 
 Deploys are automated using Github Actions and Flux.
