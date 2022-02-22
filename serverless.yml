@@ -36,6 +36,7 @@ plugins:
   - serverless-offline
   - serverless-python-requirements
   - serverless-api-gateway-caching
+  - serverless-plugin-aws-alerts
 
 package:
   individually: true
@@ -52,6 +53,7 @@ package:
 custom:
   serverless-offline:
     httpPort: ${env:API_PORT}
+    host: 0.0.0.0
   pythonRequirements:
     layer: true
   s3:
@@ -60,6 +62,51 @@ custom:
   apiGatewayCaching:
     enabled: true
     ttlInSeconds: 300
+  alerts:
+    stages: # Select which stages to deploy alarms to
+      - mainnet
+      - testnet
+    topics: # SNS Topics to send alerts to
+      major:
+        alarm:
+          topic: arn:aws:sns:${self:provider.region}:${env:AWS_ACCOUNT_ID}:aws-chatbot-slack-alerts-major
+        ok:
+          topic: arn:aws:sns:${self:provider.region}:${env:AWS_ACCOUNT_ID}:aws-chatbot-slack-alerts-major
+      minor:
+        alarm:
+          topic: arn:aws:sns:${self:provider.region}:${env:AWS_ACCOUNT_ID}:aws-chatbot-slack-alerts-minor
+        ok:
+          topic: arn:aws:sns:${self:provider.region}:${env:AWS_ACCOUNT_ID}:aws-chatbot-slack-alerts-minor
+    definitions: # Definition of alarms
+      majorFunctionErrors:
+        namespace: 'AWS/Lambda'
+        metric: Errors
+        threshold: 10
+        statistic: Sum
+        period: 60
+        evaluationPeriods: 5
+        comparisonOperator: GreaterThanOrEqualToThreshold
+        treatMissingData: notBreaching
+        okActions:
+          - major
+        alarmActions:
+          - major
+      minorFunctionErrors:
+        namespace: 'AWS/Lambda'
+        metric: Errors
+        threshold: 2
+        statistic: Sum
+        period: 60
+        evaluationPeriods: 1
+        comparisonOperator: GreaterThanOrEqualToThreshold
+        treatMissingData: notBreaching
+        okActions:
+          - minor
+        alarmActions:
+          - minor
+    alarms: # Alarms that will be applied to all functions
+      - majorFunctionErrors
+      - minorFunctionErrors
 
 functions:
   get_node_handler:
@@ -134,6 +181,7 @@ functions:
             ttlInSeconds: 15
             cacheKeyParameters:
               - name: request.path.hash
+              - name: request.header.origin
 
   get_dag_metadata_handler:
     handler: handlers/get_dag_metadata_handler.handle
@@ -152,6 +200,7 @@ functions:
             ttlInSeconds: 10
             cacheKeyParameters:
               - name: request.querystring.id
+              - name: request.header.origin
 
   node_api_get_address_balance:
     handler: handlers/node_api.get_address_balance
@@ -172,6 +221,7 @@ functions:
             ttlInSeconds: 300
             cacheKeyParameters:
               - name: request.querystring.address
+              - name: request.header.origin
 
   node_api_get_address_search:
     handler: handlers/node_api.get_address_search
@@ -196,6 +246,7 @@ functions:
               - name: request.querystring.token
               - name: request.querystring.page
               - name: request.querystring.hash
+              - name: request.header.origin
 
   node_api_get_version:
     handler: handlers/node_api.get_version
@@ -213,6 +264,8 @@ functions:
           caching:
             enabled: true
             ttlInSeconds: 3600
+            cacheKeyParameters:
+              - name: request.header.origin
 
   node_api_get_dashboard_tx:
     handler: handlers/node_api.get_dashboard_tx
@@ -233,6 +286,7 @@ functions:
             cacheKeyParameters:
               - name: request.querystring.block
               - name: request.querystring.tx
+              - name: request.header.origin
 
   node_api_get_tx_acc_w:
     handler: handlers/node_api.get_transaction_acc_weight
@@ -252,6 +306,7 @@ functions:
             ttlInSeconds: 5
             cacheKeyParameters:
               - name: request.querystring.id
+              - name: request.header.origin
 
   node_api_get_token_history:
     handler: handlers/node_api.get_token_history
@@ -275,6 +330,7 @@ functions:
               - name: request.querystring.hash
               - name: request.querystring.page
               - name: request.querystring.timestamp
+              - name: request.header.origin
 
   node_api_get_transaction:
     handler: handlers/node_api.get_transaction
@@ -294,6 +350,7 @@ functions:
             ttlInSeconds: 10
             cacheKeyParameters:
               - name: request.querystring.id
+              - name: request.header.origin
 
   node_api_list_transactions:
     handler: handlers/node_api.list_transactions
@@ -317,6 +374,7 @@ functions:
               - name: request.querystring.hash
               - name: request.querystring.page
               - name: request.querystring.timestamp
+              - name: request.header.origin
 
   node_api_get_token:
     handler: handlers/node_api.get_token
@@ -336,6 +394,7 @@ functions:
             ttlInSeconds: 10
             cacheKeyParameters:
               - name: request.querystring.id
+              - name: request.header.origin
 
   node_api_decode_tx:
     handler: handlers/node_api.decode_tx
@@ -355,6 +414,7 @@ functions:
             ttlInSeconds: 300
             cacheKeyParameters:
               - name: request.querystring.hex_tx
+              - name: request.header.origin
 
   node_api_push_tx:
     handler: handlers/node_api.push_tx
@@ -374,6 +434,7 @@ functions:
             ttlInSeconds: 5
             cacheKeyParameters:
               - name: request.querystring.hex_tx
+              - name: request.header.origin
 
   node_api_gviz_dot_neighbors:
     handler: handlers/node_api.graphviz_dot_neighbors
@@ -395,3 +456,4 @@ functions:
               - name: request.querystring.tx
               - name: request.querystring.graph_type
               - name: request.querystring.max_level
+              - name: request.header.origin

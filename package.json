@@ -1,15 +1,16 @@
 {
   "name": "hathor-explorer-service",
-  "version": "0.1.18",
+  "version": "0.2.0",
   "description": "Hathor Explorer Service Serverless deps",
   "dependencies": {
     "serverless": "^2.44.0",
     "serverless-api-gateway-caching": "^1.7.2",
-    "serverless-offline": "^7.0.0"
+    "serverless-plugin-aws-alerts": "^1.7.4"
   },
   "devDependencies": {
     "serverless-python-requirements": "^5.1.1",
-    "serverless-s3-local": "^0.6.17"
+    "serverless-s3-local": "^0.6.17",
+    "serverless-offline": "^8.2.0"
   },
   "scripts": {
     "start": "serverless offline --printOutput"

@@ -52,13 +52,10 @@ fmt: yapf isort
 test:
 	ENVIRONMENT=test pytest $(pytest_flags) ./tests
 
-.PHONY: deploy-lambdas-testnet
-deploy-lambdas-testnet:
-	serverless deploy --stage testnet --region eu-central-1
-
-.PHONY: deploy-lambdas-mainnet
-deploy-lambdas-mainnet:
-	serverless deploy --stage mainnet --region eu-central-1
+stage=dev
+.PHONY: deploy-lambdas
+deploy-lambdas:
+	serverless deploy --stage $(stage) --region eu-central-1
 
 .PHONY: install
 install:
@@ -83,7 +80,7 @@ deploy-daemons:
 	fi \
 
 	aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin $$AWS_ACCOUNT_ID.dkr.ecr.eu-central-1.amazonaws.com; \
-	docker build -t $$AWS_ACCOUNT_ID.dkr.ecr.eu-central-1.amazonaws.com/hathor-explorer-service:$$DOCKER_IMAGE_TAG .; \
+	docker build -t $$AWS_ACCOUNT_ID.dkr.ecr.eu-central-1.amazonaws.com/hathor-explorer-service:$$DOCKER_IMAGE_TAG -f Dockerfile_Daemons .; \
 	docker push $$AWS_ACCOUNT_ID.dkr.ecr.eu-central-1.amazonaws.com/hathor-explorer-service:$$DOCKER_IMAGE_TAG
 
 .PHONY: run

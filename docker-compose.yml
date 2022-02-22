@@ -1,12 +1,23 @@
 version: "3.9"
 services:
   daemons:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile_Daemons 
     stdin_open: true
-    network_mode: host
     env_file:
       - .env
   redis:
     image: "redis:6-alpine"
     ports: 
       - 6379:6379
+  explorer-service:
+    build:
+      context: .
+      dockerfile: Dockerfile_Service
+    ports: 
+      - 3001:3001
+      - 3002:3002
+      - 4569:4569
+    env_file:
+      - .env
