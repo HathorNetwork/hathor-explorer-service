@@ -34,7 +34,8 @@ class ElasticSearchClient:
             "sort": [
                 primary_sort_key,
                 tie_break_sort_key
-            ]
+            ],
+            "index": ELASTIC_INDEX
         }
 
         if search_text:
@@ -51,10 +52,8 @@ class ElasticSearchClient:
         return body
 
     def make_query(self, search_text: str, sort_by: str, order: str, search_after: List[str]) -> Optional[dict]:
-        result = self.client.search(
-            index=ELASTIC_INDEX,
-            body=self._build_search_query(search_text, sort_by, order, search_after)
-        )
+        payload = self._build_search_query(search_text, sort_by, order, search_after)
+        result = self.client.search(**payload)
 
         return dict(result)
 
