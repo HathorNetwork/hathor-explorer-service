@@ -396,6 +396,29 @@ functions:
               - name: request.querystring.id
               - name: request.header.origin
 
+  node_api_get_tokens:
+    handler: handlers/node_api.get_tokens
+    maximumRetryAttempts: 0
+    package:
+      patterns:
+        - 'handlers/node_api.py'
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: node_api/tokens
+          method: get
+          cors: true
+          caching:
+            enabled: true
+            ttlInSeconds: 300
+            cacheKeyParameters:
+              - name: request.querystring.search_text
+              - name: request.querystring.sort_by
+              - name: request.querystring.order
+              - name: request.querystring.search_after
+              - name: request.header.origin
+
   node_api_decode_tx:
     handler: handlers/node_api.decode_tx
     maximumRetryAttempts: 0

@@ -69,3 +69,8 @@ METADATA_BUCKET = config('METADATA_BUCKET', default=None)
 CORS_ALLOWED_REGEX = config('CORS_ALLOWED_REGEX', default=r'https?://([a-z0-9]*\.){0,5}hathor\.network')
 
 LOG_RENDERER = LogRenderer(config('LOG_RENDERER', default=LogRenderer.default().value))
+
+ELASTIC_CLOUD_ID = config('ELASTIC_CLOUD_ID', default=None)
+ELASTIC_PASSWORD = config('ELASTIC_PASSWORD', default=None)
+ELASTIC_INDEX = config('ELASTIC_INDEX', default=None)
+ELASTIC_RESULTS_PER_PAGE = config('ELASTIC_RESULTS_PER_PAGE', default=10)

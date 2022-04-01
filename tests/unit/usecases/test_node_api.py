@@ -271,3 +271,28 @@ class TestNodeApiCommon:
         node_api_gateway.graphviz_dot_neighbors.assert_called_once_with('123', '456', 789)
         assert result
         assert sorted(result) == sorted(obj)
+
+    def test_get_tokens(self, node_api_gateway):
+        obj = {
+            "hits": [
+                {
+                    "id": "00db7e187ab5b247f28d2d50003f6927ca9d856acf5f1610b186cb0fed5b3438",
+                    "name": "New New Santos Coin",
+                    "symbol": "NNSC",
+                    "sort": [
+                        "00db7e187ab5b247f28d2d50003f6927ca9d856acf5f1610b186cb0fed5b3438",
+                        "New New Santos Coin"
+                    ],
+                    "nft": True
+                }
+            ],
+            "has_next": False
+        }
+
+        node_api_gateway.get_tokens = MagicMock(return_value=obj)
+
+        node_api = NodeApi(node_api_gateway)
+        result = node_api.get_tokens("New", "", "", [])
+        node_api_gateway.get_tokens.assert_called_once_with("New", "", "", [])
+        assert result
+        assert sorted(result) == sorted(obj)
