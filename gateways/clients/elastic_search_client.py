@@ -7,10 +7,11 @@ from common.configuration import ELASTIC_CLOUD_ID, ELASTIC_INDEX, ELASTIC_PASSWO
 
 class ElasticSearchClient:
     def __init__(self) -> None:
-        self.client = Elasticsearch(
-            cloud_id=ELASTIC_CLOUD_ID,
-            basic_auth=("elastic", ELASTIC_PASSWORD)
-        )
+        if ELASTIC_CLOUD_ID and ELASTIC_PASSWORD:
+            self.client = Elasticsearch(
+                cloud_id=ELASTIC_CLOUD_ID,
+                basic_auth=("elastic", ELASTIC_PASSWORD)
+            )
 
     def _build_search_query(self, search_text: str, sort_by: str, order: str, search_after: List[str]) -> dict:
         # Default sort order, if nothing is passed
