@@ -1,5 +1,5 @@
-from typing import Union
 from time import time
+from typing import Union
 
 from deepdiff import DeepDiff
 from deepdiff.model import DiffLevel
