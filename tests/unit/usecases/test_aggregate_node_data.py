@@ -1,7 +1,7 @@
 from unittest.mock import MagicMock
 
-from pytest import fixture
 from deepdiff import DeepDiff
+from pytest import fixture
 
 from domain.network.network import Network
 from tests.fixtures.network_factory import NetworkFactory
@@ -41,7 +41,6 @@ class TestEarlyStopDiff:
         # It also means we will check on 'foz' if we dont find diffs on 'foo'
         print(diff4)
         assert sum(len(v) for v in diff4.tree.values()) == 2
-
 
 
 class TestAggregateNodeData:
