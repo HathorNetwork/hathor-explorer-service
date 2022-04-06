@@ -74,8 +74,8 @@ jobs:
           npx make deploy-lambdas stage=testnet
         env:
           API_PORT: 3001
-          HATHOR_CORE_DOMAIN: node1.testnet.hathor.network
-          HATHOR_NODES: node1.testnet.hathor.network
+          HATHOR_CORE_DOMAIN: node.explorer.testnet.hathor.network
+          HATHOR_NODES: node1.testnet.hathor.network,node.explorer.testnet.hathor.network
           REDIS_KEY_PREFIX: hathor-explorer-service-testnet
           REDIS_HOST: ${{ secrets.REDIS_HOST }}
           REDIS_PORT: 6379
