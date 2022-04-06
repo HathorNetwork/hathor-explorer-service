@@ -85,5 +85,4 @@ deploy-daemons:
 
 .PHONY: run
 run:
-	docker-compose up -d
-	npx serverless offline --printOutput
+	docker-compose up
