@@ -27,6 +27,8 @@ class TestElasticSearchUtils:
         assert result['query'] is not None
         assert result['query']['multi_match'] is not None
         assert result['query']['multi_match']['query'] == search_text
+        assert result['sort'] == [{'id.keyword': 'asc'}, {'name.keyword': 'asc'}]
+        assert 'search_after' not in result
 
     def test_search_query_without_search_after(self):
         utils = ElasticSearchUtils()
