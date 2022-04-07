@@ -2,87 +2,41 @@ from typing import List, Optional
 
 from elasticsearch import Elasticsearch
 
-from common.configuration import ELASTIC_CLOUD_ID, ELASTIC_INDEX, ELASTIC_PASSWORD, ELASTIC_RESULTS_PER_PAGE
+from common.configuration import ELASTIC_CLOUD_ID, ELASTIC_PASSWORD
+from utils.elastic_search.elastic_search_utils import ElasticSearchUtils
 
 
 class ElasticSearchClient:
-    def __init__(self) -> None:
-        if ELASTIC_CLOUD_ID and ELASTIC_PASSWORD:
+    def __init__(self, client: Optional[Elasticsearch]) -> None:
+        """Client to make async requests to ElasticSearch, using Cloud ID and Elastic Password
+        """
+
+        if client:
+            self.client = client
+        else:
             self.client = Elasticsearch(
                 cloud_id=ELASTIC_CLOUD_ID,
-                basic_auth=("elastic", ELASTIC_PASSWORD)
+                basic_auth=('elastic', ELASTIC_PASSWORD)
             )
 
-    def _build_search_query(self, search_text: str, sort_by: str, order: str, search_after: List[str]) -> dict:
-        # Default sort order, if nothing is passed
-        sort_order = ['id', 'name']
+        self.utils = ElasticSearchUtils()
 
-        if not sort_by or sort_by == 'uid':
-            sort_by = 'id'
+    def make_query(self, search_text: str, sort_by: str, order: str, search_after: List[str]) -> dict:
+        """Use ES client to call the cluster and get the information. Also, it calls auxiliary methods to treat data.
 
-        if not order:
-            order = 'asc'
+        :param search_text: Input text requested by user
+        :type search_text: str
 
-        primary_sort_key = {}
-        primary_sort_key[sort_by+".keyword"] = order
-        sort_order.remove(sort_by)
+        :param sort_by: How the data will be sorted (By ID, name, or symbol)
+        :type sort_by: str
 
-        tie_break_sort_key = {}
-        tie_break_sort_key[sort_order.pop()+".keyword"] = "asc"
+        :param order: If the order of the sorted data will be asc/desc
+        :type order: str
 
-        body = {
-            "size": int(ELASTIC_RESULTS_PER_PAGE) + 1,  # Last element is to check if there is next page.
-            "sort": [
-                primary_sort_key,
-                tie_break_sort_key
-            ],
-            "index": ELASTIC_INDEX
-        }
-
-        if search_text:
-            body['query'] = {
-                "multi_match": {
-                    "query": search_text,
-                    "fields": ["id", "name", "symbol"]
-                }
-            }
-
-        if search_after:
-            body['search_after'] = search_after
-
-        return body
-
-    def make_query(self, search_text: str, sort_by: str, order: str, search_after: List[str]) -> Optional[dict]:
-        payload = self._build_search_query(search_text, sort_by, order, search_after)
+        :param search_after: A list with two entries with information of the next page
+        :type search_after: List[str]
+        """
+        payload = self.utils.build_search_query(search_text, sort_by, order, search_after)
         result = self.client.search(**payload)
 
-        return dict(result)
-
-    def _get_source_from_hit(self, hit: dict) -> dict:
-        result = {
-            "id": hit["_source"]["id"],
-            "name": hit["_source"]["name"],
-            "symbol": hit["_source"]["symbol"],
-            "sort": hit["sort"]
-        }
-
-        if 'nft' in hit["_source"]:
-            result['nft'] = hit["_source"]["nft"]
-        else:
-            result['nft'] = False
-
-        return result
-
-    def treat_response(self, es_search_result: dict) -> dict:
-        response = {
-            "hits": [],
-            "has_next": False
-        }
-
-        hits = list(map(self._get_source_from_hit, es_search_result['hits']['hits']))
-        if len(hits) == (int(ELASTIC_RESULTS_PER_PAGE) + 1):
-            response['has_next'] = True
-
-        response["hits"] = hits
-
-        return response
+        return self.utils.treat_response(dict(result))

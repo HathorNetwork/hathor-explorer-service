@@ -1,7 +1,6 @@
-from typing import List, Optional
+from typing import Optional
 
 from gateways.clients.cache_client import ADDRESS_BLACKLIST_COLLECTION_NAME, CacheClient
-from gateways.clients.elastic_search_client import ElasticSearchClient
 from gateways.clients.hathor_core_client import (
     ADDRESS_BALANCE_ENDPOINT,
     ADDRESS_SEARCH_ENDPOINT,
@@ -24,12 +23,10 @@ class NodeApiGateway:
     def __init__(
         self,
         hathor_core_client: Optional[HathorCoreClient] = None,
-        elastic_search_client: Optional[ElasticSearchClient] = None,
         cache_client: Optional[CacheClient] = None,
     ) -> None:
         self.hathor_core_client = hathor_core_client or HathorCoreClient()
         self.cache_client = cache_client or CacheClient()
-        self.elastic_search_client = elastic_search_client or ElasticSearchClient()
 
     # /thin_wallet/address_balance
 
@@ -171,9 +168,3 @@ class NodeApiGateway:
         """Retrieve token by id
         """
         return self.hathor_core_client.get(TOKEN_ENDPOINT, params={'id': id})
-
-    def get_tokens(self, search_text: str, sort_by: str, order: str, search_after: List[str]) -> Optional[dict]:
-        """Retrieve all tokens that match user's query
-        """
-        es_result = self.elastic_search_client.make_query(search_text, sort_by, order, search_after)
-        return self.elastic_search_client.treat_response(es_result or {})

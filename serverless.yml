@@ -30,6 +30,11 @@ provider:
     METADATA_BUCKET: ${env:METADATA_BUCKET}
     CORS_ALLOWED_REGEX: ${env:CORS_ALLOWED_REGEX}
     NODE_CACHE_TTL: ${env:NODE_CACHE_TTL}
+    ELASTIC_CLOUD_ID: ${env:ELASTIC_CLOUD_ID}
+    ELASTIC_PASSWORD: ${env:ELASTIC_PASSWORD}
+    ELASTIC_INDEX: ${env:ELASTIC_INDEX}
+    ELASTIC_RESULTS_PER_PAGE: ${env:ELASTIC_RESULTS_PER_PAGE}
+    ELASTIC_SEARCH_TIMEOUT: ${env:ELASTIC_SEARCH_TIMEOUT}
 
 plugins:
   - serverless-s3-local
@@ -397,16 +402,16 @@ functions:
               - name: request.header.origin
 
   node_api_get_tokens:
-    handler: handlers/node_api.get_tokens
+    handler: handlers/token_api.get_tokens
     maximumRetryAttempts: 0
     package:
       patterns:
-        - 'handlers/node_api.py'
+        - 'handlers/token_api.py'
     layers:
       - { Ref: PythonRequirementsLambdaLayer }
     events:
       - http:
-          path: node_api/tokens
+          path: token_api/tokens
           method: get
           cors: true
           caching:

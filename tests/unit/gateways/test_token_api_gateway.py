@@ -2,27 +2,24 @@ from unittest.mock import MagicMock
 
 from pytest import fixture
 
-from gateways.clients.elastic_search_client import ElasticSearchClient
+from gateways.token_api_gateway import TokenApiGateway
 
 
-class TestElasticSearchClient:
+class TestTokenApiGateway:
 
     @fixture
-    def es_client(self):
+    def elastic_search_client(self):
         return MagicMock()
 
-    def test_search(self, es_client):
-        client = ElasticSearchClient(es_client)
-
-        es_client.search = MagicMock(
+    def test_get_tokens(self, elastic_search_client):
+        elastic_search_client.search = MagicMock(
             return_value={
                 'took': 0,
                 'timed_out': False,
                 '_shards': {
                     'total': 1,
                     'successful': 1,
-                    'skipped': 0,
-                    'failed': 0
+                    'skipped': 0, 'failed': 0
                 },
                 'hits': {
                     'total': {
@@ -53,7 +50,9 @@ class TestElasticSearchClient:
             }
         )
 
-        result = client.make_query(search_text="", sort_by="", order="", search_after=[])
+        gateway = TokenApiGateway(elastic_search_client=elastic_search_client)
+        result = gateway.get_tokens('', '', '', '')
+
         expected_result = {
             'hits': [
                 {
@@ -69,5 +68,7 @@ class TestElasticSearchClient:
             ],
             'has_next': False
         }
+
+        elastic_search_client.search.assert_called_once()
 
         assert result == expected_result

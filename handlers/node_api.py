@@ -275,39 +275,6 @@ def get_token(
 
 
 @ApiGateway()
-def get_tokens(
-    event: ApiGatewayEvent,
-    _context: LambdaContext,
-    node_api: Optional[NodeApi] = None
-) -> dict:
-    """Get tokens from user search"""
-
-    node_api = node_api or NodeApi()
-
-    search_text = event.query.get("search_text") or ""
-    sort_by = event.query.get("sort_by") or ""
-    order = event.query.get("order") or "asc"  # asc/desc
-    search_after = event.query.get("search_after") or ""
-    search_after_list = []
-
-    if search_after:
-        search_after_list = list(search_after.split(","))
-
-        if len(search_after_list) != 2:
-            raise ApiError("Invalid search_after parameter")
-
-    response = node_api.get_tokens(search_text, sort_by, order, search_after_list)
-
-    return {
-        "statusCode": 200,
-        "body": json.dumps(response or {}),
-        "headers": {
-            "Content-Type": "application/json"
-        }
-    }
-
-
-@ApiGateway()
 def decode_tx(
     event: ApiGatewayEvent,
     _context: LambdaContext,

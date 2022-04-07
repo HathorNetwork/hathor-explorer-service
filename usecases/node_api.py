@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Optional
 
 from common.errors import HathorCoreTimeout
 from gateways.node_api_gateway import NodeApiGateway
@@ -83,6 +83,3 @@ class NodeApi:
 
     def get_token(self, id: str) -> Optional[dict]:
         return self.node_api_gateway.get_token(id)
-
-    def get_tokens(self, search_text: str, sort_by: str, order: str, search_after: List[str]) -> Optional[dict]:
-        return self.node_api_gateway.get_tokens(search_text, sort_by, order, search_after)

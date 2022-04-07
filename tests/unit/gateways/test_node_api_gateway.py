@@ -17,10 +17,6 @@ class TestNodeApiGateway:
     def hathor_client(self):
         return MagicMock()
 
-    @fixture
-    def elastic_search_client(self):
-        return MagicMock()
-
     @patch('gateways.node_api_gateway.ADDRESS_BLACKLIST_COLLECTION_NAME', 'mock-collection')
     def test_blacklist_address(self, cache_client):
         cache_client.set = MagicMock(return_value=True)
@@ -209,54 +205,6 @@ class TestNodeApiGateway:
         hathor_client.get.assert_called_once_with('mock-endpoint', params={'id': 'mock-token-uid'})
         assert result
         assert sorted(result) == sorted(obj)
-
-    def test_get_tokens(self, elastic_search_client):
-        obj = {
-            "took": 5,
-            "timed_out": False,
-            "_shards": {
-                "total": 1,
-                "successful": 1,
-                "skipped": 0,
-                "failed": 0
-            },
-            "hits": {
-                "total": {
-                    "value": 1,
-                    "relation": "eq"
-                },
-                "max_score": None,
-                "hits": [
-                    {
-                        "_index": "mainnet-token",
-                        "_id": "00db7e187ab5b247f28d2d50003f6927ca9d856acf5f1610b186cb0fed5b3438",
-                        "_score": None,
-                        "_source": {
-                            "banned": False,
-                            "verified": False,
-                            "id": "00db7e187ab5b247f28d2d50003f6927ca9d856acf5f1610b186cb0fed5b3438",
-                            "@timestamp": "2022-03-30T03:39:05.846296Z",
-                            "nft": True,
-                            "symbol": "NNSC",
-                            "updated_at": "2022-03-24T19:53:55Z",
-                            "name": "New New Santos Coin",
-                            "created_at": "2022-03-24T19:53:55Z"
-                        },
-                        "sort": [
-                            "00db7e187ab5b247f28d2d50003f6927ca9d856acf5f1610b186cb0fed5b3438",
-                            "New New Santos Coin"
-                        ]
-                    }
-                ]
-            }
-        }
-
-        elastic_search_client.make_query = MagicMock(return_value=obj)
-        gateway = NodeApiGateway(elastic_search_client=elastic_search_client)
-        gateway.get_tokens("New", "", "", "")
-
-        elastic_search_client.make_query.assert_called_once()
-        elastic_search_client.treat_response.assert_called_once()
 
     @patch('gateways.node_api_gateway.DECODE_TX_ENDPOINT', 'mock-endpoint')
     def test_decode_tx(self, hathor_client):
