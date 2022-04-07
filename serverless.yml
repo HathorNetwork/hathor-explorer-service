@@ -159,6 +159,7 @@ functions:
 
   node_data_aggregator_handler:
     handler: handlers/node_data_aggregator.handle
+    timeout: 30
     package:
       patterns:
         - 'handlers/node_data_aggregator.py'
