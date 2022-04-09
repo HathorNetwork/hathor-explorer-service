@@ -23,7 +23,7 @@ class ElasticSearchUtils:
         """
 
         # Default sort order, if nothing is passed
-        sort_order = ['id', 'name']
+        sort_order = ['id', 'name', 'symbol']
 
         if not sort_by or sort_by == 'uid':
             sort_by = 'id'
@@ -42,7 +42,7 @@ class ElasticSearchUtils:
         primary_sort_key[sort_by+'.'+sort_fields_data_type[sort_by]] = order
         sort_order.remove(sort_by)
 
-        tie_break_sort_order = sort_order.pop()
+        tie_break_sort_order = sort_order.pop(0)
         tie_break_sort_key = {}
         tie_break_sort_key[tie_break_sort_order+'.'+sort_fields_data_type[tie_break_sort_order]] = 'asc'
 
@@ -104,6 +104,7 @@ class ElasticSearchUtils:
         hits = list(map(self._get_source_from_hit, es_search_result['hits']['hits']))
         if len(hits) == (int(ELASTIC_RESULTS_PER_PAGE) + 1):
             response['has_next'] = True
+            del hits[-1]
 
         response['hits'] = hits
 

@@ -189,6 +189,30 @@ functions:
               - name: request.path.hash
               - name: request.header.origin
 
+  get_tokens_handler:
+    handler: handlers/token_api.get_tokens
+    timeout: 15
+    maximumRetryAttempts: 0
+    package:
+      patterns:
+        - 'handlers/token_api.py'
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: tokens
+          method: get
+          cors: true
+          caching:
+            enabled: true
+            ttlInSeconds: 300
+            cacheKeyParameters:
+              - name: request.querystring.search_text
+              - name: request.querystring.sort_by
+              - name: request.querystring.order
+              - name: request.querystring.search_after
+              - name: request.header.origin
+
   get_dag_metadata_handler:
     handler: handlers/get_dag_metadata_handler.handle
     package:
@@ -400,29 +424,6 @@ functions:
             ttlInSeconds: 10
             cacheKeyParameters:
               - name: request.querystring.id
-              - name: request.header.origin
-
-  node_api_get_tokens:
-    handler: handlers/token_api.get_tokens
-    maximumRetryAttempts: 0
-    package:
-      patterns:
-        - 'handlers/token_api.py'
-    layers:
-      - { Ref: PythonRequirementsLambdaLayer }
-    events:
-      - http:
-          path: token_api/tokens
-          method: get
-          cors: true
-          caching:
-            enabled: true
-            ttlInSeconds: 300
-            cacheKeyParameters:
-              - name: request.querystring.search_text
-              - name: request.querystring.sort_by
-              - name: request.querystring.order
-              - name: request.querystring.search_after
               - name: request.header.origin
 
   node_api_decode_tx:
