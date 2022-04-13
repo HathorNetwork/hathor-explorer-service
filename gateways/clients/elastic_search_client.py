@@ -2,7 +2,7 @@ from typing import List, Optional
 
 from elasticsearch import Elasticsearch
 
-from common.configuration import ELASTIC_CLOUD_ID, ELASTIC_PASSWORD
+from common.configuration import ELASTIC_CLOUD_ID, ELASTIC_PASSWORD, ELASTIC_USER
 from utils.elastic_search.elastic_search_utils import ElasticSearchUtils
 
 
@@ -16,7 +16,7 @@ class ElasticSearchClient:
         else:
             self.client = Elasticsearch(
                 cloud_id=ELASTIC_CLOUD_ID,
-                basic_auth=('elastic', ELASTIC_PASSWORD)
+                basic_auth=(ELASTIC_USER, ELASTIC_PASSWORD)
             )
 
         self.utils = ElasticSearchUtils()

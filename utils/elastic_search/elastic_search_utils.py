@@ -31,8 +31,7 @@ class ElasticSearchUtils:
         sort_fields_data_type = {
             'id': 'keyword',
             'name': 'keyword',
-            'symbol': 'keyword',
-            'nft': 'keyword'
+            'symbol': 'keyword'
         }
 
         if not order:
