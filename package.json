@@ -5,7 +5,8 @@
   "dependencies": {
     "serverless": "^2.44.0",
     "serverless-api-gateway-caching": "^1.7.2",
-    "serverless-plugin-aws-alerts": "^1.7.4"
+    "serverless-plugin-aws-alerts": "^1.7.4",
+    "serverless-api-gateway-throttling": "^1.2.2"
   },
   "devDependencies": {
     "serverless-python-requirements": "^5.1.1",
