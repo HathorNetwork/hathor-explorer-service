@@ -42,6 +42,7 @@ plugins:
   - serverless-python-requirements
   - serverless-api-gateway-caching
   - serverless-plugin-aws-alerts
+  - serverless-api-gateway-throttling
 
 package:
   individually: true
@@ -212,6 +213,9 @@ functions:
               - name: request.querystring.order
               - name: request.querystring.search_after
               - name: request.header.origin
+          throttling:
+            maxRequestsPerSecond: 1000
+            maxConcurrentRequests: 1000
 
   get_dag_metadata_handler:
     handler: handlers/get_dag_metadata_handler.handle
