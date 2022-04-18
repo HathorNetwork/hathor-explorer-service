@@ -30,6 +30,11 @@ provider:
     METADATA_BUCKET: ${env:METADATA_BUCKET}
     CORS_ALLOWED_REGEX: ${env:CORS_ALLOWED_REGEX}
     NODE_CACHE_TTL: ${env:NODE_CACHE_TTL}
+    ELASTIC_CLOUD_ID: ${env:ELASTIC_CLOUD_ID}
+    ELASTIC_PASSWORD: ${env:ELASTIC_PASSWORD}
+    ELASTIC_INDEX: ${env:ELASTIC_INDEX}
+    ELASTIC_RESULTS_PER_PAGE: ${env:ELASTIC_RESULTS_PER_PAGE}
+    ELASTIC_SEARCH_TIMEOUT: ${env:ELASTIC_SEARCH_TIMEOUT}
 
 plugins:
   - serverless-s3-local
@@ -182,6 +187,30 @@ functions:
             ttlInSeconds: 15
             cacheKeyParameters:
               - name: request.path.hash
+              - name: request.header.origin
+
+  get_tokens_handler:
+    handler: handlers/token_api.get_tokens
+    timeout: 15
+    maximumRetryAttempts: 0
+    package:
+      patterns:
+        - 'handlers/token_api.py'
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: tokens
+          method: get
+          cors: true
+          caching:
+            enabled: true
+            ttlInSeconds: 300
+            cacheKeyParameters:
+              - name: request.querystring.search_text
+              - name: request.querystring.sort_by
+              - name: request.querystring.order
+              - name: request.querystring.search_after
               - name: request.header.origin
 
   get_dag_metadata_handler:

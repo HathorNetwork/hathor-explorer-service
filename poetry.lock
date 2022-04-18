@@ -162,6 +162,36 @@ ordered-set = "4.0.2"
 cli = ["click (==8.0.3)", "pyyaml (==5.4.1)", "toml (==0.10.2)", "clevercsv (==0.7.1)"]
 
 [[package]]
+name = "elastic-transport"
+version = "8.1.1"
+description = "Transport classes and utilities shared among Python Elastic client libraries"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+certifi = "*"
+urllib3 = ">=1.26.2,<2"
+
+[package.extras]
+develop = ["pytest", "pytest-cov", "pytest-mock", "pytest-asyncio", "mock", "requests", "aiohttp"]
+
+[[package]]
+name = "elasticsearch"
+version = "8.1.2"
+description = "Python client for Elasticsearch"
+category = "main"
+optional = false
+python-versions = ">=3.6, <4"
+
+[package.dependencies]
+elastic-transport = ">=8,<9"
+
+[package.extras]
+async = ["aiohttp (>=3,<4)"]
+requests = ["requests (>=2.4.0,<3.0.0)"]
+
+[[package]]
 name = "factory-boy"
 version = "3.2.0"
 description = "A versatile test fixtures replacement based on thoughtbot's factory_bot for Ruby."
@@ -579,7 +609,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "56c4b4ed79dcefbc6684975b6294954ced31b29ce049ad71ce21260516d0d5d1"
+content-hash = "d5edae719f685f3f457d5ff30039caba1c4fb3c584e513329e9809a58a873106"
 
 [metadata.files]
 aiohttp = [
@@ -722,6 +752,14 @@ dacite = [
 deepdiff = [
     {file = "deepdiff-5.7.0-py3-none-any.whl", hash = "sha256:1ffb38c3b5d9174eb2df95850c93aee55ec00e19396925036a2e680f725079e0"},
     {file = "deepdiff-5.7.0.tar.gz", hash = "sha256:838766484e323dcd9dec6955926a893a83767dc3f3f94542773e6aa096efe5d4"},
+]
+elastic-transport = [
+    {file = "elastic-transport-8.1.1.tar.gz", hash = "sha256:f1a5274e1eb1831f73947fbc4ae9aba142f739e600e0cf47ad5ed08cd04e401e"},
+    {file = "elastic_transport-8.1.1-py3-none-any.whl", hash = "sha256:2ee1ec56ccfad1354a36056fa942af726510fffba46b267292ba7d584a1bd406"},
+]
+elasticsearch = [
+    {file = "elasticsearch-8.1.2-py3-none-any.whl", hash = "sha256:2fd3c88bc5fef259ab936538287404b2c3c5956630944563722d5b16a4edc550"},
+    {file = "elasticsearch-8.1.2.tar.gz", hash = "sha256:bf031b44c483f6dc40d607186103d8a152ce4ade96e4ed4c656f2421f794e123"},
 ]
 factory-boy = [
     {file = "factory_boy-3.2.0-py2.py3-none-any.whl", hash = "sha256:1d3db4b44b8c8c54cdd8b83ae4bdb9aeb121e464400035f1f03ae0e1eade56a4"},
