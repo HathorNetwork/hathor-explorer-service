@@ -23,27 +23,51 @@ class ElasticSearchUtils:
         """
 
         # Default sort order, if nothing is passed
-        sort_order = ['id', 'name', 'symbol']
+        sort_order = ['transaction_timestamp', 'id', 'name', 'symbol']
 
         if not sort_by or sort_by == 'uid':
             sort_by = 'id'
 
         sort_fields_data_type = {
-            'id': 'keyword',
-            'name': 'keyword',
-            'symbol': 'keyword'
+            'transaction_timestamp': {
+                'type': 'long',
+                'append_data_type_on_sort': False
+            },
+            'id': {
+                'type': 'keyword',
+                'append_data_type_on_sort': True
+            },
+            'name': {
+                'type': 'keyword',
+                'append_data_type_on_sort': True
+            },
+            'symbol': {
+                'type': 'keyword',
+                'append_data_type_on_sort': True
+            }
         }
 
         if not order:
             order = 'asc'
 
         primary_sort_key = {}
-        primary_sort_key[sort_by+'.'+sort_fields_data_type[sort_by]] = order
+
+        sort_by_complement = ''
+        if sort_fields_data_type[sort_by]['append_data_type_on_sort']:
+            sort_by_complement = '.'+str(sort_fields_data_type[sort_by]['type'])
+
+        primary_sort_key[sort_by+sort_by_complement] = order
+
         sort_order.remove(sort_by)
 
         tie_break_sort_order = sort_order.pop(0)
         tie_break_sort_key = {}
-        tie_break_sort_key[tie_break_sort_order+'.'+sort_fields_data_type[tie_break_sort_order]] = 'asc'
+
+        sort_by_complement = ''
+        if sort_fields_data_type[tie_break_sort_order]['append_data_type_on_sort']:
+            sort_by_complement = '.'+str(sort_fields_data_type[tie_break_sort_order]['type'])
+
+        tie_break_sort_key[tie_break_sort_order+sort_by_complement] = 'asc'
 
         body = {
             'size': int(ELASTIC_RESULTS_PER_PAGE) + 1,  # Last element is to check if there is next page.
@@ -78,6 +102,7 @@ class ElasticSearchUtils:
             'id': hit['_source']['id'],
             'name': hit['_source']['name'],
             'symbol': hit['_source']['symbol'],
+            'transaction_timestamp': hit['_source']['transaction_timestamp'],
             'sort': hit['sort']
         }
 

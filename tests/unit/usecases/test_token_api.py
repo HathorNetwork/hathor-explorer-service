@@ -15,14 +15,26 @@ class TestTokenApi:
         obj = {
             "hits": [
                 {
-                    "id": "00db7e187ab5b247f28d2d50003f6927ca9d856acf5f1610b186cb0fed5b3438",
-                    "name": "New New Santos Coin",
-                    "symbol": "NNSC",
+                    "id": "00000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a",
+                    "name": "Test1",
+                    "symbol": "TST1",
+                    "transaction_timestamp": 1649473276,
                     "sort": [
-                        "00db7e187ab5b247f28d2d50003f6927ca9d856acf5f1610b186cb0fed5b3438",
-                        "New New Santos Coin"
+                        "00000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a",
+                        1649473276
                     ],
-                    "nft": True
+                    "nft": False
+                },
+                {
+                    "id": "10000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a",
+                    "name": "Test2",
+                    "symbol": "TST2",
+                    "transaction_timestamp": 1000000000,
+                    "sort": [
+                        "10000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a",
+                        1000000000
+                    ],
+                    "nft": False
                 }
             ],
             "has_next": False
