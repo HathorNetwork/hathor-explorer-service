@@ -29,22 +29,10 @@ class ElasticSearchUtils:
             sort_by = 'id'
 
         sort_fields_data_type = {
-            'transaction_timestamp': {
-                'type': 'long',
-                'append_data_type_on_sort': False
-            },
-            'id': {
-                'type': 'keyword',
-                'append_data_type_on_sort': True
-            },
-            'name': {
-                'type': 'keyword',
-                'append_data_type_on_sort': True
-            },
-            'symbol': {
-                'type': 'keyword',
-                'append_data_type_on_sort': True
-            }
+            'transaction_timestamp': 'long',
+            'id': 'keyword',
+            'name': 'keyword',
+            'symbol': 'keyword'
         }
 
         if not order:
@@ -52,10 +40,7 @@ class ElasticSearchUtils:
 
         primary_sort_key = {}
 
-        sort_by_complement = ''
-        if sort_fields_data_type[sort_by]['append_data_type_on_sort']:
-            sort_by_complement = '.'+str(sort_fields_data_type[sort_by]['type'])
-
+        sort_by_complement = '.keyword' if sort_fields_data_type[sort_by] == 'keyword' else ''
         primary_sort_key[sort_by+sort_by_complement] = order
 
         sort_order.remove(sort_by)
@@ -63,10 +48,7 @@ class ElasticSearchUtils:
         tie_break_sort_order = sort_order.pop(0)
         tie_break_sort_key = {}
 
-        sort_by_complement = ''
-        if sort_fields_data_type[tie_break_sort_order]['append_data_type_on_sort']:
-            sort_by_complement = '.'+str(sort_fields_data_type[tie_break_sort_order]['type'])
-
+        sort_by_complement = '.keyword' if sort_fields_data_type[tie_break_sort_order] == 'keyword' else ''
         tie_break_sort_key[tie_break_sort_order+sort_by_complement] = 'asc'
 
         body = {
