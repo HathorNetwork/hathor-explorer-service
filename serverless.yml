@@ -45,6 +45,7 @@ plugins:
   - serverless-python-requirements
   - serverless-api-gateway-caching
   - serverless-plugin-aws-alerts
+  - serverless-api-gateway-throttling
 
 package:
   individually: true
@@ -70,6 +71,11 @@ custom:
   apiGatewayCaching:
     enabled: true
     ttlInSeconds: 300
+  apiGatewayThrottling:
+    # Apply to all http endpoints, unless overridden
+    # According to AWS: "Each method in this stage will respect these rate and burst settings."
+    maxRequestsPerSecond: 50
+    maxConcurrentRequests: 25
   alerts:
     stages: # Select which stages to deploy alarms to
       - mainnet
