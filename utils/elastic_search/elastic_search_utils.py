@@ -4,6 +4,24 @@ from common.configuration import ELASTIC_INDEX, ELASTIC_RESULTS_PER_PAGE, ELASTI
 
 
 class ElasticSearchUtils:
+    def _get_sort_by_complement(self, sort_by: str) -> str:
+        """ Returns the complement (if any) on sort_by field that is passed to ES
+
+        :param sort_by: Which field is currently being used for primary sorting
+        :type sort_by: str
+        """
+        # Each possible sortable field and its primary type
+        sort_fields_data_type = {
+            'transaction_timestamp': 'long',
+            'id': 'keyword',
+            'name': 'keyword',
+            'symbol': 'keyword'
+        }
+
+        # For sorting purposes, only .keyword must be added as complement
+        # Other types (such as long) do not need complement
+        return '.keyword' if sort_fields_data_type[sort_by] == 'keyword' else ''
+
     def build_search_query(self, search_text: str, sort_by: str, order: str, search_after: List[str]) -> dict:
         """Build the search query that will be sent to ElasticSearch given the parameters provided by API Client.
         Access this link for more details on how ES search API works:
@@ -28,19 +46,12 @@ class ElasticSearchUtils:
         if not sort_by or sort_by == 'uid':
             sort_by = 'id'
 
-        sort_fields_data_type = {
-            'transaction_timestamp': 'long',
-            'id': 'keyword',
-            'name': 'keyword',
-            'symbol': 'keyword'
-        }
-
         if not order:
             order = 'asc'
 
         primary_sort_key = {}
 
-        sort_by_complement = '.keyword' if sort_fields_data_type[sort_by] == 'keyword' else ''
+        sort_by_complement = self._get_sort_by_complement(sort_by)
         primary_sort_key[sort_by+sort_by_complement] = order
 
         sort_order.remove(sort_by)
@@ -48,7 +59,7 @@ class ElasticSearchUtils:
         tie_break_sort_order = sort_order.pop(0)
         tie_break_sort_key = {}
 
-        sort_by_complement = '.keyword' if sort_fields_data_type[tie_break_sort_order] == 'keyword' else ''
+        sort_by_complement = self._get_sort_by_complement(tie_break_sort_order)
         tie_break_sort_key[tie_break_sort_order+sort_by_complement] = 'asc'
 
         body = {
