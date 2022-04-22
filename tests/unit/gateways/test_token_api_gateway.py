@@ -19,30 +19,50 @@ class TestTokenApiGateway:
                 '_shards': {
                     'total': 1,
                     'successful': 1,
-                    'skipped': 0, 'failed': 0
+                    'skipped': 0,
+                    'failed': 0
                 },
                 'hits': {
                     'total': {
-                        'value': 1,
+                        'value': 2,
                         'relation': 'eq'
                     },
                     'max_score': None,
                     'hits': [
                         {
-                            '_index': 'lucas-test-token',
+                            '_index': 'test-token',
                             '_id': '00000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a',
                             '_score': None,
                             '_source': {
-                                '@timestamp': '2022-04-05T18:19:05.198109Z',
-                                'id': '00000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a',
-                                'name': 'AnotherLucasCoinTest',
-                                'symbol': 'ALCT',
-                                'created_at': '2022-04-05T18:14:51Z',
-                                'updated_at': '2022-04-05T18:14:51Z'
+                                'updated_at': '2022-04-19T13:55:30Z',
+                                'symbol': 'TST1',
+                                '@timestamp': '2022-04-19T13:56:04.371602Z',
+                                'name': 'Test1',
+                                'created_at': '2022-04-19T12:41:04Z',
+                                'transaction_timestamp': 1649473276,
+                                'id': '00000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a'
                             },
                             'sort': [
                                 '00000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a',
-                                'AnotherLucasCoinTest'
+                                1649473276
+                            ]
+                        },
+                        {
+                            '_index': 'test-token',
+                            '_id': '10000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a',
+                            '_score': None,
+                            '_source': {
+                                'updated_at': '2022-04-19T13:55:30Z',
+                                'symbol': 'TST2',
+                                '@timestamp': '2022-04-19T13:56:04.372449Z',
+                                'name': 'Test2',
+                                'created_at': '2022-04-19T12:41:07Z',
+                                'transaction_timestamp': 1000000000,
+                                'id': '10000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a'
+                            },
+                            'sort': [
+                                '10000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a',
+                                1000000000
                             ]
                         }
                     ]
@@ -57,11 +77,23 @@ class TestTokenApiGateway:
             'hits': [
                 {
                     'id': '00000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a',
-                    'name': 'AnotherLucasCoinTest',
-                    'symbol': 'ALCT',
+                    'name': 'Test1',
+                    'symbol': 'TST1',
+                    'transaction_timestamp': 1649473276,
                     'sort': [
                         '00000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a',
-                        'AnotherLucasCoinTest'
+                        1649473276
+                    ],
+                    'nft': False
+                },
+                {
+                    'id': '10000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a',
+                    'name': 'Test2',
+                    'symbol': 'TST2',
+                    'transaction_timestamp': 1000000000,
+                    'sort': [
+                        '10000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a',
+                        1000000000
                     ],
                     'nft': False
                 }

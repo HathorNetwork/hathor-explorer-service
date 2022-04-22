@@ -19,15 +19,15 @@ class TestElasticSearchUtils:
     def test_filled_search_string(self):
         utils = ElasticSearchUtils()
         search_text = "Test"
-        sort_by = ""
-        order = ""
+        sort_by = "transaction_timestamp"
+        order = "desc"
         search_after = []
 
         result = utils.build_search_query(search_text, sort_by, order, search_after)
         assert result['query'] is not None
         assert result['query']['multi_match'] is not None
         assert result['query']['multi_match']['query'] == search_text
-        assert result['sort'] == [{'id.keyword': 'asc'}, {'name.keyword': 'asc'}]
+        assert result['sort'] == [{'transaction_timestamp': 'desc'}, {'id.keyword': 'asc'}]
         assert 'search_after' not in result
 
     def test_search_query_without_search_after(self):
@@ -56,7 +56,7 @@ class TestElasticSearchUtils:
         utils = ElasticSearchUtils()
 
         es_response = {
-            "took": 5,
+            "took": 0,
             "timed_out": False,
             "_shards": {
                 "total": 1,
@@ -66,29 +66,45 @@ class TestElasticSearchUtils:
             },
             "hits": {
                 "total": {
-                    "value": 1,
+                    "value": 2,
                     "relation": "eq"
                 },
                 "max_score": None,
                 "hits": [
                     {
-                        "_index": "mainnet-token",
-                        "_id": "00db7e187ab5b247f28d2d50003f6927ca9d856acf5f1610b186cb0fed5b3438",
+                        "_index": "test-token",
+                        "_id": "00000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a",
                         "_score": None,
                         "_source": {
-                            "banned": False,
-                            "verified": False,
-                            "id": "00db7e187ab5b247f28d2d50003f6927ca9d856acf5f1610b186cb0fed5b3438",
-                            "@timestamp": "2022-03-30T03: 39: 05.846296Z",
-                            "nft": True,
-                            "symbol": "NNSC",
-                            "updated_at": "2022-03-24T19: 53: 55Z",
-                            "name": "New New Santos Coin",
-                            "created_at": "2022-03-24T19: 53: 55Z"
+                            "updated_at": "2022-04-19T13:55:30Z",
+                            "symbol": "TST1",
+                            "@timestamp": "2022-04-19T13:56:04.371602Z",
+                            "name": "Test1",
+                            "created_at": "2022-04-19T12:41:04Z",
+                            "transaction_timestamp": 1649473276,
+                            "id": "00000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a"
                         },
                         "sort": [
-                            "00db7e187ab5b247f28d2d50003f6927ca9d856acf5f1610b186cb0fed5b3438",
-                            "New New Santos Coin"
+                            "00000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a",
+                            1649473276
+                        ]
+                    },
+                    {
+                        "_index": "test-token",
+                        "_id": "10000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a",
+                        "_score": None,
+                        "_source": {
+                            "updated_at": "2022-04-19T13:55:30Z",
+                            "symbol": "TST2",
+                            "@timestamp": "2022-04-19T13:56:04.372449Z",
+                            "name": "Test2",
+                            "created_at": "2022-04-19T12:41:07Z",
+                            "transaction_timestamp": 1000000000,
+                            "id": "10000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a"
+                        },
+                        "sort": [
+                            "10000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a",
+                            1000000000
                         ]
                     }
                 ]
@@ -97,14 +113,26 @@ class TestElasticSearchUtils:
         expected_treated_response = {
             "hits": [
                 {
-                    "id": "00db7e187ab5b247f28d2d50003f6927ca9d856acf5f1610b186cb0fed5b3438",
-                    "name": "New New Santos Coin",
-                    "symbol": "NNSC",
+                    "id": "00000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a",
+                    "name": "Test1",
+                    "symbol": "TST1",
+                    "transaction_timestamp": 1649473276,
                     "sort": [
-                        "00db7e187ab5b247f28d2d50003f6927ca9d856acf5f1610b186cb0fed5b3438",
-                        "New New Santos Coin"
+                        "00000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a",
+                        1649473276
                     ],
-                    "nft": True
+                    "nft": False
+                },
+                {
+                    "id": "10000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a",
+                    "name": "Test2",
+                    "symbol": "TST2",
+                    "transaction_timestamp": 1000000000,
+                    "sort": [
+                        "10000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a",
+                        1000000000
+                    ],
+                    "nft": False
                 }
             ],
             "has_next": False
