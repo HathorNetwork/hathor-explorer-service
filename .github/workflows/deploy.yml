@@ -14,6 +14,11 @@ env:
   AWS_SUBNET_ID_1: ${{ secrets.AWS_SUBNET_ID_1 }}
   AWS_SUBNET_ID_2: ${{ secrets.AWS_SUBNET_ID_2 }}
   AWS_SUBNET_ID_3: ${{ secrets.AWS_SUBNET_ID_3 }}
+  ELASTIC_CLOUD_ID: ${{ secrets.ELASTIC_CLOUD_ID }}
+  ELASTIC_USER: ${{ secrets.ELASTIC_USER }}
+  ELASTIC_PASSWORD: ${{ secrets.ELASTIC_PASSWORD }}
+  ELASTIC_SEARCH_TIMEOUT: 25
+  ELASTIC_RESULTS_PER_PAGE: 10
 
 jobs:
   init:
@@ -83,6 +88,7 @@ jobs:
           METADATA_BUCKET: hathor-explorer-metadata-testnet
           CORS_ALLOWED_REGEX: https?://([a-z0-9]*\.){0,5}hathor\.network
           NODE_CACHE_TTL: 30
+          ELASTIC_INDEX: testnet-token
       - name: Deploy Lambdas Mainnet
         if: ${{ needs.init.outputs.environment == 'mainnet' }}
         run: |
@@ -98,6 +104,7 @@ jobs:
           METADATA_BUCKET: hathor-explorer-metadata-mainnet
           CORS_ALLOWED_REGEX: https?://([a-z0-9]*\.){0,5}hathor\.network
           NODE_CACHE_TTL: 30
+          ELASTIC_INDEX: mainnet-token
       - name: Deploy Daemons Testnet
         if: ${{ needs.init.outputs.environment == 'testnet' }}
         run: |
