@@ -24,6 +24,9 @@ def get_tokens(
     search_after = event.query.get("search_after") or ""
     search_after_list = []
 
+    if sort_by == "uid":
+        sort_by = "id"
+
     if search_after:
         search_after_list = list(search_after.split(","))
 
