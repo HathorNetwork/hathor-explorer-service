@@ -85,12 +85,8 @@ custom:
       major:
         alarm:
           topic: arn:aws:sns:${self:provider.region}:${env:AWS_ACCOUNT_ID}:aws-chatbot-slack-alerts-major
-        ok:
-          topic: arn:aws:sns:${self:provider.region}:${env:AWS_ACCOUNT_ID}:aws-chatbot-slack-alerts-major
       minor:
         alarm:
-          topic: arn:aws:sns:${self:provider.region}:${env:AWS_ACCOUNT_ID}:aws-chatbot-slack-alerts-minor
-        ok:
           topic: arn:aws:sns:${self:provider.region}:${env:AWS_ACCOUNT_ID}:aws-chatbot-slack-alerts-minor
     definitions: # Definition of alarms
       majorFunctionErrors:
@@ -102,8 +98,6 @@ custom:
         evaluationPeriods: 5
         comparisonOperator: GreaterThanOrEqualToThreshold
         treatMissingData: notBreaching
-        okActions:
-          - major
         alarmActions:
           - major
       minorFunctionErrors:
@@ -115,8 +109,6 @@ custom:
         evaluationPeriods: 1
         comparisonOperator: GreaterThanOrEqualToThreshold
         treatMissingData: notBreaching
-        okActions:
-          - minor
         alarmActions:
           - minor
     alarms: # Alarms that will be applied to all functions
