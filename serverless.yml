@@ -94,7 +94,7 @@ custom:
           topic: arn:aws:sns:${self:provider.region}:${env:AWS_ACCOUNT_ID}:aws-chatbot-slack-alerts-minor
     definitions: # Definition of alarms
       majorFunctionErrors:
-        description: "Too many errors in hathor-explorer-service. Runbook: TODO"
+        description: "Too many errors in hathor-explorer-service. Runbook: https://github.com/HathorNetwork/ops-tools/blob/master/docs/runbooks/hathor-explorer-service/errors-in-lambdas.md"
         namespace: 'AWS/Lambda'
         metric: Errors
         threshold: 10
@@ -108,7 +108,7 @@ custom:
         alarmActions:
           - major
       minorFunctionErrors:
-        description: "Too many errors in hathor-explorer-service. Runbook: TODO"
+        description: "Too many errors in hathor-explorer-service. Runbook: https://github.com/HathorNetwork/ops-tools/blob/master/docs/runbooks/hathor-explorer-service/errors-in-lambdas.md"
         namespace: 'AWS/Lambda'
         metric: Errors
         threshold: 2
