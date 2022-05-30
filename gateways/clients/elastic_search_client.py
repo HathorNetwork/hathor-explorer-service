@@ -7,7 +7,7 @@ from utils.elastic_search.elastic_search_utils import ElasticSearchUtils
 
 
 class ElasticSearchClient:
-    def __init__(self, client: Optional[Elasticsearch]) -> None:
+    def __init__(self, elastic_index: str, client: Optional[Elasticsearch]) -> None:
         """Client to make async requests to ElasticSearch, using Cloud ID and Elastic Password
         """
 
@@ -19,7 +19,7 @@ class ElasticSearchClient:
                 basic_auth=(ELASTIC_USER, ELASTIC_PASSWORD)
             )
 
-        self.utils = ElasticSearchUtils()
+        self.utils = ElasticSearchUtils(elastic_index=elastic_index)
 
     def make_query(self, search_text: str, sort_by: str, order: str, search_after: List[str]) -> dict:
         """Use ES client to call the cluster and get the information. Also, it calls auxiliary methods to treat data.
