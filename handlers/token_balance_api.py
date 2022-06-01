@@ -19,7 +19,6 @@ def get_token_balances(
     token_balances_api = token_balances_api or TokenBalancesApi()
 
     token_id = event.query.get('token_id') or "00"
-    search_text = event.query.get('search_text') or ""
     sort_by = event.query.get('sort_by') or ""
     order = event.query.get('order') or 'asc'  # asc/desc
     search_after = event.query.get('search_after') or ''
@@ -31,7 +30,7 @@ def get_token_balances(
         if len(search_after_list) != 2:
             raise ApiError('Invalid search_after parameter')
 
-    response = token_balances_api.get_token_balances(token_id, search_text, sort_by, order, search_after_list)
+    response = token_balances_api.get_token_balances(token_id, sort_by, order, search_after_list)
 
     return {
         'statusCode': 200,

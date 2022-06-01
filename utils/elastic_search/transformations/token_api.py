@@ -4,9 +4,6 @@ def es_hit_to_result(hit: dict) -> dict:
     :param hit: Raw ElasticSearch hit
     :type hit: dict
     """
-    print("\n\n\nWILL PRINT HIT")
-    print(hit)
-    print("\n\n\nPRINTED HIT")
     result = {
         'id': hit['_source']['id'],
         'name': hit['_source']['name'],
