@@ -15,11 +15,14 @@ class ElasticSearchClient:
             self.client = client
         else:
             self.client = Elasticsearch(
-                cloud_id=ELASTIC_CLOUD_ID,
+                "http://localhost:9200",
                 basic_auth=(ELASTIC_USER, ELASTIC_PASSWORD)
             )
 
         self.utils = ElasticSearchUtils(elastic_index=elastic_index)
+
+    def run(self, payload: dict) -> dict:
+        return dict(self.client.search(**payload))
 
     def make_query(self, search_text: str, sort_by: str, order: str, search_after: List[str]) -> dict:
         """Use ES client to call the cluster and get the information. Also, it calls auxiliary methods to treat data.
