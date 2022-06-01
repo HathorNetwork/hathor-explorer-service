@@ -54,7 +54,7 @@ class TokenBalancesApiGateway:
             'addresses': response['aggregations']['address_count']['value']
         }
 
-    def get_token_balances(self, token_id: str, search_text: str, sort_by: str, order: str, search_after: List[str]) -> dict:
+    def get_token_balances(self, token_id: str, sort_by: str, order: str, search_after: List[str]) -> dict:
         """Retrieve all token balances that match user's query
         """
 
