@@ -2,7 +2,11 @@ from typing import List, Optional
 from elasticsearch import Elasticsearch
 from gateways.clients.elastic_search_client import ElasticSearchClient
 from utils.elastic_search.elastic_search_utils import ElasticSearchUtils
-from common.configuration import ELASTIC_RESULTS_PER_PAGE, ELASTIC_SEARCH_TIMEOUT, ELASTIC_INDEX, ELASTIC_TOKEN_BALANCES_INDEX
+from common.configuration import (
+    ELASTIC_RESULTS_PER_PAGE,
+    ELASTIC_SEARCH_TIMEOUT,
+    ELASTIC_TOKEN_BALANCES_INDEX,
+)
 
 SORTABLE_FIELDS = {
     'address': 'keyword',
@@ -12,6 +16,7 @@ SORTABLE_FIELDS = {
     'total': 'long',
 }
 
+
 class TokenBalancesApiGateway:
     """ Gateway to interact with the Hathor ElasticSearch cluster with the token balances index
     """
@@ -20,7 +25,8 @@ class TokenBalancesApiGateway:
         self,
         elastic_search_client: Optional[Elasticsearch] = None,
     ) -> None:
-        self.elastic_search_client = ElasticSearchClient(elastic_index=ELASTIC_TOKEN_BALANCES_INDEX, client=elastic_search_client)
+        self.elastic_search_client = ElasticSearchClient(elastic_index=ELASTIC_TOKEN_BALANCES_INDEX,
+                                                         client=elastic_search_client)
 
     def get_token_information(self, token_id: str) -> dict:
         """Retrieve total number of addresses and transactions for a given token_id
@@ -68,7 +74,8 @@ class TokenBalancesApiGateway:
 
         primary_sort_key = {}
 
-        sort_by_complement = elastic_search_utils.get_sort_by_complement(sortable_fields=SORTABLE_FIELDS, sort_by=sort_by)
+        sort_by_complement = elastic_search_utils.get_sort_by_complement(sortable_fields=SORTABLE_FIELDS,
+                                                                         sort_by=sort_by)
         primary_sort_key[sort_by+sort_by_complement] = order
 
         # In this case, since we are not displaying any unique values, we should always use the unique_id

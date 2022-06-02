@@ -40,6 +40,7 @@ def get_token_balances(
         }
     }
 
+
 @ApiGateway()
 def get_token_information(
     event: ApiGatewayEvent,

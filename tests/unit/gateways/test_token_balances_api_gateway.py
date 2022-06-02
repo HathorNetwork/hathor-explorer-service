@@ -13,7 +13,7 @@ class TestTokenBalancesApiGateway:
 
     def test_get_token_information(self, elastic_search_client):
         elastic_search_client.search = MagicMock(
-            return_value = {
+            return_value={
                 'took': 2,
                 'timed_out': False,
                 '_shards': {
@@ -55,7 +55,7 @@ class TestTokenBalancesApiGateway:
 
     def test_get_token_balances(self, elastic_search_client):
         elastic_search_client.search = MagicMock(
-            return_value = {
+            return_value={
                 'took': 1,
                 'timed_out': False,
                 '_shards': {
