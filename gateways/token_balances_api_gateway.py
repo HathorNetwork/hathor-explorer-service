@@ -37,6 +37,8 @@ class TokenBalancesApiGateway:
                     'token_id': token_id
                 }
             },
+            'index': ELASTIC_TOKEN_BALANCES_INDEX,
+            'request_timeout': int(ELASTIC_SEARCH_TIMEOUT),
             'aggs': {
                 'address_count': {
                     'value_count': {
