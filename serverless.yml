@@ -199,6 +199,50 @@ functions:
               - name: request.path.hash
               - name: request.header.origin
 
+  get_token_balances_handler:
+    handler: handlers/token_balance_api.get_token_balances
+    timeout: 6
+    maximumRetryAttempts: 0
+    package:
+      patterns:
+        - 'handlers/token_balance_api.py'
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: token_balances
+          method: get
+          cors: true
+          caching:
+            enabled: true
+            ttlInSeconds: 300
+            cacheKeyParameters:
+              - name: request.queryString.token_id
+              - name: request.querystring.sort_by
+              - name: request.querystring.order
+              - name: request.querystring.search_after
+              - name: request.header.origin
+
+  get_token_balance_information_handler:
+    handler: handlers/token_balance_api.get_token_information
+    timeout: 6
+    maximumRetryAttempts: 0
+    package:
+      patterns:
+        - 'handlers/token_balance_api.py'
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: token_balances/information
+          method: get
+          cors: true
+          caching:
+            enabled: true
+            ttlInSeconds: 300
+            cacheKeyParameters:
+              - name: request.querystring.token_id
+
   get_tokens_handler:
     handler: handlers/token_api.get_tokens
     timeout: 15
