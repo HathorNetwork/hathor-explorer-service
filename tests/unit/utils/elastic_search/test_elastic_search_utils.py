@@ -1,5 +1,5 @@
-from utils.elastic_search.elastic_search_utils import ElasticSearchUtils
 from common.configuration import ELASTIC_INDEX
+from utils.elastic_search.elastic_search_utils import ElasticSearchUtils
 
 
 class TestElasticSearchUtils:

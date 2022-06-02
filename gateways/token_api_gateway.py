@@ -2,8 +2,8 @@ from typing import List, Optional
 
 from elasticsearch import Elasticsearch
 
-from gateways.clients.elastic_search_client import ElasticSearchClient
 from common.configuration import ELASTIC_INDEX
+from gateways.clients.elastic_search_client import ElasticSearchClient
 
 
 class TokenApiGateway:

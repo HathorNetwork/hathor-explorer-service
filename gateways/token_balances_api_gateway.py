@@ -1,12 +1,10 @@
 from typing import List, Optional
+
 from elasticsearch import Elasticsearch
+
+from common.configuration import ELASTIC_RESULTS_PER_PAGE, ELASTIC_SEARCH_TIMEOUT, ELASTIC_TOKEN_BALANCES_INDEX
 from gateways.clients.elastic_search_client import ElasticSearchClient
 from utils.elastic_search.elastic_search_utils import ElasticSearchUtils
-from common.configuration import (
-    ELASTIC_RESULTS_PER_PAGE,
-    ELASTIC_SEARCH_TIMEOUT,
-    ELASTIC_TOKEN_BALANCES_INDEX,
-)
 
 SORTABLE_FIELDS = {
     'address': 'keyword',

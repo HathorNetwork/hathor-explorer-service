@@ -2,8 +2,8 @@ from unittest.mock import MagicMock
 
 from pytest import fixture
 
-from gateways.clients.elastic_search_client import ElasticSearchClient
 from common.configuration import ELASTIC_INDEX
+from gateways.clients.elastic_search_client import ElasticSearchClient
 
 
 class TestElasticSearchClient:

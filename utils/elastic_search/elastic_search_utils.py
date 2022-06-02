@@ -1,7 +1,11 @@
 from typing import List
 
-from common.configuration import ELASTIC_RESULTS_PER_PAGE, ELASTIC_SEARCH_TIMEOUT, \
-                                 ELASTIC_INDEX, ELASTIC_TOKEN_BALANCES_INDEX
+from common.configuration import (
+    ELASTIC_INDEX,
+    ELASTIC_RESULTS_PER_PAGE,
+    ELASTIC_SEARCH_TIMEOUT,
+    ELASTIC_TOKEN_BALANCES_INDEX,
+)
 from utils.elastic_search.transformations.token_api import es_hit_to_result as token_api_es_hit_to_result
 from utils.elastic_search.transformations.token_balances import es_hit_to_result as token_balances_es_hit_to_result
 
