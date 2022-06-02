@@ -15,7 +15,7 @@ class ElasticSearchClient:
             self.client = client
         else:
             self.client = Elasticsearch(
-                ELASTIC_CLOUD_ID,
+                cloud_id=ELASTIC_CLOUD_ID,
                 basic_auth=(ELASTIC_USER, ELASTIC_PASSWORD)
             )
 

@@ -1,8 +1,9 @@
 from typing import List
 
-from common.configuration import ELASTIC_RESULTS_PER_PAGE, ELASTIC_SEARCH_TIMEOUT, ELASTIC_INDEX, ELASTIC_TOKEN_BALANCES_INDEX
+from common.configuration import ELASTIC_RESULTS_PER_PAGE, ELASTIC_SEARCH_TIMEOUT, ELASTIC_INDEX, ELASTIC_TOKEN_BALANCES_INDEX, ELASTIC_TX_INDEX
 from utils.elastic_search.transformations.token_api import es_hit_to_result as token_api_es_hit_to_result
 from utils.elastic_search.transformations.token_balances import es_hit_to_result as token_balances_es_hit_to_result
+from utils.elastic_search.transformations.tx import es_hit_to_result as tx_es_hit_to_result
 
 # Each possible sortable field and its primary type for each elastic search index
 SORTABLE_FIELDS_BY_INDEX = {
@@ -35,6 +36,7 @@ DEFAULT_SORT_ORDER_BY_INDEX = {
 RESPONSE_TRANSFORMATION_BY_INDEX = {
     ELASTIC_INDEX: token_api_es_hit_to_result,
     ELASTIC_TOKEN_BALANCES_INDEX: token_balances_es_hit_to_result,
+    ELASTIC_TX_INDEX: tx_es_hit_to_result,
 }
 
 
