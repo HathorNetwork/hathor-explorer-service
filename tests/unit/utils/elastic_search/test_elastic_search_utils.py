@@ -1,10 +1,11 @@
 from utils.elastic_search.elastic_search_utils import ElasticSearchUtils
+from common.configuration import ELASTIC_INDEX
 
 
 class TestElasticSearchUtils:
 
     def test_empty_search_string(self):
-        utils = ElasticSearchUtils()
+        utils = ElasticSearchUtils(elastic_index=ELASTIC_INDEX)
 
         search_text = ""
         sort_by = ""
@@ -17,13 +18,14 @@ class TestElasticSearchUtils:
         assert 'search_after' not in result
 
     def test_filled_search_string(self):
-        utils = ElasticSearchUtils()
+        utils = ElasticSearchUtils(elastic_index=ELASTIC_INDEX)
         search_text = "Test"
         sort_by = "transaction_timestamp"
         order = "desc"
         search_after = []
 
         result = utils.build_search_query(search_text, sort_by, order, search_after)
+        print(result)
         assert result['query'] is not None
         assert result['query']['multi_match'] is not None
         assert result['query']['multi_match']['query'] == search_text
@@ -31,7 +33,7 @@ class TestElasticSearchUtils:
         assert 'search_after' not in result
 
     def test_search_query_without_search_after(self):
-        utils = ElasticSearchUtils()
+        utils = ElasticSearchUtils(elastic_index=ELASTIC_INDEX)
         search_text = "Test"
         sort_by = "name"
         order = "asc"
@@ -42,7 +44,7 @@ class TestElasticSearchUtils:
         assert 'search_after' not in result
 
     def test_search_query_with_search_after(self):
-        utils = ElasticSearchUtils()
+        utils = ElasticSearchUtils(elastic_index=ELASTIC_INDEX)
         search_text = "Test"
         sort_by = "name"
         order = "asc"
@@ -53,7 +55,7 @@ class TestElasticSearchUtils:
         assert result['search_after'] == search_after
 
     def test_treat_response(self):
-        utils = ElasticSearchUtils()
+        utils = ElasticSearchUtils(elastic_index=ELASTIC_INDEX)
 
         es_response = {
             "took": 0,
