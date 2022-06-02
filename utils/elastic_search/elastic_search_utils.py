@@ -48,7 +48,7 @@ class ElasticSearchUtils:
     def __init__(self, elastic_index: str):
         self.elastic_index = elastic_index
 
-    def get_sort_by_complement(self, sortable_fields: List[str], sort_by: str) -> str:
+    def get_sort_by_complement(self, sortable_fields: dict, sort_by: str) -> str:
         """ Returns the complement (if any) on sort_by field that is passed to ES
 
         :param sort_by: Which field is currently being used for primary sorting
