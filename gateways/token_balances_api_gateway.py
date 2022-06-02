@@ -59,10 +59,9 @@ class TokenBalancesApiGateway:
         """
 
         elastic_search_utils = ElasticSearchUtils(elastic_index=ELASTIC_TOKEN_BALANCES_INDEX)
-        sort_order = ['total', 'unlocked_balance', 'locked_balance', 'address']
 
         if not sort_by:
-            sort_by = sort_order[0]
+            sort_by = 'total'
 
         if not order:
             order = 'asc'
@@ -72,14 +71,11 @@ class TokenBalancesApiGateway:
         sort_by_complement = elastic_search_utils.get_sort_by_complement(sortable_fields=SORTABLE_FIELDS, sort_by=sort_by)
         primary_sort_key[sort_by+sort_by_complement] = order
 
-        sort_order.remove(sort_by)
-
-        tie_break_sort_order = sort_order.pop(0)
-        tie_break_sort_key = {}
-
-        sort_by_complement = elastic_search_utils.get_sort_by_complement(sortable_fields=SORTABLE_FIELDS, sort_by=tie_break_sort_order)
-
-        tie_break_sort_key[tie_break_sort_order+sort_by_complement] = 'asc'
+        # In this case, since we are not displaying any unique values, we should always use the unique_id
+        # as a tie breaker
+        tie_break_sort_key = {
+            'unique_id.keyword': 'desc'
+        }
 
         body = {
             'size': int(ELASTIC_RESULTS_PER_PAGE) + 1,  # Last element is to check if there is next page.
@@ -95,5 +91,8 @@ class TokenBalancesApiGateway:
                 }
             }
         }
+
+        if search_after:
+            body['search_after'] = search_after
 
         return elastic_search_utils.treat_response(self.elastic_search_client.run(body))
