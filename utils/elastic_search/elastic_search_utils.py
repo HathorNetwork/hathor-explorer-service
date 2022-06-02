@@ -106,14 +106,10 @@ class ElasticSearchUtils:
         if search_text:
             fields = SEARCH_TEXT_FIELDS_BY_INDEX[self.elastic_index]
             body['query'] = {
-                'bool': {
-                    'must': {
-                        'multi_match': {
-                            'query': search_text,
-                            'fields': fields
-                        },
-                    }
-                },
+                'multi_match': {
+                    'query': search_text,
+                    'fields': fields
+                }
             }
 
         if search_after:
