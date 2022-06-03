@@ -26,20 +26,23 @@ class TokenBalancesApiGateway:
         self.elastic_search_client = ElasticSearchClient(elastic_index=ELASTIC_TOKEN_BALANCES_INDEX,
                                                          client=elastic_search_client)
 
+    def _build_filtered_query(self, token_id: str) -> dict:
+        return {
+            'bool': {
+                'must': [
+                    { 'match': { 'token_id': token_id } },
+                    { 'range': { 'total': { 'gt': 0 } } },
+                ]
+            }
+        }
+
     def get_token_information(self, token_id: str) -> dict:
         """Retrieve total number of addresses and transactions for a given token_id
         """
 
         body = {
             'size': 0,
-            'query': {
-                'bool': {
-                    'must': [
-                        { 'match': { 'token_id': token_id } },
-                        { 'range': { 'total': { 'gt': 0 } } },
-                    ]
-                }
-            },
+            'query': self._build_filtered_query(token_id),
             'index': ELASTIC_TOKEN_BALANCES_INDEX,
             'request_timeout': int(ELASTIC_SEARCH_TIMEOUT),
             'aggs': {
@@ -95,14 +98,7 @@ class TokenBalancesApiGateway:
             ],
             'index': ELASTIC_TOKEN_BALANCES_INDEX,
             'request_timeout': int(ELASTIC_SEARCH_TIMEOUT),
-            'query': {
-                'bool': {
-                    'must': [
-                        { 'match': { 'token_id': token_id } },
-                        { 'range': { 'total': { 'gt': 0 } } },
-                    ]
-                }
-            }
+            'query': self._build_filtered_query(token_id),
         }
 
         if search_after:
