@@ -33,8 +33,11 @@ class TokenBalancesApiGateway:
         body = {
             'size': 0,
             'query': {
-                'match': {
-                    'token_id': token_id
+                'bool': {
+                    'must': [
+                        { 'match': { 'token_id': token_id } },
+                        { 'range': { 'total': { 'gt': 0 } } },
+                    ]
                 }
             },
             'index': ELASTIC_TOKEN_BALANCES_INDEX,
@@ -93,8 +96,11 @@ class TokenBalancesApiGateway:
             'index': ELASTIC_TOKEN_BALANCES_INDEX,
             'request_timeout': int(ELASTIC_SEARCH_TIMEOUT),
             'query': {
-                'match': {
-                    'token_id': token_id
+                'bool': {
+                    'must': [
+                        { 'match': { 'token_id': token_id } },
+                        { 'range': { 'total': { 'gt': 0 } } },
+                    ]
                 }
             }
         }
