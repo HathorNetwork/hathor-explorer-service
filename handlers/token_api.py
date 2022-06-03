@@ -1,5 +1,4 @@
 import json
-from typing import Optional
 
 from aws_lambda_context import LambdaContext
 

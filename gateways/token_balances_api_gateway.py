@@ -30,8 +30,8 @@ class TokenBalancesApiGateway:
         return {
             'bool': {
                 'must': [
-                    { 'match': { 'token_id': token_id } },
-                    { 'range': { 'total': { 'gt': 0 } } },
+                    {'match': {'token_id': token_id}},
+                    {'range': {'total': {'gt': 0}}},
                 ]
             }
         }
