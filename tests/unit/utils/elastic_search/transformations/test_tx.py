@@ -25,8 +25,17 @@ ELASTIC_SEARCH_HIT_MAPPED = {
     'hash_rate': 123
 }
 
+ES_HIT_TO_RESULT_EXPECTED_RETURN = {
+    'tx_id': '00a1786694f2b2248c4272e64f9f414759322b4e6d5e40d39cc5b5aedfd70dfb',
+    'timestamp': '2022-05-09T18:55:47Z',
+    'version': 0,
+    'voided': False,
+    'height': 1740645,
+    'weight': 60.66999816894531
+}
+
 
 class TestTx:
     def test_tx_transformation(self):
         tx_transformation = es_hit_to_result(ELASTIC_SEARCH_RAW_HIT)
-        print(tx_transformation)
+        assert tx_transformation == ES_HIT_TO_RESULT_EXPECTED_RETURN

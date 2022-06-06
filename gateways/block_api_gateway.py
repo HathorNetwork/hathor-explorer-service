@@ -22,7 +22,10 @@ class BlockApiGateway:
                                                          client=elastic_search_client
                                                          )
 
-    def get_block_with_biggest_height(self):
+    def get_block_with_biggest_height(self) -> dict:
+        """ Get the block with biggest height available on the ElasticSearch
+        """
+
         body = {
             'index': ELASTIC_TX_INDEX,
             'query': {

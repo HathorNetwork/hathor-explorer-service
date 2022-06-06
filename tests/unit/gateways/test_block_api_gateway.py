@@ -64,6 +64,9 @@ class TestBlockApiGateway:
         return MagicMock()
 
     def test_get_block_with_biggest_height(self, elastic_search_client):
+        """ Test if ElasticSearch client is being called
+            and if the response is being treated before returning the data
+        """
         elastic_search_client.search = MagicMock(
             return_value=ELASTIC_SEARCH_BIGGEST_HEIGHT_SUCCESSFUL_RAW_RESPONSE
         )

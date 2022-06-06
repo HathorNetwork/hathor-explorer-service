@@ -4,6 +4,21 @@ from pytest import fixture
 
 from usecases.block_api import BlockApi
 
+API_GATEWAY_GET_BLOCK_WITH_BIGGEST_HEIGHT_RESPONSE = {
+    'hits':
+    [
+        {
+            'tx_id': '00a1786694f2b2248c4272e64f9f414759322b4e6d5e40d39cc5b5aedfd70dfb',
+            'timestamp': '2022-05-09T18:55:47Z',
+            'version': 0,
+            'voided': False,
+            'height': 1740645,
+            'weight': 60.66999816894531
+        }
+    ],
+    'has_next': False
+}
+
 
 class TestBlockApi:
 
@@ -11,34 +26,19 @@ class TestBlockApi:
     def block_api_gateway(self):
         return MagicMock()
 
-    @fixture
-    def api_gateway_get_block_with_biggest_height_response(self):
-        return {
-            'hits':
-            [
-                {
-                    'tx_id': '00a1786694f2b2248c4272e64f9f414759322b4e6d5e40d39cc5b5aedfd70dfb',
-                    'timestamp': '2022-05-09T18:55:47Z',
-                    'version': 0,
-                    'voided': False,
-                    'height': 1740645,
-                    'weight': 60.66999816894531
-                }
-            ],
-            'has_next': False
-        }
-
     def test_get_block_with_biggest_height(
         self,
         block_api_gateway,
-        api_gateway_get_block_with_biggest_height_response
     ):
-        api_gateway_response = api_gateway_get_block_with_biggest_height_response
-        block_api_gateway.get_block_with_biggest_height = MagicMock(return_value=api_gateway_response)
+        """ Test if API Gateway is being called and if the API GW result is being returned
+        """
+        block_api_gateway.get_block_with_biggest_height = MagicMock(
+            return_value=API_GATEWAY_GET_BLOCK_WITH_BIGGEST_HEIGHT_RESPONSE
+        )
 
         block_api = BlockApi(block_api_gateway)
 
         result = block_api.get_block_with_biggest_height()
         block_api_gateway.get_block_with_biggest_height.assert_called_once
         assert result
-        assert result == api_gateway_response
+        assert result == API_GATEWAY_GET_BLOCK_WITH_BIGGEST_HEIGHT_RESPONSE
