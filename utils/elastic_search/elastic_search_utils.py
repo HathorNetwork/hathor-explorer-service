@@ -1,26 +1,63 @@
 from typing import List
 
-from common.configuration import ELASTIC_INDEX, ELASTIC_RESULTS_PER_PAGE, ELASTIC_SEARCH_TIMEOUT
+from common.configuration import (
+    ELASTIC_INDEX,
+    ELASTIC_RESULTS_PER_PAGE,
+    ELASTIC_SEARCH_TIMEOUT,
+    ELASTIC_TOKEN_BALANCES_INDEX,
+)
+from utils.elastic_search.transformations.token_api import es_hit_to_result as token_api_es_hit_to_result
+from utils.elastic_search.transformations.token_balances import es_hit_to_result as token_balances_es_hit_to_result
+
+# Each possible sortable field and its primary type for each elastic search index
+SORTABLE_FIELDS_BY_INDEX = {
+    ELASTIC_INDEX: {
+        'transaction_timestamp': 'long',
+        'uid': 'keyword',
+        'id': 'keyword',
+        'name': 'keyword',
+        'symbol': 'keyword',
+    },
+    ELASTIC_TOKEN_BALANCES_INDEX: {
+        'address': 'keyword',
+        'token_id': 'keyword',
+        'unlocked_balance': 'long',
+        'locked_balance': 'long',
+        'total': 'long',
+    }
+}
+
+SEARCH_TEXT_FIELDS_BY_INDEX = {
+    ELASTIC_INDEX: ['id', 'name', 'symbol'],
+    ELASTIC_TOKEN_BALANCES_INDEX: ['token_id']
+}
+
+DEFAULT_SORT_ORDER_BY_INDEX = {
+    ELASTIC_INDEX: ['transaction_timestamp', 'id', 'name', 'symbol'],
+    ELASTIC_TOKEN_BALANCES_INDEX: ['unlocked_balance', 'locked_balance', 'total', 'address'],
+}
+
+RESPONSE_TRANSFORMATION_BY_INDEX = {
+    ELASTIC_INDEX: token_api_es_hit_to_result,
+    ELASTIC_TOKEN_BALANCES_INDEX: token_balances_es_hit_to_result,
+}
 
 
 class ElasticSearchUtils:
-    def _get_sort_by_complement(self, sort_by: str) -> str:
+
+    def __init__(self, elastic_index: str):
+        self.elastic_index = elastic_index
+
+    def get_sort_by_complement(self, sortable_fields: dict, sort_by: str) -> str:
         """ Returns the complement (if any) on sort_by field that is passed to ES
 
         :param sort_by: Which field is currently being used for primary sorting
         :type sort_by: str
         """
-        # Each possible sortable field and its primary type
-        sort_fields_data_type = {
-            'transaction_timestamp': 'long',
-            'id': 'keyword',
-            'name': 'keyword',
-            'symbol': 'keyword'
-        }
 
         # For sorting purposes, only .keyword must be added as complement
         # Other types (such as long) do not need complement
-        return '.keyword' if sort_fields_data_type[sort_by] == 'keyword' else ''
+        return '.keyword' if sortable_fields[sort_by] == 'keyword' else ''
 
     def build_search_query(self, search_text: str, sort_by: str, order: str, search_after: List[str]) -> dict:
         """Build the search query that will be sent to ElasticSearch given the parameters provided by API Client.
@@ -39,19 +76,19 @@ class ElasticSearchUtils:
         :param search_after: A list with two entries with information of the next page
         :type search_after: List[str]
         """
-
         # Default sort order, if nothing is passed
-        sort_order = ['transaction_timestamp', 'id', 'name', 'symbol']
+        sort_order = DEFAULT_SORT_ORDER_BY_INDEX[self.elastic_index].copy()
 
-        if not sort_by or sort_by == 'uid':
-            sort_by = 'id'
+        if not sort_by:
+            sort_by = sort_order[0]
 
         if not order:
             order = 'asc'
 
         primary_sort_key = {}
 
-        sort_by_complement = self._get_sort_by_complement(sort_by)
+        sort_by_complement = self.get_sort_by_complement(sortable_fields=SORTABLE_FIELDS_BY_INDEX[self.elastic_index],
+                                                         sort_by=sort_by)
         primary_sort_key[sort_by+sort_by_complement] = order
 
         sort_order.remove(sort_by)
@@ -59,7 +96,8 @@ class ElasticSearchUtils:
         tie_break_sort_order = sort_order.pop(0)
         tie_break_sort_key = {}
 
-        sort_by_complement = self._get_sort_by_complement(tie_break_sort_order)
+        sort_by_complement = self.get_sort_by_complement(sortable_fields=SORTABLE_FIELDS_BY_INDEX[self.elastic_index],
+                                                         sort_by=tie_break_sort_order)
         tie_break_sort_key[tie_break_sort_order+sort_by_complement] = 'asc'
 
         body = {
@@ -68,15 +106,16 @@ class ElasticSearchUtils:
                 primary_sort_key,
                 tie_break_sort_key
             ],
-            'index': ELASTIC_INDEX,
-            'request_timeout': int(ELASTIC_SEARCH_TIMEOUT)
+            'index': self.elastic_index,
+            'request_timeout': int(ELASTIC_SEARCH_TIMEOUT),
         }
 
         if search_text:
+            fields = SEARCH_TEXT_FIELDS_BY_INDEX[self.elastic_index]
             body['query'] = {
                 'multi_match': {
                     'query': search_text,
-                    'fields': ['id', 'name', 'symbol']
+                    'fields': fields
                 }
             }
 
@@ -84,27 +123,6 @@ class ElasticSearchUtils:
             body['search_after'] = search_after
 
         return body
-
-    def _get_source_from_hit(self, hit: dict) -> dict:
-        """Gets a unique hit from ElasticSearch and map it to what API client expects.
-
-        :param hit: Raw ElasticSearch hit
-        :type hit: dict
-        """
-        result = {
-            'id': hit['_source']['id'],
-            'name': hit['_source']['name'],
-            'symbol': hit['_source']['symbol'],
-            'transaction_timestamp': hit['_source']['transaction_timestamp'],
-            'sort': hit['sort']
-        }
-
-        if 'nft' in hit['_source']:
-            result['nft'] = hit['_source']['nft']
-        else:
-            result['nft'] = False
-
-        return result
 
     def treat_response(self, es_search_result: dict) -> dict:
         """Get the response from ElasticSearch and transform it into what API client expects.
@@ -118,7 +136,8 @@ class ElasticSearchUtils:
             'has_next': False
         }
 
-        hits = list(map(self._get_source_from_hit, es_search_result['hits']['hits']))
+        transformation = RESPONSE_TRANSFORMATION_BY_INDEX[self.elastic_index]
+        hits = list(map(transformation, es_search_result['hits']['hits']))
         if len(hits) == (int(ELASTIC_RESULTS_PER_PAGE) + 1):
             response['has_next'] = True
             del hits[-1]
