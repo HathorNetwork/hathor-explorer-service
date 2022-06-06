@@ -50,8 +50,11 @@ fmt: yapf isort
 
 .PHONY: test
 test:
-	ENVIRONMENT=test pytest $(pytest_flags) ./tests
-
+	# We need those variables set before the tests run because some modules use them as indexes for dicts
+	ENVIRONMENT=test \
+	ES_INDEX=dev-token \
+	ELASTIC_TOKEN_BALANCES_INDEX=dev-token-balance \
+	pytest $(pytest_flags) ./tests
 stage=dev
 .PHONY: deploy-lambdas
 deploy-lambdas:
