@@ -22,7 +22,7 @@ ELASTIC_SEARCH_BIGGEST_HEIGHT_SUCCESSFUL_RAW_RESPONSE = {
         'max_score': None,
         'hits': [
             {
-                '_index': 'lucas-mainnet-tx',
+                '_index': 'dev-tx',
                 '_id': '00a1786694f2b2248c4272e64f9f414759322b4e6d5e40d39cc5b5aedfd70dfb',
                 '_score': None,
                 '_source': {
