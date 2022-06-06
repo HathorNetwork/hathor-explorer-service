@@ -31,6 +31,7 @@ ELASTIC_SEARCH_BIGGEST_HEIGHT_SUCCESSFUL_RAW_RESPONSE = {
                     'timestamp': '2022-05-09T18:55:47Z',
                     '@timestamp': '2022-06-01T02:56:20.402864Z',
                     'weight': 60.66999816894531,
+                    'hash_rate': 123, 
                     'updated_at': '2022-06-01T02:36:14Z',
                     'height': 1740645,
                     'created_at': '2022-06-01T02:31:49Z',
@@ -51,7 +52,8 @@ GATEWAY_BIGGEST_HEIGHT_SUCCESSFUL_RESPONSE = {
             'version': 0,
             'voided': False,
             'height': 1740645,
-            'weight': 60.66999816894531
+            'weight': 60.66999816894531,
+            'hash_rate': 123,
         }
     ],
     'has_next': False

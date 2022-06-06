@@ -13,7 +13,8 @@ API_GATEWAY_GET_BLOCK_WITH_BIGGEST_HEIGHT_RESPONSE = {
             'version': 0,
             'voided': False,
             'height': 1740645,
-            'weight': 60.66999816894531
+            'weight': 60.66999816894531,
+            'hash_rate': 123
         }
     ],
     'has_next': False

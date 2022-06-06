@@ -31,7 +31,8 @@ ES_HIT_TO_RESULT_EXPECTED_RETURN = {
     'version': 0,
     'voided': False,
     'height': 1740645,
-    'weight': 60.66999816894531
+    'weight': 60.66999816894531,
+    'hash_rate': 123
 }
 
 
