@@ -55,6 +55,7 @@ test:
 	ES_INDEX=dev-token \
 	ELASTIC_TOKEN_BALANCES_INDEX=dev-token-balance \
 	pytest $(pytest_flags) ./tests
+
 stage=dev
 .PHONY: deploy-lambdas
 deploy-lambdas:
