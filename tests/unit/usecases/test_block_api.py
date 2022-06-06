@@ -1,6 +1,7 @@
+from unittest.mock import MagicMock
+
 from pytest import fixture
 
-from unittest.mock import MagicMock
 from usecases.block_api import BlockApi
 
 

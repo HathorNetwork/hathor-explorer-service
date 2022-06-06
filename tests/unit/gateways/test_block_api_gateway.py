@@ -1,7 +1,8 @@
+from unittest.mock import MagicMock
+
 from pytest import fixture
 
 from gateways.block_api_gateway import BlockApiGateway
-from unittest.mock import MagicMock
 
 ELASTIC_SEARCH_BIGGEST_HEIGHT_SUCCESSFUL_RAW_RESPONSE = {
     'took': 3,

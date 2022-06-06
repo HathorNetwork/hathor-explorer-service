@@ -1,5 +1,6 @@
 import json
 from typing import Optional
+
 from aws_lambda_context import LambdaContext
 
 from usecases.block_api import BlockApi

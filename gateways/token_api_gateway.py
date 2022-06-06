@@ -4,7 +4,6 @@ from elasticsearch import Elasticsearch
 
 from common.configuration import ELASTIC_INDEX
 from gateways.clients.elastic_search_client import ElasticSearchClient
-from common.configuration import ELASTIC_INDEX
 
 
 class TokenApiGateway:

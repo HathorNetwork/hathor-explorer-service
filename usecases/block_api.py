@@ -1,4 +1,5 @@
 from typing import Optional
+
 from gateways.block_api_gateway import BlockApiGateway
 
 

@@ -1,8 +1,10 @@
 from typing import Optional
+
 from elasticsearch import Elasticsearch
+
 from common.configuration import ELASTIC_TX_INDEX
-from utils.elastic_search.elastic_search_utils import ElasticSearchUtils
 from gateways.clients.elastic_search_client import ElasticSearchClient
+from utils.elastic_search.elastic_search_utils import ElasticSearchUtils
 
 BLOCK_TX_VERSION = 0
 
