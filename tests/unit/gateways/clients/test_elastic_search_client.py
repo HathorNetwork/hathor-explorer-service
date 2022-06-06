@@ -2,6 +2,7 @@ from unittest.mock import MagicMock
 
 from pytest import fixture
 
+from common.configuration import ELASTIC_INDEX
 from gateways.clients.elastic_search_client import ElasticSearchClient
 
 
@@ -12,7 +13,7 @@ class TestElasticSearchClient:
         return MagicMock()
 
     def test_search(self, es_client):
-        client = ElasticSearchClient(es_client)
+        client = ElasticSearchClient(elastic_index=ELASTIC_INDEX, client=es_client)
 
         es_client.search = MagicMock(
             return_value={

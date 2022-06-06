@@ -37,6 +37,7 @@ provider:
     ELASTIC_USER: ${env:ELASTIC_USER}
     ELASTIC_PASSWORD: ${env:ELASTIC_PASSWORD}
     ELASTIC_INDEX: ${env:ELASTIC_INDEX}
+    ELASTIC_TOKEN_BALANCES_INDEX: ${env:ELASTIC_TOKEN_BALANCES_INDEX}
     ELASTIC_RESULTS_PER_PAGE: ${env:ELASTIC_RESULTS_PER_PAGE}
     ELASTIC_SEARCH_TIMEOUT: ${env:ELASTIC_SEARCH_TIMEOUT}
     ELASTIC_TX_INDEX: ${env:ELASTIC_TX_INDEX}
@@ -86,15 +87,12 @@ custom:
       major:
         alarm:
           topic: arn:aws:sns:${self:provider.region}:${env:AWS_ACCOUNT_ID}:aws-chatbot-slack-alerts-major
-        ok:
-          topic: arn:aws:sns:${self:provider.region}:${env:AWS_ACCOUNT_ID}:aws-chatbot-slack-alerts-major
       minor:
         alarm:
           topic: arn:aws:sns:${self:provider.region}:${env:AWS_ACCOUNT_ID}:aws-chatbot-slack-alerts-minor
-        ok:
-          topic: arn:aws:sns:${self:provider.region}:${env:AWS_ACCOUNT_ID}:aws-chatbot-slack-alerts-minor
     definitions: # Definition of alarms
       majorFunctionErrors:
+        description: "Too many errors in hathor-explorer-service. Runbook: https://github.com/HathorNetwork/ops-tools/blob/master/docs/runbooks/hathor-explorer-service/errors-in-lambdas.md"
         namespace: 'AWS/Lambda'
         metric: Errors
         threshold: 10
@@ -103,11 +101,10 @@ custom:
         evaluationPeriods: 5
         comparisonOperator: GreaterThanOrEqualToThreshold
         treatMissingData: notBreaching
-        okActions:
-          - major
         alarmActions:
           - major
       minorFunctionErrors:
+        description: "Too many errors in hathor-explorer-service. Runbook: https://github.com/HathorNetwork/ops-tools/blob/master/docs/runbooks/hathor-explorer-service/errors-in-lambdas.md"
         namespace: 'AWS/Lambda'
         metric: Errors
         threshold: 2
@@ -116,8 +113,6 @@ custom:
         evaluationPeriods: 1
         comparisonOperator: GreaterThanOrEqualToThreshold
         treatMissingData: notBreaching
-        okActions:
-          - minor
         alarmActions:
           - minor
     alarms: # Alarms that will be applied to all functions
@@ -199,6 +194,50 @@ functions:
             cacheKeyParameters:
               - name: request.path.hash
               - name: request.header.origin
+
+  get_token_balances_handler:
+    handler: handlers/token_balance_api.get_token_balances
+    timeout: 6
+    maximumRetryAttempts: 0
+    package:
+      patterns:
+        - 'handlers/token_balance_api.py'
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: token_balances
+          method: get
+          cors: true
+          caching:
+            enabled: true
+            ttlInSeconds: 300
+            cacheKeyParameters:
+              - name: request.queryString.token_id
+              - name: request.querystring.sort_by
+              - name: request.querystring.order
+              - name: request.querystring.search_after
+              - name: request.header.origin
+
+  get_token_balance_information_handler:
+    handler: handlers/token_balance_api.get_token_information
+    timeout: 6
+    maximumRetryAttempts: 0
+    package:
+      patterns:
+        - 'handlers/token_balance_api.py'
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: token_balances/information
+          method: get
+          cors: true
+          caching:
+            enabled: true
+            ttlInSeconds: 300
+            cacheKeyParameters:
+              - name: request.querystring.token_id
 
   get_tokens_handler:
     handler: handlers/token_api.get_tokens

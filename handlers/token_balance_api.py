@@ -7,6 +7,8 @@ from common.errors import ApiError
 from usecases.token_balances_api import TokenBalancesApi
 from utils.wrappers.aws.api_gateway import ApiGateway, ApiGatewayEvent
 
+HTR_TOKEN_ID = '00'
+
 
 @ApiGateway()
 def get_token_balances(
@@ -18,7 +20,7 @@ def get_token_balances(
 
     token_balances_api = token_balances_api or TokenBalancesApi()
 
-    token_id = event.query.get('token_id') or "00"
+    token_id = event.query.get('token_id') or HTR_TOKEN_ID
     sort_by = event.query.get('sort_by') or ""
     order = event.query.get('order') or 'asc'  # asc/desc
     search_after = event.query.get('search_after') or ''
@@ -44,13 +46,12 @@ def get_token_balances(
 def get_token_information(
     event: ApiGatewayEvent,
     _context: LambdaContext,
-    token_balances_api: Optional[TokenBalancesApi] = None
+    token_balances_api: TokenBalancesApi = TokenBalancesApi()
 ) -> dict:
     """Get token information from a given token_id
     """
 
-    token_balances_api = token_balances_api or TokenBalancesApi()
-    token_id = event.query.get('token_id') or '00'
+    token_id = event.query.get('token_id') or HTR_TOKEN_ID
     response = token_balances_api.get_token_information(token_id)
 
     return {

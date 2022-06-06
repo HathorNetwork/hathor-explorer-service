@@ -1,8 +1,10 @@
 from typing import List, Optional
+
 from elasticsearch import Elasticsearch
+
+from common.configuration import ELASTIC_RESULTS_PER_PAGE, ELASTIC_SEARCH_TIMEOUT, ELASTIC_TOKEN_BALANCES_INDEX
 from gateways.clients.elastic_search_client import ElasticSearchClient
 from utils.elastic_search.elastic_search_utils import ElasticSearchUtils
-from common.configuration import ELASTIC_RESULTS_PER_PAGE, ELASTIC_SEARCH_TIMEOUT, ELASTIC_INDEX, ELASTIC_TOKEN_BALANCES_INDEX
 
 SORTABLE_FIELDS = {
     'address': 'keyword',
@@ -12,6 +14,7 @@ SORTABLE_FIELDS = {
     'total': 'long',
 }
 
+
 class TokenBalancesApiGateway:
     """ Gateway to interact with the Hathor ElasticSearch cluster with the token balances index
     """
@@ -20,7 +23,18 @@ class TokenBalancesApiGateway:
         self,
         elastic_search_client: Optional[Elasticsearch] = None,
     ) -> None:
-        self.elastic_search_client = ElasticSearchClient(elastic_index=ELASTIC_TOKEN_BALANCES_INDEX, client=elastic_search_client)
+        self.elastic_search_client = ElasticSearchClient(elastic_index=ELASTIC_TOKEN_BALANCES_INDEX,
+                                                         client=elastic_search_client)
+
+    def _build_filtered_query(self, token_id: str) -> dict:
+        return {
+            'bool': {
+                'must': [
+                    {'match': {'token_id': token_id}},
+                    {'range': {'total': {'gt': 0}}},
+                ]
+            }
+        }
 
     def get_token_information(self, token_id: str) -> dict:
         """Retrieve total number of addresses and transactions for a given token_id
@@ -28,11 +42,9 @@ class TokenBalancesApiGateway:
 
         body = {
             'size': 0,
-            'query': {
-                'match': {
-                    'token_id': token_id
-                }
-            },
+            'query': self._build_filtered_query(token_id),
+            'index': ELASTIC_TOKEN_BALANCES_INDEX,
+            'request_timeout': int(ELASTIC_SEARCH_TIMEOUT),
             'aggs': {
                 'address_count': {
                     'value_count': {
@@ -59,27 +71,24 @@ class TokenBalancesApiGateway:
         """
 
         elastic_search_utils = ElasticSearchUtils(elastic_index=ELASTIC_TOKEN_BALANCES_INDEX)
-        sort_order = ['total', 'unlocked_balance', 'locked_balance', 'address']
 
         if not sort_by:
-            sort_by = sort_order[0]
+            sort_by = 'total'
 
         if not order:
             order = 'asc'
 
         primary_sort_key = {}
 
-        sort_by_complement = elastic_search_utils.get_sort_by_complement(sortable_fields=SORTABLE_FIELDS, sort_by=sort_by)
+        sort_by_complement = elastic_search_utils.get_sort_by_complement(sortable_fields=SORTABLE_FIELDS,
+                                                                         sort_by=sort_by)
         primary_sort_key[sort_by+sort_by_complement] = order
 
-        sort_order.remove(sort_by)
-
-        tie_break_sort_order = sort_order.pop(0)
-        tie_break_sort_key = {}
-
-        sort_by_complement = elastic_search_utils.get_sort_by_complement(sortable_fields=SORTABLE_FIELDS, sort_by=tie_break_sort_order)
-
-        tie_break_sort_key[tie_break_sort_order+sort_by_complement] = 'asc'
+        # In this case, since we are not displaying any unique values, we should always use the unique_id
+        # as a tie breaker
+        tie_break_sort_key = {
+            'unique_id.keyword': 'desc'
+        }
 
         body = {
             'size': int(ELASTIC_RESULTS_PER_PAGE) + 1,  # Last element is to check if there is next page.
@@ -89,11 +98,10 @@ class TokenBalancesApiGateway:
             ],
             'index': ELASTIC_TOKEN_BALANCES_INDEX,
             'request_timeout': int(ELASTIC_SEARCH_TIMEOUT),
-            'query': {
-                'match': {
-                    'token_id': token_id
-                }
-            }
+            'query': self._build_filtered_query(token_id),
         }
+
+        if search_after:
+            body['search_after'] = search_after
 
         return elastic_search_utils.treat_response(self.elastic_search_client.run(body))

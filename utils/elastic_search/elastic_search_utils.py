@@ -1,6 +1,12 @@
 from typing import List
 
-from common.configuration import ELASTIC_RESULTS_PER_PAGE, ELASTIC_SEARCH_TIMEOUT, ELASTIC_INDEX, ELASTIC_TOKEN_BALANCES_INDEX, ELASTIC_TX_INDEX
+from common.configuration import (
+    ELASTIC_INDEX,
+    ELASTIC_RESULTS_PER_PAGE,
+    ELASTIC_SEARCH_TIMEOUT,
+    ELASTIC_TOKEN_BALANCES_INDEX,
+    ELASTIC_TX_INDEX
+)
 from utils.elastic_search.transformations.token_api import es_hit_to_result as token_api_es_hit_to_result
 from utils.elastic_search.transformations.token_balances import es_hit_to_result as token_balances_es_hit_to_result
 from utils.elastic_search.transformations.tx import es_hit_to_result as tx_es_hit_to_result
@@ -45,7 +51,7 @@ class ElasticSearchUtils:
     def __init__(self, elastic_index: str):
         self.elastic_index = elastic_index
 
-    def get_sort_by_complement(self, sortable_fields: List[str], sort_by: str) -> str:
+    def get_sort_by_complement(self, sortable_fields: dict, sort_by: str) -> str:
         """ Returns the complement (if any) on sort_by field that is passed to ES
 
         :param sort_by: Which field is currently being used for primary sorting
@@ -74,7 +80,7 @@ class ElasticSearchUtils:
         :type search_after: List[str]
         """
         # Default sort order, if nothing is passed
-        sort_order = DEFAULT_SORT_ORDER_BY_INDEX[self.elastic_index].copy() # Make sure we dont mutate it
+        sort_order = DEFAULT_SORT_ORDER_BY_INDEX[self.elastic_index].copy()
 
         if not sort_by:
             sort_by = sort_order[0]
@@ -84,7 +90,8 @@ class ElasticSearchUtils:
 
         primary_sort_key = {}
 
-        sort_by_complement = self.get_sort_by_complement(sortable_fields=SORTABLE_FIELDS_BY_INDEX[self.elastic_index], sort_by=sort_by)
+        sort_by_complement = self.get_sort_by_complement(sortable_fields=SORTABLE_FIELDS_BY_INDEX[self.elastic_index],
+                                                         sort_by=sort_by)
         primary_sort_key[sort_by+sort_by_complement] = order
 
         sort_order.remove(sort_by)
@@ -92,7 +99,8 @@ class ElasticSearchUtils:
         tie_break_sort_order = sort_order.pop(0)
         tie_break_sort_key = {}
 
-        sort_by_complement = self.get_sort_by_complement(sortable_fields=SORTABLE_FIELDS_BY_INDEX[self.elastic_index], sort_by=tie_break_sort_order)
+        sort_by_complement = self.get_sort_by_complement(sortable_fields=SORTABLE_FIELDS_BY_INDEX[self.elastic_index],
+                                                         sort_by=tie_break_sort_order)
         tie_break_sort_key[tie_break_sort_order+sort_by_complement] = 'asc'
 
         body = {
@@ -108,14 +116,10 @@ class ElasticSearchUtils:
         if search_text:
             fields = SEARCH_TEXT_FIELDS_BY_INDEX[self.elastic_index]
             body['query'] = {
-                'bool': {
-                    'must': {
-                        'multi_match': {
-                            'query': search_text,
-                            'fields': fields
-                        },
-                    }
-                },
+                'multi_match': {
+                    'query': search_text,
+                    'fields': fields
+                }
             }
 
         if search_after:

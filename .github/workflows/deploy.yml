@@ -90,6 +90,7 @@ jobs:
           NODE_CACHE_TTL: 30
           ELASTIC_INDEX: testnet-token
           ELASTIC_TX_INDEX: testnet-tx
+          ELASTIC_TOKEN_BALANCES_INDEX: testnet-token-balance
       - name: Deploy Lambdas Mainnet
         if: ${{ needs.init.outputs.environment == 'mainnet' }}
         run: |
@@ -107,6 +108,7 @@ jobs:
           NODE_CACHE_TTL: 30
           ELASTIC_INDEX: mainnet-token
           ELASTIC_TX_INDEX: mainnet-tx
+          ELASTIC_TOKEN_BALANCES_INDEX: mainnet-token-balance
       - name: Deploy Daemons Testnet
         if: ${{ needs.init.outputs.environment == 'testnet' }}
         run: |

@@ -1,5 +1,4 @@
 import json
-from typing import Optional
 
 from aws_lambda_context import LambdaContext
 
@@ -12,11 +11,9 @@ from utils.wrappers.aws.api_gateway import ApiGateway, ApiGatewayEvent
 def get_tokens(
     event: ApiGatewayEvent,
     _context: LambdaContext,
-    token_api: Optional[TokenApi] = None
+    token_api: TokenApi = TokenApi()
 ) -> dict:
     """Get tokens from user search"""
-
-    token_api = token_api or TokenApi()
 
     search_text = event.query.get("search_text") or ""
     sort_by = event.query.get("sort_by") or ""
