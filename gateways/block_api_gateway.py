@@ -78,6 +78,3 @@ class BlockApiGateway:
             return {'error': 'Explorer Service was not authorized to access ElasticSearch', 'status': 403}
         except TransportError:
             return {'error': 'An error ocurred before an HTTP response arrived',  'status': 500}
-
-
-        
