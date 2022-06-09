@@ -99,7 +99,8 @@ class TestElasticSearchClient:
                     'nft': False
                 }
             ],
-            'has_next': False
+            'has_next': False,
+            'status': 200,
         }
 
         assert result == expected_result

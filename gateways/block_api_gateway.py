@@ -1,12 +1,11 @@
 from typing import Optional
 
-from elasticsearch import Elasticsearch
+from elasticsearch import Elasticsearch, TransportError, RequestError, AuthorizationException
+from hathorlib.base_transaction import TxVersion
 
-from common.configuration import ELASTIC_TX_INDEX
+from common.configuration import ELASTIC_SEARCH_TIMEOUT, ELASTIC_TX_INDEX
 from gateways.clients.elastic_search_client import ElasticSearchClient
 from utils.elastic_search.elastic_search_utils import ElasticSearchUtils
-
-BLOCK_TX_VERSION = 0
 
 
 class BlockApiGateway:
@@ -28,12 +27,25 @@ class BlockApiGateway:
 
         body = {
             'index': ELASTIC_TX_INDEX,
+            # This query can be transalated to
+            # ((TxVersion.REGULAR_BLOCK or TxVersion.MERGE_MINED_BLOCK) and voided == False)
             'query': {
                 'bool': {
                     'must': [
                         {
-                            'match': {
-                                'version': BLOCK_TX_VERSION,
+                            'bool': {
+                                'should': [
+                                    {
+                                        'match': {
+                                            'version': TxVersion.REGULAR_BLOCK,
+                                        }
+                                    },
+                                    {
+                                        'match': {
+                                            'version': TxVersion.MERGE_MINED_BLOCK
+                                        }
+                                    }
+                                ]
                             }
                         },
                         {
@@ -51,8 +63,21 @@ class BlockApiGateway:
                     }
                 }
             ],
-            'size': 1
+            'size': 1,
+            'request_timeout': int(ELASTIC_SEARCH_TIMEOUT),
         }
 
         elastic_search_utils = ElasticSearchUtils(elastic_index=ELASTIC_TX_INDEX)
-        return elastic_search_utils.treat_response(self.elastic_search_client.run(body))
+
+        try:
+            elastic_search_response = self.elastic_search_client.run(body)
+            return elastic_search_utils.treat_response(elastic_search_response)
+        except RequestError:
+            return {'error': 'Bad request to ElasticSearch', 'status': 400}
+        except AuthorizationException:
+            return {'error': 'Explorer Service was not authorized to access ElasticSearch', 'status': 403}
+        except TransportError:
+            return {'error': 'An error ocurred before an HTTP response arrived',  'status': 500}
+
+
+        

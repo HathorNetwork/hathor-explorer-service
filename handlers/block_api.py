@@ -11,15 +11,14 @@ from utils.wrappers.aws.api_gateway import ApiGateway, ApiGatewayEvent
 def get_block_with_biggest_height(
     event: ApiGatewayEvent,
     _context: LambdaContext,
-    block_api: Optional[BlockApi] = None
+    block_api: BlockApi = BlockApi()
 ) -> dict:
     """Get the block with biggest height available on the ElasticSearch"""
 
-    block_api = block_api or BlockApi()
     response = block_api.get_block_with_biggest_height()
 
     return {
-        "statusCode": 200,
+        "statusCode": response['status'],
         "body": json.dumps(response or {}),
         "headers": {
             "Content-Type": "application/json"

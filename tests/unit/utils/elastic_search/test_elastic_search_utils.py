@@ -137,7 +137,8 @@ class TestElasticSearchUtils:
                     "nft": False
                 }
             ],
-            "has_next": False
+            "has_next": False,
+            "status": 200
         }
 
         result = utils.treat_response(es_response)

@@ -265,7 +265,7 @@ functions:
 
   get_block_with_biggest_height:
     handler: handlers/block_api.get_block_with_biggest_height
-    timeout: 15
+    timeout: 30
     maximumRetryAttempts: 0
     package:
       patterns:
@@ -274,12 +274,12 @@ functions:
       - { Ref: PythonRequirementsLambdaLayer }
     events:
       - http:
-          path: blocks/biggest_height
+          path: blocks/bestchain_height
           method: get
           cors: true
           caching:
             enabled: true
-            ttlInSeconds: 300
+            ttlInSeconds: 60
             cacheKeyParameters:
               - name: request.header.origin
 
