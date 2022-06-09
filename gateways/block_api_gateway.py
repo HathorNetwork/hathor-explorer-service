@@ -21,8 +21,8 @@ class BlockApiGateway:
                                                          client=elastic_search_client
                                                          )
 
-    def get_block_with_biggest_height(self) -> dict:
-        """ Get the block with biggest height available on the ElasticSearch
+    def get_best_chain_height(self) -> dict:
+        """ Get the best chain height
         """
 
         body = {

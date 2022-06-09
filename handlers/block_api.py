@@ -8,14 +8,14 @@ from utils.wrappers.aws.api_gateway import ApiGateway, ApiGatewayEvent
 
 
 @ApiGateway()
-def get_block_with_biggest_height(
+def get_best_chain_height(
     event: ApiGatewayEvent,
     _context: LambdaContext,
     block_api: BlockApi = BlockApi()
 ) -> dict:
-    """Get the block with biggest height available on the ElasticSearch"""
+    """Get the best chain height on the ElasticSearch"""
 
-    response = block_api.get_block_with_biggest_height()
+    response = block_api.get_best_chain_height()
 
     return {
         "statusCode": response['status'],
