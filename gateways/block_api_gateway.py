@@ -1,6 +1,6 @@
 from typing import Optional
 
-from elasticsearch import Elasticsearch, TransportError, RequestError, AuthorizationException
+from elasticsearch import AuthorizationException, Elasticsearch, RequestError, TransportError
 from hathorlib.base_transaction import TxVersion
 
 from common.configuration import ELASTIC_SEARCH_TIMEOUT, ELASTIC_TX_INDEX

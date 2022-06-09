@@ -1,9 +1,8 @@
 from unittest.mock import MagicMock
 
-from tests.fixtures.elastic_search_fixtures import GATEWAY_BEST_CHAIN_HEIGHT_SUCCESSFUL_RESPONSE
-
 from pytest import fixture
 
+from tests.fixtures.elastic_search_fixtures import GATEWAY_BEST_CHAIN_HEIGHT_SUCCESSFUL_RESPONSE
 from usecases.block_api import BlockApi
 
 

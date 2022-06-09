@@ -1,14 +1,13 @@
 from unittest.mock import MagicMock
 
+from elasticsearch import TransportError
+from pytest import fixture
+
+from gateways.block_api_gateway import BlockApiGateway
 from tests.fixtures.elastic_search_fixtures import (
     ELASTIC_SEARCH_BEST_CHAIN_HEIGHT_SUCCESSFUL_RAW_RESPONSE,
     GATEWAY_BEST_CHAIN_HEIGHT_SUCCESSFUL_RESPONSE,
 )
-from pytest import fixture
-
-from gateways.block_api_gateway import BlockApiGateway
-
-from elasticsearch import TransportError
 
 
 class TestBlockApiGateway:
