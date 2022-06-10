@@ -15,7 +15,7 @@ class BlockApi:
 
     def get_best_chain_height(self) -> dict:
         try:
-            return self.block_api_gateway.get_best_chain_height()            
+            return self.block_api_gateway.get_best_chain_height()
         except exceptions.RequestError:
             logger.error('ElasticSearch request error')
             raise ApiError('invalid_parameters')
