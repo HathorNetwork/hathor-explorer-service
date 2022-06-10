@@ -135,7 +135,6 @@ class ElasticSearchUtils:
         """
 
         response = {
-            'status': 200,
             'hits': [],
             'has_next': False
         }

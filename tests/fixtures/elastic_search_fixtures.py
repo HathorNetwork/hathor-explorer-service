@@ -51,7 +51,6 @@ GATEWAY_BEST_CHAIN_HEIGHT_SUCCESSFUL_RESPONSE = {
         }
     ],
     'has_next': False,
-    'status': 200,
 }
 
 ELASTIC_SEARCH_RAW_HIT = {

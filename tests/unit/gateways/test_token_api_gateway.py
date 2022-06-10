@@ -99,7 +99,6 @@ class TestTokenApiGateway:
                 }
             ],
             'has_next': False,
-            'status': 200,
         }
 
         elastic_search_client.search.assert_called_once()

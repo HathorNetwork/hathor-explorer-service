@@ -100,7 +100,6 @@ class TestElasticSearchClient:
                 }
             ],
             'has_next': False,
-            'status': 200,
         }
 
         assert result == expected_result

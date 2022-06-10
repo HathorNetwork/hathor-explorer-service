@@ -17,7 +17,7 @@ def get_best_chain_height(
     response = block_api.get_best_chain_height()
 
     return {
-        "statusCode": response['status'],
+        "statusCode": 200,
         "body": json.dumps(response or {}),
         "headers": {
             "Content-Type": "application/json"

@@ -138,7 +138,6 @@ class TestElasticSearchUtils:
                 }
             ],
             "has_next": False,
-            "status": 200
         }
 
         result = utils.treat_response(es_response)
