@@ -1,7 +1,7 @@
 from typing import Optional
 
-from elasticsearch import AuthorizationException, Elasticsearch, RequestError, TransportError
-from hathorlib.base_transaction import TxVersion
+from elasticsearch import Elasticsearch
+from hathorlib import TxVersion
 
 from common.configuration import ELASTIC_SEARCH_TIMEOUT, ELASTIC_TX_INDEX
 from gateways.clients.elastic_search_client import ElasticSearchClient
@@ -29,6 +29,8 @@ class BlockApiGateway:
             'index': ELASTIC_TX_INDEX,
             # This query can be transalated to
             # ((TxVersion.REGULAR_BLOCK or TxVersion.MERGE_MINED_BLOCK) and voided == False)
+            #   .sort(height, 'desc')
+            #   .limit(1)
             'query': {
                 'bool': {
                     'must': [
@@ -69,12 +71,5 @@ class BlockApiGateway:
 
         elastic_search_utils = ElasticSearchUtils(elastic_index=ELASTIC_TX_INDEX)
 
-        try:
-            elastic_search_response = self.elastic_search_client.run(body)
-            return elastic_search_utils.treat_response(elastic_search_response)
-        except RequestError:
-            return {'error': 'Bad request to ElasticSearch', 'status': 400}
-        except AuthorizationException:
-            return {'error': 'Explorer Service was not authorized to access ElasticSearch', 'status': 403}
-        except TransportError:
-            return {'error': 'An error ocurred before an HTTP response arrived',  'status': 500}
+        elastic_search_response = self.elastic_search_client.run(body)
+        return elastic_search_utils.treat_response(elastic_search_response)
