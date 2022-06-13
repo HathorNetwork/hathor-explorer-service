@@ -73,7 +73,9 @@ LOG_RENDERER = LogRenderer(config('LOG_RENDERER', default=LogRenderer.default().
 ELASTIC_CLOUD_ID = config('ELASTIC_CLOUD_ID', default=None)
 ELASTIC_USER = config('ELASTIC_USER', default=None)
 ELASTIC_PASSWORD = config('ELASTIC_PASSWORD', default=None)
-ELASTIC_INDEX = config('ELASTIC_INDEX', default=None)
 ELASTIC_RESULTS_PER_PAGE = config('ELASTIC_RESULTS_PER_PAGE', default=10)
 ELASTIC_SEARCH_TIMEOUT = config('ELASTIC_SEARCH_TIMEOUT', default=25)
+
+ELASTIC_INDEX = config('ELASTIC_INDEX', default=None)
 ELASTIC_TOKEN_BALANCES_INDEX = config('ELASTIC_TOKEN_BALANCES_INDEX', default=None)
+ELASTIC_TX_INDEX = config('ELASTIC_TX_INDEX', default=None)

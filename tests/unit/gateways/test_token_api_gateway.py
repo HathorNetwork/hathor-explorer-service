@@ -30,7 +30,7 @@ class TestTokenApiGateway:
                     'max_score': None,
                     'hits': [
                         {
-                            '_index': 'test-token',
+                            '_index': 'dev-token',
                             '_id': '00000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a',
                             '_score': None,
                             '_source': {
@@ -48,7 +48,7 @@ class TestTokenApiGateway:
                             ]
                         },
                         {
-                            '_index': 'test-token',
+                            '_index': 'dev-token',
                             '_id': '10000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a',
                             '_score': None,
                             '_source': {
@@ -98,7 +98,7 @@ class TestTokenApiGateway:
                     'nft': False
                 }
             ],
-            'has_next': False
+            'has_next': False,
         }
 
         elastic_search_client.search.assert_called_once()

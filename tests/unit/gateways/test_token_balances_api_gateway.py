@@ -152,7 +152,7 @@ class TestTokenBalancesApiGateway:
                     ]
                 }
             ],
-            'has_next': False
+            'has_next': False,
         }
 
         elastic_search_client.search.assert_called_once()

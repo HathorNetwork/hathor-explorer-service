@@ -40,6 +40,7 @@ provider:
     ELASTIC_TOKEN_BALANCES_INDEX: ${env:ELASTIC_TOKEN_BALANCES_INDEX}
     ELASTIC_RESULTS_PER_PAGE: ${env:ELASTIC_RESULTS_PER_PAGE}
     ELASTIC_SEARCH_TIMEOUT: ${env:ELASTIC_SEARCH_TIMEOUT}
+    ELASTIC_TX_INDEX: ${env:ELASTIC_TX_INDEX}
 
 plugins:
   - serverless-s3-local
@@ -260,6 +261,26 @@ functions:
               - name: request.querystring.sort_by
               - name: request.querystring.order
               - name: request.querystring.search_after
+              - name: request.header.origin
+
+  get_best_chain_height:
+    handler: handlers/block_api.get_best_chain_height
+    timeout: 30
+    maximumRetryAttempts: 0
+    package:
+      patterns:
+        - 'handlers/block_api.py'
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: blocks/best_chain_height
+          method: get
+          cors: true
+          caching:
+            enabled: true
+            ttlInSeconds: 60
+            cacheKeyParameters:
               - name: request.header.origin
 
   get_dag_metadata_handler:

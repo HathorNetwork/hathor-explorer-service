@@ -53,6 +53,7 @@ test:
 	# We need those variables set before the tests run because some modules use them as indexes for dicts
 	ENVIRONMENT=test \
 	ES_INDEX=dev-token \
+	ELASTIC_TX_INDEX=dev-tx \
 	ELASTIC_TOKEN_BALANCES_INDEX=dev-token-balance \
 	pytest $(pytest_flags) ./tests
 
