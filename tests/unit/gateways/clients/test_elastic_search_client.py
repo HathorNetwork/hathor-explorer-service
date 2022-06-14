@@ -2,6 +2,7 @@ from unittest.mock import MagicMock
 
 from pytest import fixture
 
+from common.configuration import ELASTIC_INDEX
 from gateways.clients.elastic_search_client import ElasticSearchClient
 
 
@@ -12,7 +13,7 @@ class TestElasticSearchClient:
         return MagicMock()
 
     def test_search(self, es_client):
-        client = ElasticSearchClient(es_client)
+        client = ElasticSearchClient(elastic_index=ELASTIC_INDEX, client=es_client)
 
         es_client.search = MagicMock(
             return_value={
@@ -32,7 +33,7 @@ class TestElasticSearchClient:
                     'max_score': None,
                     'hits': [
                         {
-                            '_index': 'test-token',
+                            '_index': 'dev-token',
                             '_id': '00000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a',
                             '_score': None,
                             '_source': {
@@ -50,7 +51,7 @@ class TestElasticSearchClient:
                             ]
                         },
                         {
-                            '_index': 'test-token',
+                            '_index': 'dev-token',
                             '_id': '10000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a',
                             '_score': None,
                             '_source': {
@@ -98,7 +99,7 @@ class TestElasticSearchClient:
                     'nft': False
                 }
             ],
-            'has_next': False
+            'has_next': False,
         }
 
         assert result == expected_result

@@ -37,8 +37,10 @@ provider:
     ELASTIC_USER: ${env:ELASTIC_USER}
     ELASTIC_PASSWORD: ${env:ELASTIC_PASSWORD}
     ELASTIC_INDEX: ${env:ELASTIC_INDEX}
+    ELASTIC_TOKEN_BALANCES_INDEX: ${env:ELASTIC_TOKEN_BALANCES_INDEX}
     ELASTIC_RESULTS_PER_PAGE: ${env:ELASTIC_RESULTS_PER_PAGE}
     ELASTIC_SEARCH_TIMEOUT: ${env:ELASTIC_SEARCH_TIMEOUT}
+    ELASTIC_TX_INDEX: ${env:ELASTIC_TX_INDEX}
 
 plugins:
   - serverless-s3-local
@@ -193,6 +195,50 @@ functions:
               - name: request.path.hash
               - name: request.header.origin
 
+  get_token_balances_handler:
+    handler: handlers/token_balance_api.get_token_balances
+    timeout: 6
+    maximumRetryAttempts: 0
+    package:
+      patterns:
+        - 'handlers/token_balance_api.py'
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: token_balances
+          method: get
+          cors: true
+          caching:
+            enabled: true
+            ttlInSeconds: 300
+            cacheKeyParameters:
+              - name: request.queryString.token_id
+              - name: request.querystring.sort_by
+              - name: request.querystring.order
+              - name: request.querystring.search_after
+              - name: request.header.origin
+
+  get_token_balance_information_handler:
+    handler: handlers/token_balance_api.get_token_information
+    timeout: 6
+    maximumRetryAttempts: 0
+    package:
+      patterns:
+        - 'handlers/token_balance_api.py'
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: token_balances/information
+          method: get
+          cors: true
+          caching:
+            enabled: true
+            ttlInSeconds: 300
+            cacheKeyParameters:
+              - name: request.querystring.token_id
+
   get_tokens_handler:
     handler: handlers/token_api.get_tokens
     timeout: 15
@@ -215,6 +261,26 @@ functions:
               - name: request.querystring.sort_by
               - name: request.querystring.order
               - name: request.querystring.search_after
+              - name: request.header.origin
+
+  get_best_chain_height:
+    handler: handlers/block_api.get_best_chain_height
+    timeout: 30
+    maximumRetryAttempts: 0
+    package:
+      patterns:
+        - 'handlers/block_api.py'
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: blocks/best_chain_height
+          method: get
+          cors: true
+          caching:
+            enabled: true
+            ttlInSeconds: 60
+            cacheKeyParameters:
               - name: request.header.origin
 
   get_dag_metadata_handler:
