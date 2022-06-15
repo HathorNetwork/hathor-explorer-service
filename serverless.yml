@@ -195,7 +195,7 @@ functions:
               - name: request.path.hash
               - name: request.header.origin
 
-  get_token_balances_handler:
+  get_tokenbalances_handler:
     handler: handlers/token_balance_api.get_token_balances
     timeout: 6
     maximumRetryAttempts: 0
@@ -219,7 +219,7 @@ functions:
               - name: request.querystring.search_after
               - name: request.header.origin
 
-  get_token_balance_information_handler:
+  get_tokenbalance_info_handler:
     handler: handlers/token_balance_api.get_token_information
     timeout: 6
     maximumRetryAttempts: 0
