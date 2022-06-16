@@ -213,7 +213,7 @@ functions:
             enabled: true
             ttlInSeconds: 300
             cacheKeyParameters:
-              - name: request.queryString.token_id
+              - name: request.querystring.token_id
               - name: request.querystring.sort_by
               - name: request.querystring.order
               - name: request.querystring.search_after
