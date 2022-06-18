@@ -65,3 +65,20 @@ class MetadataGateway:
             raise ConfigError('No bucket name in config')
 
         return metadata_bucket
+
+    def update_metadata(self, tokenUid: str, metadata) -> Optional[dict]:
+        """Update a token's metadata and returns it as a response
+
+        :param tokenUid: Token UID
+        :type tokenUid: str
+
+        :param metadata: Token metadata
+        :type metadata: Object
+        """
+        response = self.s3_client.put_object(
+            Body=metadata,  # type: ignore[arg-type]
+            Bucket=self._metadata_bucket(),
+            Key=f"dag/{tokenUid}.json",
+        )
+
+        return response
