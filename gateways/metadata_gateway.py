@@ -28,6 +28,22 @@ class MetadataGateway:
             return None
         return json.dumps({id: metadata})
 
+    def put_dag_metadata(self, id: str, contents: str) -> str:
+        """Update dag metadata on a json file stored in s3, with contents received via parameter
+
+        :param id: dag entity hash id
+        :type id: str
+        :param contents: minified JSON with the dag metadata contents for this hash id
+        :type contents: str
+        :raises ConfigError: The name of the bucket used to store the jsons must be on config
+        :return: metadata json file contents of the updated file
+        :rtype: str
+        """
+        metadata = self._update_metadata(id, contents)
+        
+        # TODO: Missing error treatment for update failures
+        return json.dumps({id: metadata})
+
     def _get_metadata(self, s3_object_name: str) -> Optional[dict]:
         """Retrieve metadata from file in s3
 
@@ -66,7 +82,7 @@ class MetadataGateway:
 
         return metadata_bucket
 
-    def update_metadata(self, tokenUid: str, metadata) -> Optional[dict]:
+    def _update_metadata(self, tokenUid: str, metadata) -> Optional[dict]:
         """Update a token's metadata and returns it as a response
 
         :param tokenUid: Token UID
