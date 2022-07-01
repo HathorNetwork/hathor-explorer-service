@@ -39,13 +39,7 @@ class MetadataGateway:
         :return: metadata json file contents of the updated file
         :rtype: str
         """
-        metadata = self._update_metadata(id, contents)
-        
-        # TODO: Missing error treatment for update failures
-        return json.dumps({
-            "success": True, 
-            "debug": metadata
-            })
+        self._update_metadata(id, contents)
 
     def _get_metadata(self, s3_object_name: str) -> Optional[dict]:
         """Retrieve metadata from file in s3

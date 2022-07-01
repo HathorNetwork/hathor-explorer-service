@@ -3,8 +3,7 @@ from typing import Optional
 from aws_lambda_context import LambdaContext
 
 from common.errors import ApiError
-from usecases.get_metadata import GetMetadata
-from usecases.put_metadata import PutMetadata
+from usecases.metadata import Metadata
 from utils.wrappers.aws.api_gateway import ApiGateway, ApiGatewayEvent
 
 
@@ -12,14 +11,14 @@ from utils.wrappers.aws.api_gateway import ApiGateway, ApiGatewayEvent
 def handle_get(
     event: ApiGatewayEvent,
     _context: LambdaContext,
-    get_metadata: Optional[GetMetadata] = None
+    metadata: Optional[Metadata] = None
 ) -> dict:
 
-    get_metadata = get_metadata or GetMetadata()
+    metadata = metadata or Metadata()
     if 'id' not in event.query:
         raise ApiError('invalid_parameters')
     hash = event.query['id']
-    response = get_metadata.get('dag', hash)
+    response = metadata.get('dag', hash)
 
     if response is None:
         raise ApiError('not_found')
@@ -36,22 +35,19 @@ def handle_get(
 def handle_put(
     event: ApiGatewayEvent,
     _context: LambdaContext,
-    put_metadata: Optional[PutMetadata] = None
+    metadata: Optional[Metadata] = None
 ) -> dict:
 
-    put_metadata = put_metadata or PutMetadata()
+    metadata = metadata or Metadata()
     if 'id' not in event.query:
         raise ApiError('invalid_parameters')
     hash = event.query['id']
     content = event.body
-    response = put_metadata.put('dag', hash, content)
-
-    if response is None:
-        raise ApiError('not_found')
+    metadata.put('dag', hash, content)
 
     return {
         "statusCode": 200,
-        "body": response,
+        "body": '{ "success": true }',
         "headers": {
             "Content-Type": "application/json"
         }

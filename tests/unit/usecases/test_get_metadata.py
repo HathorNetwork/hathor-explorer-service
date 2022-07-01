@@ -2,7 +2,7 @@ from unittest.mock import MagicMock
 
 from pytest import fixture
 
-from usecases.get_metadata import GetMetadata
+from usecases.metadata import GetMetadata
 
 
 class TestGetMetadata:
