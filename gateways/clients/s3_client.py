@@ -39,8 +39,11 @@ class S3Client:
         :type bucket: str
         :param file: file path
         :type file: str
-        :param content: The string content
+        :param content: The stringified JSON content
         :type content: str
+
+        :return: the S3 upload metadata
+        :rtype: dict
         """
         response = self.client.put_object(
             Body=content.encode(),

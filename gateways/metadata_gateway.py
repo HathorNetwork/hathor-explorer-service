@@ -33,11 +33,11 @@ class MetadataGateway:
 
         :param id: dag entity hash id
         :type id: str
-        :param contents: minified JSON with the dag metadata contents for this hash id
-        :type contents: str
+        :param contents: dictionary with the dag metadata contents for this hash id
+        :type contents: dict
         :raises ConfigError: The name of the bucket used to store the jsons must be on config
-        :return: metadata json file contents of the updated file
-        :rtype: str
+        :return: None. No need to pass along the S3 upload metadata.
+        :rtype: None
         """
         self._update_metadata(id, contents)
 
@@ -87,6 +87,9 @@ class MetadataGateway:
 
         :param metadata: Token metadata
         :type metadata: Object
+
+        :return: S3 Upload metadata
+        :rtype: dict
         """
         response = self.s3_client.upload_file(
             self._metadata_bucket(),
