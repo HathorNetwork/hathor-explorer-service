@@ -28,7 +28,7 @@ class MetadataGateway:
             return None
         return json.dumps({id: metadata})
 
-    def put_dag_metadata(self, id: str, contents: str) -> str:
+    def put_dag_metadata(self, id: str, contents: dict) -> str:
         """Update dag metadata on a json file stored in s3, with contents received via parameter
 
         :param id: dag entity hash id
@@ -42,7 +42,10 @@ class MetadataGateway:
         metadata = self._update_metadata(id, contents)
         
         # TODO: Missing error treatment for update failures
-        return json.dumps({id: metadata})
+        return json.dumps({
+            "success": True, 
+            "debug": metadata
+            })
 
     def _get_metadata(self, s3_object_name: str) -> Optional[dict]:
         """Retrieve metadata from file in s3
@@ -82,7 +85,7 @@ class MetadataGateway:
 
         return metadata_bucket
 
-    def _update_metadata(self, tokenUid: str, metadata) -> Optional[dict]:
+    def _update_metadata(self, tokenUid: str, metadata: dict) -> Optional[dict]:
         """Update a token's metadata and returns it as a response
 
         :param tokenUid: Token UID
@@ -91,10 +94,10 @@ class MetadataGateway:
         :param metadata: Token metadata
         :type metadata: Object
         """
-        response = self.s3_client.put_object(
-            Body=metadata,  # type: ignore[arg-type]
-            Bucket=self._metadata_bucket(),
-            Key=f"dag/{tokenUid}.json",
+        response = self.s3_client.upload_file(
+            self._metadata_bucket(),
+            f"dag/{tokenUid}.json",
+            json.dumps(metadata),  # type: ignore[arg-type]
         )
 
         return response

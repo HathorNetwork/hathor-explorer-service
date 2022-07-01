@@ -71,6 +71,7 @@ custom:
   s3:
     host: localhost
     directory: /tmp
+    buckets: hathor-explorer-metadata-dev
   apiGatewayCaching:
     enabled: true
     ttlInSeconds: 300
@@ -284,10 +285,10 @@ functions:
               - name: request.header.origin
 
   get_dag_metadata_handler:
-    handler: handlers/get_dag_metadata_handler.handle
+    handler: handlers/dag_metadata_handler.handle_get
     package:
       patterns:
-        - 'handlers/get_dag_metadata_handler.py'
+        - 'handlers/dag_metadata_handler.py'
     layers:
       - { Ref: PythonRequirementsLambdaLayer }
     events:
@@ -303,10 +304,10 @@ functions:
               - name: request.header.origin
 
   put_dag_metadata_handler:
-    handler: handlers/put_dag_metadata_handler.handle
+    handler: handlers/dag_metadata_handler.handle_put
     package:
       patterns:
-        - 'handlers/put_dag_metadata_handler.py'
+        - 'handlers/dag_metadata_handler.py'
     layers:
       - { Ref: PythonRequirementsLambdaLayer }
     events:
