@@ -19,12 +19,6 @@ class Metadata:
 
         return method(id)
 
-    def put(self, type: str, id: str, content: dict) -> Optional[str]:
-        metadata_methods = {
-            'dag': self.metadata_gateway.put_dag_metadata,
-        }
-        method = metadata_methods.get(type, None)
-        if method is None:
-            return None
-
-        return method(id, content)
+    def put_dag(self, type: str, id: str, content: dict) -> Optional[str]:
+        # Only the dag metadata will be updated here
+        return self.metadata_gateway.put_dag_metadata(id, content)
