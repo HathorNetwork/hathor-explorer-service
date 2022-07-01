@@ -32,7 +32,7 @@ class S3Client:
             # TODO: Add log here
             return None
 
-    def upload_file(self, bucket: str, file: str, content: Union[str, bytes]) -> None:
+    def upload_file(self, bucket: str, file: str, content: str) -> dict:
         """Writes a string to a file in the storage.
 
         :param bucket: bucket name

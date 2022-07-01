@@ -30,7 +30,8 @@ def handle_get(
             "Content-Type": "application/json"
         }
     }
-    
+
+
 @ApiGateway()
 def handle_put(
     event: ApiGatewayEvent,

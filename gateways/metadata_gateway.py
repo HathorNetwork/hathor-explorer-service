@@ -28,7 +28,7 @@ class MetadataGateway:
             return None
         return json.dumps({id: metadata})
 
-    def put_dag_metadata(self, id: str, contents: dict) -> str:
+    def put_dag_metadata(self, id: str, contents: dict) -> None:
         """Update dag metadata on a json file stored in s3, with contents received via parameter
 
         :param id: dag entity hash id
@@ -94,7 +94,7 @@ class MetadataGateway:
         response = self.s3_client.upload_file(
             self._metadata_bucket(),
             f"dag/{tokenUid}.json",
-            json.dumps(metadata),  # type: ignore[arg-type]
+            json.dumps(metadata),
         )
 
         return response
