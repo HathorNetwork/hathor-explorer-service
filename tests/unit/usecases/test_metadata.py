@@ -39,11 +39,11 @@ class TestMetadata:
         assert result is None
 
     def test_put_for_dag(self, metadata_gateway):
-        metadata_gateway.put_dag_metadata = MagicMock(return_value="some-return")
+        metadata_gateway.put_dag_metadata = MagicMock(return_value=None)
 
         metadata = Metadata(metadata_gateway)
 
-        result = metadata.put_dag('some-id', '{ "id": "some-id" }')
+        result = metadata.put_dag('dag', 'some-id', '{ "id": "some-id" }')
 
         metadata_gateway.put_dag_metadata.assert_called_once_with('some-id', '{ "id": "some-id" }')
-        assert result == "some-return"
+        assert result is None
