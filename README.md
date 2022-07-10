@@ -12,6 +12,11 @@ Explorer service will be exposed on port 3001.
 
 If you add a new API, be careful to add ```request.header.origin``` as cacheKey, if applicable. Otherwise, you may see CORS error when accessing the same resource from different domains.
 
+## API Keys generation
+The API Keys for this application are generated dynamically by the `serverless.yml` configuration.
+
+Whenever the application or its `API Gateway` is _destroyed_ from an environment and re-created, it is important to also update the clients with the newly generated API Key.
+
 ## Deploying
 
 Deploys are automated using Github Actions and Flux.
