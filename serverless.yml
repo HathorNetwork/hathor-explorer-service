@@ -23,10 +23,6 @@ provider:
       - ${env:AWS_SUBNET_ID_1}
       - ${env:AWS_SUBNET_ID_2}
       - ${env:AWS_SUBNET_ID_3}
-  apiGateway:
-    apiKeys:
-      - name: updateS3Key
-        description: Allows writing to dag+metadata on S3
   environment:
     HATHOR_CORE_DOMAIN: ${env:HATHOR_CORE_DOMAIN}
     HATHOR_NODES: ${env:HATHOR_NODES}
@@ -314,12 +310,6 @@ functions:
         - 'handlers/dag_metadata_handler.py'
     layers:
       - { Ref: PythonRequirementsLambdaLayer }
-    events:
-      - http:
-          path: metadata/dag
-          method: put
-          cors: true
-          private: true
 
   node_api_get_address_balance:
     handler: handlers/node_api.get_address_balance

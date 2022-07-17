@@ -60,7 +60,7 @@ test:
 stage=dev
 .PHONY: deploy-lambdas
 deploy-lambdas:
-	npx serverless deploy --stage $(stage) --region eu-central-1 --conceal
+	npx serverless deploy --stage $(stage) --region eu-central-1
 
 .PHONY: install
 install:
