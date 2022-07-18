@@ -71,7 +71,7 @@ custom:
   s3:
     host: localhost
     directory: /tmp
-    buckets: hathor-explorer-metadata-dev
+    buckets: ${env:METADATA_BUCKET}
   apiGatewayCaching:
     enabled: true
     ttlInSeconds: 300
