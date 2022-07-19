@@ -33,7 +33,7 @@ def handle_get(
 
 
 @ApiGateway()
-def handle_put(
+def handle_create_or_update(
     event: ApiGatewayEvent,
     _context: LambdaContext,
     metadata: Optional[Metadata] = None
@@ -44,7 +44,7 @@ def handle_put(
         raise ApiError('invalid_parameters')
     hash = event.query['id']
     content = event.body
-    metadata.put_dag(hash, content)
+    metadata.create_or_update_dag(hash, content)
 
     return {
         "statusCode": 200,

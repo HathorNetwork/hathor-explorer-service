@@ -28,13 +28,13 @@ class MetadataGateway:
             return None
         return json.dumps({id: metadata})
 
-    def put_dag_metadata(self, id: str, contents: dict) -> None:
+    def put_dag_metadata(self, id: str, contents: str) -> None:
         """Update dag metadata on a json file stored in s3, with contents received via parameter
 
         :param id: dag entity hash id
         :type id: str
-        :param contents: dictionary with the dag metadata contents for this hash id
-        :type contents: dict
+        :param contents: Token metadata as a stringified JSON
+        :type contents: str
         :raises ConfigError: The name of the bucket used to store the jsons must be on config
         :return: None. No need to pass along the S3 upload metadata.
         :rtype: None
@@ -79,14 +79,14 @@ class MetadataGateway:
 
         return metadata_bucket
 
-    def _update_metadata(self, tokenUid: str, metadata: dict) -> Optional[dict]:
+    def _update_metadata(self, tokenUid: str, metadata: str) -> Optional[dict]:
         """Update a token's metadata and returns it as a response
 
         :param tokenUid: Token UID
         :type tokenUid: str
 
-        :param metadata: Token metadata
-        :type metadata: Object
+        :param metadata: Token metadata as a stringified JSON
+        :type metadata: str
 
         :return: S3 Upload metadata
         :rtype: dict
@@ -94,7 +94,7 @@ class MetadataGateway:
         response = self.s3_client.upload_file(
             self._metadata_bucket(),
             f"dag/{tokenUid}.json",
-            json.dumps(metadata),
+            metadata,
         )
 
         return response
