@@ -44,7 +44,7 @@ def handle_put(
         raise ApiError('invalid_parameters')
     hash = event.query['id']
     content = event.body
-    metadata.put_dag('dag', hash, content)
+    metadata.put_dag(hash, content)
 
     return {
         "statusCode": 200,

@@ -43,7 +43,7 @@ class TestMetadata:
 
         metadata = Metadata(metadata_gateway)
 
-        result = metadata.put_dag('dag', 'some-id', '{ "id": "some-id" }')
+        result = metadata.put_dag('some-id', '{ "id": "some-id" }')
 
         metadata_gateway.put_dag_metadata.assert_called_once_with('some-id', '{ "id": "some-id" }')
         assert result is None
