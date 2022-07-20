@@ -31,3 +31,24 @@ class S3Client:
         except self.client.exceptions.NoSuchKey:
             # TODO: Add log here
             return None
+
+    def upload_file(self, bucket: str, file: str, content: str) -> dict:
+        """Writes a string to a file in the storage.
+
+        :param bucket: bucket name
+        :type bucket: str
+        :param file: file path
+        :type file: str
+        :param content: The stringified JSON content
+        :type content: str
+
+        :return: the S3 upload metadata
+        :rtype: dict
+        """
+        response = self.client.put_object(
+            Body=content.encode(),
+            Bucket=bucket,
+            Key=file,
+            ContentType='application/json'
+        )
+        return response
