@@ -4,7 +4,7 @@ from sqlalchemy import text
 from sqlalchemy.exc import NoResultFound, MultipleResultsFound
 
 from common.errors import RdsError, RdsNotFoundError
-# from common.configuration import ENVIRONMENT
+from common.configuration import WALLET_SERVICE_USERNAME, WALLET_SERVICE_PASSWORD, WALLET_SERVICE_HOST, WALLET_SERVICE_DB
 
 if TYPE_CHECKING:
     from sqlalchemy.engine import Engine, Row
@@ -12,11 +12,11 @@ if TYPE_CHECKING:
 
 wallet_service_url = sqlalchemy.engine.url.URL(
         'mysql+pymysql',
-        username='',
-        password='',
-        host='',
+        username=WALLET_SERVICE_USERNAME,
+        password=WALLET_SERVICE_PASSWORD,
+        host=WALLET_SERVICE_HOST,
         port=3306,
-        database='')
+        database=WALLET_SERVICE_DB)
 wallet_service_engine = sqlalchemy.create_engine(wallet_service_url, echo=True)
 
 
