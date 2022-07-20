@@ -19,6 +19,7 @@ structlog = "^21.1.0"
 elasticsearch = "^8.1.2"
 deepdiff = "^5.7.0"
 hathorlib = "^0.2.0"
+SQLAlchemy = "^1.4.39"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.4"
