@@ -16,3 +16,11 @@ class HathorCoreMalformedToken(Exception):
 
 class HathorCoreTimeout(Exception):
     pass
+
+
+class RdsError(Exception):
+    pass
+
+
+class RdsNotFoundError(RdsError):
+    pass
