@@ -1,5 +1,5 @@
-from typing import TYPE_CHECKING, Optional
 from dataclasses import asdict, dataclass
+from typing import Optional
 
 from dacite import from_dict
 

@@ -1,6 +1,6 @@
-from typing import Optional, List
+from typing import List, Optional
 
-from domain.wallet_service import TokenBalance, TxHistoryEntry, TokenEntry
+from domain.wallet_service import TokenBalance, TokenEntry, TxHistoryEntry
 from gateways.clients.wallet_service_db_client import WalletServiceDBClient
 
 
@@ -8,7 +8,7 @@ class WalletServiceGateway:
     def __init__(self, db_client: Optional[WalletServiceDBClient] = None):
         self.db_client = db_client or WalletServiceDBClient()
 
-    def address_balance(self, address: str, token: str) -> List[TokenBalance]:
+    def address_balance(self, address: str, token: str) -> TokenBalance:
         balance = self.db_client.get_address_balance(address, token)
         return TokenBalance.from_dict(balance)
 
