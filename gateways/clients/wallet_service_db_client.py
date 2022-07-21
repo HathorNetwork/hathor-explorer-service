@@ -4,7 +4,7 @@ from sqlalchemy import text
 from sqlalchemy.exc import NoResultFound, MultipleResultsFound
 
 from common.errors import RdsError, RdsNotFoundError
-from common.configuration import WALLET_SERVICE_USERNAME, WALLET_SERVICE_PASSWORD, WALLET_SERVICE_HOST, WALLET_SERVICE_DB
+from common.configuration import ENVIRONMENT, WALLET_SERVICE_USERNAME, WALLET_SERVICE_PASSWORD, WALLET_SERVICE_HOST, WALLET_SERVICE_DB
 
 if TYPE_CHECKING:
     from sqlalchemy.engine import Engine
@@ -17,7 +17,8 @@ wallet_service_url = sqlalchemy.engine.url.URL(
         host=WALLET_SERVICE_HOST,
         port=3306,
         database=WALLET_SERVICE_DB)
-wallet_service_engine = sqlalchemy.create_engine(wallet_service_url, echo=True)
+wallet_service_engine = sqlalchemy.create_engine(
+        wallet_service_url, echo=ENVIRONMENT.is_dev)
 
 
 def get_engine():
@@ -62,7 +63,7 @@ class WalletServiceDBClient:
                 result = cursor.one()
             except NoResultFound:
                 raise RdsNotFoundError('not found')
-            except (NoResultFound, MultipleResultsFound):
+            except MultipleResultsFound:
                 raise RdsError('only one row expected')
             finally:
                 cursor.close()
