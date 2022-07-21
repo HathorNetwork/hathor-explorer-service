@@ -7,7 +7,7 @@ from common.errors import RdsError, RdsNotFoundError
 from common.configuration import WALLET_SERVICE_USERNAME, WALLET_SERVICE_PASSWORD, WALLET_SERVICE_HOST, WALLET_SERVICE_DB
 
 if TYPE_CHECKING:
-    from sqlalchemy.engine import Engine, Row
+    from sqlalchemy.engine import Engine
 
 
 wallet_service_url = sqlalchemy.engine.url.URL(
@@ -28,19 +28,25 @@ def get_engine():
 address_balance_query: str = '''\
 SELECT token_id, transactions, unlocked_balance, locked_balance, unlocked_authorities, locked_authorities
 FROM address_balance
-WHERE voided = FALSE AND address = ? AND token_id = ?'''
+WHERE address = :address AND token_id = :token LIMIT 1'''
 
 address_history_query: str = '''\
-SELECT tx_id, token_id, balance, timestamp
-FROM address_tx_history
+SELECT  address_tx_history.tx_id AS tx_id,
+        address_tx_history.token_id AS token_id,
+        address_tx_history.balance AS balance,
+        address_tx_history.timestamp AS timestamp,
+        transaction.version AS version,
+        transaction.height AS height
+FROM address_tx_history INNER JOIN transaction ON address_tx_history.tx_id = transaction.tx_id
+WHERE transaction.voided = FALSE AND address_tx_history.address = :address AND address_tx_history.token_id = :token
 ORDER BY timestamp DESC
-WHERE voided = FALSE AND address = ? AND token_id = ?
-OFFSET ? ROWS FETCH FIRST ? ROWS ONLY'''
+LIMIT :count OFFSET :skip'''
+
 
 address_tokens_query: str = '''\
-SELECT token.id AS token_id, token.name AS name, token.symbol AS symbol
-FROM token INNER JOIN address_balance ON token.id = address_balance.token_id
-WHERE address_balance.address = ?'''
+SELECT address_balance.token_id AS token_id, token.name AS name, token.symbol AS symbol
+FROM token RIGHT OUTER JOIN address_balance ON token.id = address_balance.token_id
+WHERE address_balance.address = :address'''
 
 
 class WalletServiceDBClient:
@@ -48,10 +54,10 @@ class WalletServiceDBClient:
     def __init__(self, engine: Optional['Engine'] = None):
         self.engine = engine or get_engine()
 
-    def get_address_balance(self, address: str, token: str) -> 'Row':
-        result: 'Row'
+    def get_address_balance(self, address: str, token: str) -> dict:
+        result: dict
         with self.engine.connect() as connection:
-            cursor = connection.execute(text(address_balance_query))
+            cursor = connection.execute(text(address_balance_query), address=address, token=token)
             try:
                 result = cursor.one()
             except NoResultFound:
@@ -60,19 +66,21 @@ class WalletServiceDBClient:
                 raise RdsError('only one row expected')
             finally:
                 cursor.close()
+        return result._asdict()
+
+    def get_address_history(self, address: str, token: str, count: int, skip: int) -> List[dict]:
+        result: List[dict] = []
+        with self.engine.connect() as connection:
+            cursor = connection.execute(text(address_history_query), address=address, token=token, skip=skip, count=count)
+            for row in cursor:
+                result.append(row._asdict())
+
         return result
 
-    def get_address_history(self, address: str, token: str, count: int, skip: int) -> List['Row']:
-        result: List['Row'] = []
+    def get_address_tokens(self, address: str) -> List[dict]:
+        result: List[dict] = []
         with self.engine.connect() as connection:
-            cursor = connection.execute(text(address_history_query))
-            result = cursor.all()
-
-        return result
-
-    def get_address_tokens(self, address: str) -> List['Row']:
-        result = List['Row'] = []
-        with self.engine.connect() as connection:
-            cursor = connection.execute(text(address_tokens_query))
-            result = cursor.all()
+            cursor = connection.execute(text(address_tokens_query), address=address)
+            for row in cursor:
+                result.append(row._asdict())
         return result
