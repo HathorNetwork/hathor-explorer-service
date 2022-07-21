@@ -1,8 +1,7 @@
 from typing import TYPE_CHECKING, Optional
 from dataclasses import asdict, dataclass
 
-if TYPE_CHECKING:
-    from sqlalchemy.engine import Row
+from dacite import from_dict
 
 
 @dataclass
@@ -11,12 +10,6 @@ class TokenBalance:
 
     :param token_id: Token unique id
     :type token_id: str
-
-    :param name: Token name
-    :type name: str
-
-    :param symbol: Token symbol
-    :type symbol: str
 
     :param unlocked_balance: Address unlocked balance of the token
     :type unlocked_balance: int
@@ -32,8 +25,6 @@ class TokenBalance:
     """
 
     token_id: str
-    name: str
-    symbol: str
     unlocked_balance: int
     locked_balance: int
     unlocked_authorities: int
@@ -49,16 +40,8 @@ class TokenBalance:
         return asdict(self)
 
     @classmethod
-    def from_row(cls, row: 'Row') -> 'TokenBalance':
-        return cls(
-            token_id=row[0],
-            name=row[1],
-            symbol=row[2],
-            unlocked_balance=row[3],
-            locked_balance=row[4],
-            unlocked_authorities=row[5],
-            locked_authorities=row[6],
-        )
+    def from_dict(cls, dikt: dict) -> 'TokenBalance':
+        return from_dict(data_class=cls, data=dikt)
 
 
 @dataclass
@@ -68,8 +51,8 @@ class TxHistoryEntry:
     :param tx_id: Transaction unique id
     :type tx_id: str
 
-    :param token_uid: Token unique id
-    :type token_uid: str
+    :param token_id: Token unique id
+    :type token_id: str
 
     :param timestamp: Transaction timestamp
     :type timestamp: int
@@ -77,15 +60,19 @@ class TxHistoryEntry:
     :param balance: Transaction balance for the token
     :type balance: int
 
-    :param type: Type of transaction ['tx', 'block']
-    :type type: str
+    :param version: Transaction version
+    :type type: int
+
+    :param height: Transaction height
+    :type height: int
     """
 
     tx_id: str
-    token_uid: str
+    token_id: str
     timestamp: int
     balance: int
-    type: str
+    version: int
+    height: int
 
     def to_dict(self) -> dict:
         """ Convert an instance into dict
@@ -96,14 +83,8 @@ class TxHistoryEntry:
         return asdict(self)
 
     @classmethod
-    def from_row(cls, row: 'Row') -> 'TxHistoryEntry':
-        return cls(
-            tx=row[0],
-            token_id=row[1],
-            timestamp=row[2],
-            balance=row[3],
-            type=row[4],
-        )
+    def from_dict(cls, dikt: dict) -> 'TxHistoryEntry':
+        return from_dict(data_class=cls, data=dikt)
 
 
 @dataclass
@@ -141,9 +122,8 @@ class TokenEntry:
         return asdict(self)
 
     @classmethod
-    def from_row(cls, row: 'Row') -> 'TokenEntry':
-        return cls(
-            token_id=row[0],
-            name=row[1],
-            symbol=row[2],
-        )
+    def from_dict(cls, dikt: dict) -> 'TokenEntry':
+        token_id = dikt.get('token_id')
+        if token_id == '00':
+            return cls(token_id='00', name='Hathor', symbol='HTR')
+        return from_dict(data_class=cls, data=dikt)
