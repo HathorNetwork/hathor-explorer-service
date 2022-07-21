@@ -1,13 +1,20 @@
-from typing import TYPE_CHECKING, Optional, List
+from typing import TYPE_CHECKING, List, Optional
+
 import sqlalchemy
 from sqlalchemy import text
-from sqlalchemy.exc import NoResultFound, MultipleResultsFound
+from sqlalchemy.exc import MultipleResultsFound, NoResultFound
 
+from common.configuration import (
+    ENVIRONMENT,
+    WALLET_SERVICE_DB,
+    WALLET_SERVICE_HOST,
+    WALLET_SERVICE_PASSWORD,
+    WALLET_SERVICE_USERNAME,
+)
 from common.errors import RdsError, RdsNotFoundError
-from common.configuration import ENVIRONMENT, WALLET_SERVICE_USERNAME, WALLET_SERVICE_PASSWORD, WALLET_SERVICE_HOST, WALLET_SERVICE_DB
 
 if TYPE_CHECKING:
-    from sqlalchemy.engine import Engine
+    from sqlalchemy.engine import Engine, Row
 
 
 wallet_service_url = sqlalchemy.engine.url.URL(
@@ -56,7 +63,7 @@ class WalletServiceDBClient:
         self.engine = engine or get_engine()
 
     def get_address_balance(self, address: str, token: str) -> dict:
-        result: dict
+        result: 'Row'
         with self.engine.connect() as connection:
             cursor = connection.execute(text(address_balance_query), address=address, token=token)
             try:
@@ -72,7 +79,8 @@ class WalletServiceDBClient:
     def get_address_history(self, address: str, token: str, count: int, skip: int) -> List[dict]:
         result: List[dict] = []
         with self.engine.connect() as connection:
-            cursor = connection.execute(text(address_history_query), address=address, token=token, skip=skip, count=count)
+            cursor = connection.execute(
+                    text(address_history_query), address=address, token=token, skip=skip, count=count)
             for row in cursor:
                 result.append(row._asdict())
 

@@ -1,5 +1,5 @@
 import json
-from typing import Union
+from typing import Optional, Union
 
 from aws_lambda_context import LambdaContext
 
@@ -23,7 +23,7 @@ def handle_address_balance(
     if address is None or token is None:
         raise ApiError("invalid_parameters")
 
-    response: dict
+    response: Optional[dict]
     try:
         response = wallet_service.address_balance(address, token)
     except RdsNotFoundError:

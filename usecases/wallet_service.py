@@ -1,4 +1,4 @@
-from typing import Optional, List
+from typing import List, Optional
 
 from gateways.wallet_service_gateway import WalletServiceGateway
 
