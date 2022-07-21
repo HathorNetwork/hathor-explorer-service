@@ -16,7 +16,6 @@ def handle_address_balance(
 ) -> dict:
 
     wallet_service = wallet_service or WalletService()
-    wallet_service.address_balance()
 
     address = event.query.get("address")
     token = event.query.get("token")
@@ -50,7 +49,6 @@ def handle_address_history(
 ) -> dict:
 
     wallet_service = wallet_service or WalletService()
-    wallet_service.address_balance()
 
     address = event.query.get("address")
     token = event.query.get("token")
@@ -79,7 +77,6 @@ def handle_address_tokens(
 ) -> dict:
 
     wallet_service = wallet_service or WalletService()
-    wallet_service.address_balance()
 
     address = event.query.get("address")
 
