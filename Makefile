@@ -91,3 +91,7 @@ deploy-daemons:
 .PHONY: run
 run:
 	docker-compose up
+
+.PHONY: validate_openapi
+validate_openapi:
+	npx swagger-cli validate openapi.yml
