@@ -41,6 +41,10 @@ provider:
     ELASTIC_RESULTS_PER_PAGE: ${env:ELASTIC_RESULTS_PER_PAGE}
     ELASTIC_SEARCH_TIMEOUT: ${env:ELASTIC_SEARCH_TIMEOUT}
     ELASTIC_TX_INDEX: ${env:ELASTIC_TX_INDEX}
+    WALLET_SERVICE_USERNAME: ${env:WALLET_SERVICE_USERNAME}
+    WALLET_SERVICE_PASSWORD: ${env:WALLET_SERVICE_PASSWORD}
+    WALLET_SERVICE_HOST: ${env:WALLET_SERVICE_HOST}
+    WALLET_SERVICE_DB: ${env:WALLET_SERVICE_DB}
 
 plugins:
   - serverless-s3-local
@@ -565,4 +569,68 @@ functions:
               - name: request.querystring.tx
               - name: request.querystring.graph_type
               - name: request.querystring.max_level
+              - name: request.header.origin
+
+  wallet_address_balance:
+    handler: handlers/wallet_service.handle_address_balance
+    timeout: 15
+    package:
+      patterns:
+        - 'handlers/wallet_service.py'
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: wallet/address/balance
+          method: get
+          cors: true
+          caching:
+            enabled: true
+            ttlInSeconds: 5
+            cacheKeyParameters:
+              - name: request.querystring.address
+              - name: request.querystring.token
+              - name: request.header.origin
+
+  wallet_address_history:
+    handler: handlers/wallet_service.handle_address_history
+    timeout: 15
+    package:
+      patterns:
+        - 'handlers/wallet_service.py'
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: wallet/address/history
+          method: get
+          cors: true
+          caching:
+            enabled: true
+            ttlInSeconds: 5
+            cacheKeyParameters:
+              - name: request.querystring.address
+              - name: request.querystring.token
+              - name: request.querystring.limit
+              - name: request.querystring.skip
+              - name: request.header.origin
+
+  wallet_address_tokens:
+    handler: handlers/wallet_service.handle_address_tokens
+    timeout: 15
+    package:
+      patterns:
+        - 'handlers/wallet_service.py'
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: wallet/address/tokens
+          method: get
+          cors: true
+          caching:
+            enabled: true
+            ttlInSeconds: 10
+            cacheKeyParameters:
+              - name: request.querystring.address
               - name: request.header.origin
