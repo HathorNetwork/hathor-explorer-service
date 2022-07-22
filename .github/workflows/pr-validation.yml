@@ -35,4 +35,4 @@ jobs:
       - name: Docs
         run: |
           npm install
-          make validate_openapi
+          make validate_docs
