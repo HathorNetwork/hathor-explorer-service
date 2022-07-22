@@ -52,13 +52,21 @@ def handle_address_history(
 
     address = event.query.get("address")
     token = event.query.get("token")
-    limit = event.query.get("limit", 10)
-    skip = event.query.get("skip", 0)
+    limit_str = event.query.get("limit", 10)
+    skip_str = event.query.get("skip", 0)
 
     if address is None or token is None:
         raise ApiError("invalid_parameters")
 
-    response = wallet_service.address_history(address, token, limit, skip)
+    limit: int
+    skip: int
+    try:
+        limit = int(limit_str)
+        skip = int(skip_str)
+    except ValueError:
+        raise ApiError("invalid_parameters")
+
+    response = wallet_service.address_history(address, token, int(limit), int(skip))
 
     return {
         "statusCode": 200,
