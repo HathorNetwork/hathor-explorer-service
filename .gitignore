@@ -27,3 +27,6 @@ coverage.xml
 
 # convenience folder to put files without messing git status up
 .tray
+
+# Api docs bundle
+openapi.yml
