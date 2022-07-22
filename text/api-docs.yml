@@ -5,7 +5,7 @@ info:
   license:
     name: MIT
 servers:
-  - url: "http://0.0.0.0:3001/dev/"
+  - url: "http://localhost:3001/dev/"
   - url: "https://explorer-service.hathor.network/"
 paths:
   /wallet/address/tokens:
