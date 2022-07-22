@@ -32,3 +32,7 @@ jobs:
           poetry run make test
         env:
           AWS_DEFAULT_REGION: us-west-1
+      - name: Docs
+        run: |
+          npm install
+          make validate_openapi
