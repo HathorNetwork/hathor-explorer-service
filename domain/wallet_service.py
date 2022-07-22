@@ -1,5 +1,4 @@
 from dataclasses import asdict, dataclass
-from typing import Optional
 
 from dacite import from_dict
 
@@ -110,8 +109,6 @@ class TokenEntry:
     token_id: str
     name: str
     symbol: str
-    createdAt: Optional[int] = None
-    updateddAt: Optional[int] = None
 
     def to_dict(self) -> dict:
         """ Convert an instance into dict

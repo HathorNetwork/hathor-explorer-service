@@ -8,13 +8,10 @@ class WalletService:
     def __init__(self, wallet_service_gateway: Optional[WalletServiceGateway] = None) -> None:
         self.wallet_service_gateway = wallet_service_gateway or WalletServiceGateway()
 
-    def address_balance(self, address: str, token: str) -> Optional[dict]:
+    def address_balance(self, address: str, token: str) -> dict:
         balance = self.wallet_service_gateway.address_balance(address, token)
 
-        if balance is not None:
-            return balance.to_dict()
-
-        return None
+        return balance.to_dict()
 
     def address_history(self, address: str, token: str, limit: int, skip: int) -> List[dict]:
         history = self.wallet_service_gateway.address_history(address, token, limit, skip)
