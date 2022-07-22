@@ -1,8 +1,8 @@
 from typing import TYPE_CHECKING, List, Optional
 
-import sqlalchemy
-from sqlalchemy import text
+from sqlalchemy.engine import URL, create_engine
 from sqlalchemy.exc import MultipleResultsFound, NoResultFound
+from sqlalchemy.sql import text
 
 from common.configuration import (
     ENVIRONMENT,
@@ -15,22 +15,6 @@ from common.errors import RdsError, RdsNotFoundError
 
 if TYPE_CHECKING:
     from sqlalchemy.engine import Engine, Row
-
-
-wallet_service_url = sqlalchemy.engine.url.URL(
-        'mysql+pymysql',
-        username=WALLET_SERVICE_USERNAME,
-        password=WALLET_SERVICE_PASSWORD,
-        host=WALLET_SERVICE_HOST,
-        port=3306,
-        database=WALLET_SERVICE_DB)
-wallet_service_engine = sqlalchemy.create_engine(
-        wallet_service_url, echo=ENVIRONMENT.is_dev)
-
-
-def get_engine():
-    """ Returns the engine for connecting with the wallet service database."""
-    return wallet_service_engine
 
 
 address_balance_query: str = '''\
@@ -55,6 +39,18 @@ address_tokens_query: str = '''\
 SELECT address_balance.token_id AS token_id, token.name AS name, token.symbol AS symbol
 FROM token RIGHT OUTER JOIN address_balance ON token.id = address_balance.token_id
 WHERE address_balance.address = :address'''
+
+
+def get_engine():
+    """ Returns the engine for connecting with the wallet service database."""
+    wallet_service_url = URL(
+            'mysql+pymysql',
+            username=WALLET_SERVICE_USERNAME,
+            password=WALLET_SERVICE_PASSWORD,
+            host=WALLET_SERVICE_HOST,
+            port=3306,
+            database=WALLET_SERVICE_DB)
+    return create_engine(wallet_service_url, echo=ENVIRONMENT.is_dev)
 
 
 class WalletServiceDBClient:
