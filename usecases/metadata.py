@@ -19,7 +19,7 @@ class Metadata:
 
         return method(id)
 
-    def create_or_update_dag(self, id: str, update_data: Any) -> None:
+    def create_or_update_dag(self, id: str, update_data: dict) -> None:
         # Convert both JSONs into dicts
         existing = json.loads(self.metadata_gateway.get_dag_metadata(id) or '{}')
 
