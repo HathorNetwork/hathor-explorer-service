@@ -571,7 +571,7 @@ functions:
               - name: request.querystring.max_level
               - name: request.header.origin
 
-  wallet_address_balance:
+  walletServiceAddressBalance:
     handler: handlers/wallet_service.handle_address_balance
     timeout: 15
     package:
@@ -581,7 +581,7 @@ functions:
       - { Ref: PythonRequirementsLambdaLayer }
     events:
       - http:
-          path: wallet/address/balance
+          path: address/balance
           method: get
           cors: true
           caching:
@@ -592,7 +592,7 @@ functions:
               - name: request.querystring.token
               - name: request.header.origin
 
-  wallet_address_history:
+  walletServiceAddressHistory:
     handler: handlers/wallet_service.handle_address_history
     timeout: 15
     package:
@@ -602,7 +602,7 @@ functions:
       - { Ref: PythonRequirementsLambdaLayer }
     events:
       - http:
-          path: wallet/address/history
+          path: address/history
           method: get
           cors: true
           caching:
@@ -615,7 +615,7 @@ functions:
               - name: request.querystring.skip
               - name: request.header.origin
 
-  wallet_address_tokens:
+  walletServiceAddressTokens:
     handler: handlers/wallet_service.handle_address_tokens
     timeout: 15
     package:
@@ -625,7 +625,7 @@ functions:
       - { Ref: PythonRequirementsLambdaLayer }
     events:
       - http:
-          path: wallet/address/tokens
+          path: address/tokens
           method: get
           cors: true
           caching:
