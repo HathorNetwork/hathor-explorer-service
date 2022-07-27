@@ -53,7 +53,7 @@ class TestWalletService:
 
         ws = WalletService(wallet_service_gateway)
 
-        expected = [obj.to_dict() for obj in objs]
+        expected = {obj.token_id: obj.to_dict() for obj in objs}
         returned = ws.address_tokens(addr)
 
         assert len(returned) == len(expected)

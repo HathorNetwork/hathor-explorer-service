@@ -18,7 +18,14 @@ if TYPE_CHECKING:
 
 
 address_balance_query: str = '''\
-SELECT token_id, transactions, unlocked_balance, locked_balance, unlocked_authorities, locked_authorities
+SELECT
+    token_id,
+    transactions,
+    total_received,
+    unlocked_balance,
+    locked_balance,
+    unlocked_authorities,
+    locked_authorities
 FROM address_balance
 WHERE address = :address AND token_id = :token LIMIT 1'''
 

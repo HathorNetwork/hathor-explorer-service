@@ -24,6 +24,7 @@ class TokenBalance:
     """
 
     token_id: str
+    total_received: int
     unlocked_balance: int
     locked_balance: int
     unlocked_authorities: int

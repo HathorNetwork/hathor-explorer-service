@@ -12,6 +12,7 @@ class TokenBalanceFactory(factory.Factory):
 
     token_id = factory.Faker('sha256')
     transactions = factory.Faker('random_int', min=0)
+    total_received = factory.Faker('random_int', min=0)
     unlocked_balance = factory.Faker('random_int', min=0)
     locked_balance = factory.Faker('random_int', min=0)
     unlocked_authorities = factory.Faker('random_int', min=0)
