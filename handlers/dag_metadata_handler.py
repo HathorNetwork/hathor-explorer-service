@@ -5,7 +5,7 @@ from aws_lambda_context import LambdaContext
 from common.errors import ApiError
 from usecases.metadata import Metadata
 from utils.wrappers.aws.api_gateway import ApiGateway, ApiGatewayEvent
-from utils.wrappers.aws.invoke_gateway import InvokeGateway, MetadataUpdateEvent
+from utils.wrappers.aws.invoke_gateway import InvokeEvent, InvokeHandler, MetadataUpdateEvent
 
 
 @ApiGateway()
@@ -33,16 +33,16 @@ def handle_get(
     }
 
 
-@InvokeGateway()
-def handle_create_or_update(event: MetadataUpdateEvent, _context: LambdaContext,
+@InvokeHandler()
+def handle_create_or_update(event: InvokeEvent, _context: LambdaContext,
                             metadata: Optional[Metadata] = None) -> dict:
 
     metadata = metadata or Metadata()
-    if 'id' not in event:
-        raise ApiError('missing_parameter_id')
 
-    tx_id = event['id']
-    tx_metadata = event['metadata']
+    parsed_event = MetadataUpdateEvent.from_event(event)
+
+    tx_id = parsed_event.id
+    tx_metadata = parsed_event.metadata
 
     metadata.create_or_update_dag(tx_id, tx_metadata)
 
