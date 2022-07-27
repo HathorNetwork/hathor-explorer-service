@@ -26,7 +26,8 @@ class InvokeGateway:
 
                 return result
             except Exception as error:
-                logger.exception(error)
-                return error
+                wrapped_error = dict(success=False)
+                wrapped_error.update(error.args)
+                return wrapped_error
 
         return wrapper
