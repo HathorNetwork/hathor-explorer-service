@@ -1,5 +1,5 @@
 import json
-from typing import Any, Optional
+from typing import Optional
 
 from gateways.metadata_gateway import MetadataGateway
 
