@@ -35,13 +35,14 @@ class InvokeHandler:
     def __call__(
             self,
             function_to_call: Callable[[InvokeEvent, LambdaContext, Any], dict]
-    ) -> Callable[[dict, LambdaContext, Any], dict]:
+    ) -> Callable[[InvokeEvent, LambdaContext, Any], dict]:
         def wrapper(event: InvokeEvent, context: LambdaContext, *args: Any, **kwargs: Any) -> dict:
             try:
                 result = function_to_call(event, context, *args, **kwargs)  # type: ignore
 
                 return result
             except Exception as error:
+                logger.exception(error)
                 wrapped_error = dict(success=False)
                 wrapped_error.update(error.args)
                 return wrapped_error
