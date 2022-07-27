@@ -5,7 +5,7 @@ from aws_lambda_context import LambdaContext
 from common.errors import ApiError
 from usecases.metadata import Metadata
 from utils.wrappers.aws.api_gateway import ApiGateway, ApiGatewayEvent
-from utils.wrappers.aws.invoke_gateway import InvokeEvent, InvokeHandler, MetadataUpdateEvent
+from utils.wrappers.aws.invoke_handler import InvokeEvent, InvokeHandler, MetadataUpdateEvent
 
 
 @ApiGateway()
