@@ -1,5 +1,5 @@
 import json
-from typing import Any, Optional
+from typing import Optional
 
 from gateways.metadata_gateway import MetadataGateway
 
@@ -19,13 +19,13 @@ class Metadata:
 
         return method(id)
 
-    def create_or_update_dag(self, id: str, update_data: Any) -> None:
+    def create_or_update_dag(self, id: str, update_data: dict) -> None:
         # Convert both JSONs into dicts
-        existing = json.loads(self.metadata_gateway.get_dag_metadata(id) or '{}')
-        inputted = json.loads(update_data)
+        full_existing_obj = json.loads(self.metadata_gateway.get_dag_metadata(id) or '{}')
+        existing_metadata = full_existing_obj.get(id) or {}
 
         # Merge the existing and input metadata, with the input having priority
-        new_content = {**existing, **inputted}
+        new_content = {**existing_metadata, **update_data}
 
         # Call the existing put_dag_metadata with the string version of the merged object
         return self.metadata_gateway.put_dag_metadata(id, json.dumps(new_content))

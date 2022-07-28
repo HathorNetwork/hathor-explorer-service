@@ -303,7 +303,7 @@ functions:
               - name: request.querystring.id
               - name: request.header.origin
 
-  create_or_update_dag_metadata_handler:
+  create_or_update_dag_metadata:
     handler: handlers/dag_metadata_handler.handle_create_or_update
     package:
       patterns:
