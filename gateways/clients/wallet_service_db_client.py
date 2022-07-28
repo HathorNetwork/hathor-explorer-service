@@ -1,8 +1,8 @@
 from typing import TYPE_CHECKING, List, Optional
 
 from sqlalchemy.engine import URL, create_engine
-from sqlalchemy.pool import NullPool
 from sqlalchemy.exc import MultipleResultsFound, NoResultFound
+from sqlalchemy.pool import NullPool
 from sqlalchemy.sql import text
 
 from common.configuration import (

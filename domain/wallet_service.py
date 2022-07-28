@@ -1,5 +1,5 @@
-from typing import Union
 from dataclasses import asdict, dataclass
+from typing import Union
 
 from dacite import from_dict
 
