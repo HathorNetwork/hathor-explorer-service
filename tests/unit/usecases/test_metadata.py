@@ -50,7 +50,7 @@ class TestMetadata:
         metadata_gateway.put_dag_metadata.assert_called_once_with('some-id', expected_called_with)
 
     def test_create_or_update_metadata_update_property(self, metadata_gateway):
-        metadata_gateway.get_dag_metadata = MagicMock(return_value='{ "id": "some-id", "nft": false }')
+        metadata_gateway.get_dag_metadata = MagicMock(return_value='{ "some-id": {"id": "some-id", "nft": false} }')
         metadata_gateway.put_dag_metadata = MagicMock(return_value=None)
 
         metadata = Metadata(metadata_gateway)
@@ -60,7 +60,7 @@ class TestMetadata:
         metadata_gateway.put_dag_metadata.assert_called_once_with('some-id', expected_called_with)
 
     def test_create_or_update_metadata_update_new_property(self, metadata_gateway):
-        metadata_gateway.get_dag_metadata = MagicMock(return_value='{ "id": "some-id", "nft": false }')
+        metadata_gateway.get_dag_metadata = MagicMock(return_value='{ "some-id": {"id": "some-id", "nft": false} }')
         metadata_gateway.put_dag_metadata = MagicMock(return_value=None)
 
         metadata = Metadata(metadata_gateway)

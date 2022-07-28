@@ -21,10 +21,11 @@ class Metadata:
 
     def create_or_update_dag(self, id: str, update_data: dict) -> None:
         # Convert both JSONs into dicts
-        existing = json.loads(self.metadata_gateway.get_dag_metadata(id) or '{}')
+        full_existing_obj = json.loads(self.metadata_gateway.get_dag_metadata(id) or '{}')
+        existing_metadata = full_existing_obj.get(id) or {}
 
         # Merge the existing and input metadata, with the input having priority
-        new_content = {**existing, **update_data}
+        new_content = {**existing_metadata, **update_data}
 
         # Call the existing put_dag_metadata with the string version of the merged object
         return self.metadata_gateway.put_dag_metadata(id, json.dumps(new_content))
