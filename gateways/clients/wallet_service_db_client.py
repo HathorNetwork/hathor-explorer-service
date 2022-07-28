@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING, List, Optional
 
 from sqlalchemy.engine import URL, create_engine
+from sqlalchemy.pool import NullPool
 from sqlalchemy.exc import MultipleResultsFound, NoResultFound
 from sqlalchemy.sql import text
 
@@ -49,7 +50,11 @@ WHERE address_balance.address = :address'''
 
 
 def get_engine():
-    """ Returns the engine for connecting with the wallet service database."""
+    """ Returns the engine for connecting with the wallet service database.
+
+        NullPool is used to disable connection pooling
+        making each connect/disconnect actually grab a connection and release the connection.
+    """
     wallet_service_url = URL(
             'mysql+pymysql',
             username=WALLET_SERVICE_USERNAME,
@@ -57,7 +62,8 @@ def get_engine():
             host=WALLET_SERVICE_HOST,
             port=3306,
             database=WALLET_SERVICE_DB)
-    return create_engine(wallet_service_url, echo=ENVIRONMENT.is_dev)
+
+    return create_engine(wallet_service_url, poolclass=NullPool, echo=ENVIRONMENT.is_dev)
 
 
 class WalletServiceDBClient:

@@ -1,3 +1,4 @@
+from typing import Union
 from dataclasses import asdict, dataclass
 
 from dacite import from_dict
@@ -72,7 +73,7 @@ class TxHistoryEntry:
     timestamp: int
     balance: int
     version: int
-    height: int
+    height: Union[int, None]
 
     def to_dict(self) -> dict:
         """ Convert an instance into dict
