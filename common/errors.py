@@ -16,3 +16,7 @@ class HathorCoreMalformedToken(Exception):
 
 class HathorCoreTimeout(Exception):
     pass
+
+
+class EventValidationError(Exception):
+    pass
