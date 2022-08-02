@@ -8,9 +8,9 @@ servers:
   - url: "http://localhost:3001/dev/"
   - url: "https://explorer-service.hathor.network/"
 paths:
-  /wallet/address/tokens:
+  /address/tokens:
     $ref: "./openapi/wallet_service.yml#/methods/address_tokens"
-  /wallet/address/balance:
+  /address/balance:
     $ref: "./openapi/wallet_service.yml#/methods/address_balance"
-  /wallet/address/history:
+  /address/history:
     $ref: "./openapi/wallet_service.yml#/methods/address_history"
