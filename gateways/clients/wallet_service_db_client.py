@@ -47,7 +47,7 @@ address_tokens_query: str = '''\
 SELECT address_balance.token_id AS token_id,
        token.name AS name,
        token.symbol AS symbol,
-       COUNT(*) OVER() as total,
+       COUNT(*) OVER() as total
 FROM token RIGHT OUTER JOIN address_balance ON token.id = address_balance.token_id
 WHERE address_balance.address = :address
 ORDER BY address_balance.updated_at DESC
