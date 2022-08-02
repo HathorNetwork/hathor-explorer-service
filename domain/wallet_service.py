@@ -65,7 +65,7 @@ class TxHistoryEntry:
     :type type: int
 
     :param height: Transaction height
-    :type height: int
+    :type height: Union[int, None]
     """
 
     tx_id: str
@@ -100,12 +100,6 @@ class TokenEntry:
 
     :param symbol: Token symbol
     :type symbol: str
-
-    :param createdAt: Timestamp this entry was created
-    :type createdAt: int
-
-    :param updatedAt: Last update timestamp
-    :type updatedAt: int
     """
 
     token_id: str

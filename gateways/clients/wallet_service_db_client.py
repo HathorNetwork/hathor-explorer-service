@@ -7,10 +7,10 @@ from sqlalchemy.sql import text
 
 from common.configuration import (
     ENVIRONMENT,
-    WALLET_SERVICE_DB,
-    WALLET_SERVICE_HOST,
-    WALLET_SERVICE_PASSWORD,
-    WALLET_SERVICE_USERNAME,
+    WALLET_SERVICE_DB_NAME,
+    WALLET_SERVICE_DB_HOST,
+    WALLET_SERVICE_DB_PASSWORD,
+    WALLET_SERVICE_DB_USERNAME,
 )
 from common.errors import RdsError, RdsNotFoundError
 
@@ -62,11 +62,11 @@ def get_engine():
     """
     wallet_service_url = URL(
             'mysql+pymysql',
-            username=WALLET_SERVICE_USERNAME,
-            password=WALLET_SERVICE_PASSWORD,
-            host=WALLET_SERVICE_HOST,
+            username=WALLET_SERVICE_DB_USERNAME,
+            password=WALLET_SERVICE_DB_PASSWORD,
+            host=WALLET_SERVICE_DB_HOST,
             port=3306,
-            database=WALLET_SERVICE_DB)
+            database=WALLET_SERVICE_DB_NAME)
 
     return create_engine(wallet_service_url, poolclass=NullPool, echo=ENVIRONMENT.is_dev)
 

@@ -41,10 +41,10 @@ provider:
     ELASTIC_RESULTS_PER_PAGE: ${env:ELASTIC_RESULTS_PER_PAGE}
     ELASTIC_SEARCH_TIMEOUT: ${env:ELASTIC_SEARCH_TIMEOUT}
     ELASTIC_TX_INDEX: ${env:ELASTIC_TX_INDEX}
-    WALLET_SERVICE_USERNAME: ${env:WALLET_SERVICE_USERNAME}
-    WALLET_SERVICE_PASSWORD: ${env:WALLET_SERVICE_PASSWORD}
-    WALLET_SERVICE_HOST: ${env:WALLET_SERVICE_HOST}
-    WALLET_SERVICE_DB: ${env:WALLET_SERVICE_DB}
+    WALLET_SERVICE_DB_USERNAME: ${env:WALLET_SERVICE_DB_USERNAME}
+    WALLET_SERVICE_DB_PASSWORD: ${env:WALLET_SERVICE_DB_PASSWORD}
+    WALLET_SERVICE_DB_HOST: ${env:WALLET_SERVICE_DB_HOST}
+    WALLET_SERVICE_DB_NAME: ${env:WALLET_SERVICE_DB_NAME}
 
 plugins:
   - serverless-s3-local
@@ -612,7 +612,7 @@ functions:
               - name: request.querystring.address
               - name: request.querystring.token
               - name: request.querystring.limit
-              - name: request.querystring.skip
+              - name: request.querystring.offset
               - name: request.header.origin
 
   walletServiceAddressTokens:
@@ -633,4 +633,6 @@ functions:
             ttlInSeconds: 10
             cacheKeyParameters:
               - name: request.querystring.address
+              - name: request.querystring.limit
+              - name: request.querystring.offset
               - name: request.header.origin
