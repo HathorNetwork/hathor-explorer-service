@@ -7,8 +7,8 @@ from sqlalchemy.sql import text
 
 from common.configuration import (
     ENVIRONMENT,
-    WALLET_SERVICE_DB_NAME,
     WALLET_SERVICE_DB_HOST,
+    WALLET_SERVICE_DB_NAME,
     WALLET_SERVICE_DB_PASSWORD,
     WALLET_SERVICE_DB_USERNAME,
 )
