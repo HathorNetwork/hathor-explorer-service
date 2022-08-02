@@ -17,8 +17,8 @@ def handle_address_balance(
 
     wallet_service = wallet_service or WalletService()
 
-    address = event.query.get("address")
-    token = event.query.get("token")
+    address: Optional[str] = event.query.get("address")
+    token: Optional[str] = event.query.get("token")
 
     if address is None or token is None:
         raise ApiError("invalid_parameters")
@@ -50,23 +50,26 @@ def handle_address_history(
 
     wallet_service = wallet_service or WalletService()
 
-    address = event.query.get("address")
-    token = event.query.get("token")
-    limit_str = event.query.get("limit", 10)
-    skip_str = event.query.get("skip", 0)
+    address: Optional[str] = event.query.get("address")
+    token: Optional[str] = event.query.get("token")
+    limit_str: str = event.query.get("limit", '10')
+    offset_str: str = event.query.get("offset", '0')
 
     if address is None or token is None:
         raise ApiError("invalid_parameters")
 
     limit: int
-    skip: int
+    offset: int
     try:
         limit = int(limit_str)
-        skip = int(skip_str)
+        offset = int(offset_str)
     except ValueError:
         raise ApiError("invalid_parameters")
 
-    response = wallet_service.address_history(address, token, int(limit), int(skip))
+    if limit > 100:
+        raise ApiError("invalid_parameters")
+
+    response = wallet_service.address_history(address, token, limit, offset)
 
     return {
         "statusCode": 200,
@@ -86,12 +89,25 @@ def handle_address_tokens(
 
     wallet_service = wallet_service or WalletService()
 
-    address = event.query.get("address")
+    address: Optional[str] = event.query.get("address")
+    limit_str: str = event.query.get("limit", '50')
+    offset_str: str = event.query.get("offset", '0')
 
     if address is None:
         raise ApiError("invalid_parameters")
 
-    response = wallet_service.address_tokens(address)
+    limit: int
+    offset: int
+    try:
+        limit = int(limit_str)
+        offset = int(offset_str)
+    except ValueError:
+        raise ApiError("invalid_parameters")
+
+    if limit > 100:
+        raise ApiError("invalid_parameters")
+
+    response = wallet_service.address_tokens(address, limit, offset)
 
     return {
         "statusCode": 200,

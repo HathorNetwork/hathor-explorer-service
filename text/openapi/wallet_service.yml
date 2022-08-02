@@ -46,7 +46,7 @@ methods:
             type: string
         - name: limit
           in: query
-          description: Limit to the number of transactions on the responses
+          description: Limit to the number of transactions on the response
           required: false
           schema:
             type: integer
@@ -54,9 +54,9 @@ methods:
             maximum: 100
             minimum: 1
             default: 10
-        - name: skip
+        - name: offset
           in: query
-          description: Skip the first transactions on the history
+          description: Offset for the first transactions on the history
           required: false
           schema:
             type: integer
@@ -85,6 +85,25 @@ methods:
           required: true
           schema:
             type: string
+        - name: limit
+          in: query
+          description: Limit to the number of tokens on the response
+          required: false
+          schema:
+            type: integer
+            format: uint8
+            maximum: 100
+            minimum: 1
+            default: 50
+        - name: offset
+          in: query
+          description: Offset for the first tokens
+          required: false
+          schema:
+            type: integer
+            format: uint64
+            minimum: 0
+            default: 0
       responses:
         "200":
           description: List of tokens
@@ -92,8 +111,18 @@ methods:
             application/json:
               schema:
                 type: object
-                additionalProperties:
-                  $ref: "#/schemas/TokenEntry"
+                required:
+                    - total
+                    - tokens
+                properties:
+                  total:
+                    type: integer
+                    format: uint64
+                  tokens:
+                    type: object
+                    maxProperties: 100
+                    additionalProperties:
+                      $ref: "#/schemas/TokenEntry"
 schemas:
   TokenEntry:
     type: object

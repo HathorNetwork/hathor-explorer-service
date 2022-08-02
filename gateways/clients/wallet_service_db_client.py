@@ -40,13 +40,18 @@ SELECT  address_tx_history.tx_id AS tx_id,
 FROM address_tx_history INNER JOIN transaction ON address_tx_history.tx_id = transaction.tx_id
 WHERE transaction.voided = FALSE AND address_tx_history.address = :address AND address_tx_history.token_id = :token
 ORDER BY timestamp DESC
-LIMIT :count OFFSET :skip'''
+LIMIT :limit OFFSET :offset'''
 
 
 address_tokens_query: str = '''\
-SELECT address_balance.token_id AS token_id, token.name AS name, token.symbol AS symbol
+SELECT address_balance.token_id AS token_id,
+       token.name AS name,
+       token.symbol AS symbol,
+       COUNT(*) OVER() as total,
 FROM token RIGHT OUTER JOIN address_balance ON token.id = address_balance.token_id
-WHERE address_balance.address = :address'''
+WHERE address_balance.address = :address
+ORDER BY address_balance.updated_at DESC
+LIMIT :limit OFFSET :offset'''
 
 
 def get_engine():
@@ -85,20 +90,20 @@ class WalletServiceDBClient:
                 cursor.close()
         return result._asdict()
 
-    def get_address_history(self, address: str, token: str, count: int, skip: int) -> List[dict]:
+    def get_address_history(self, address: str, token: str, limit: int, offset: int) -> List[dict]:
         result: List[dict] = []
         with self.engine.connect() as connection:
             cursor = connection.execute(
-                    text(address_history_query), address=address, token=token, skip=skip, count=count)
+                    text(address_history_query), address=address, token=token, offset=offset, limit=limit)
             for row in cursor:
                 result.append(row._asdict())
 
         return result
 
-    def get_address_tokens(self, address: str) -> List[dict]:
+    def get_address_tokens(self, address: str, limit: int, offset: int) -> List[dict]:
         result: List[dict] = []
         with self.engine.connect() as connection:
-            cursor = connection.execute(text(address_tokens_query), address=address)
+            cursor = connection.execute(text(address_tokens_query), address=address, offset=offset, limit=limit)
             for row in cursor:
                 result.append(row._asdict())
         return result
