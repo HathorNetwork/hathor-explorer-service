@@ -584,6 +584,9 @@ functions:
           path: address/balance
           method: get
           cors: true
+          throttling:
+            maxRequestsPerSecond: 100
+            maxConcurrentRequests: 4
           caching:
             enabled: true
             ttlInSeconds: 5
@@ -605,6 +608,9 @@ functions:
           path: address/history
           method: get
           cors: true
+          throttling:
+            maxRequestsPerSecond: 100
+            maxConcurrentRequests: 4
           caching:
             enabled: true
             ttlInSeconds: 5
@@ -628,6 +634,9 @@ functions:
           path: address/tokens
           method: get
           cors: true
+          throttling:
+            maxRequestsPerSecond: 100
+            maxConcurrentRequests: 4
           caching:
             enabled: true
             ttlInSeconds: 10
