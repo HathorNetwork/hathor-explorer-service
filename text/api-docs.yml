@@ -1,0 +1,16 @@
+openapi: 3.0.0
+info:
+  version: "0.0.1"
+  title: "Explorer Service"
+  license:
+    name: MIT
+servers:
+  - url: "http://localhost:3001/dev/"
+  - url: "https://explorer-service.hathor.network/"
+paths:
+  /address/tokens:
+    $ref: "./openapi/wallet_service.yml#/methods/address_tokens"
+  /address/balance:
+    $ref: "./openapi/wallet_service.yml#/methods/address_balance"
+  /address/history:
+    $ref: "./openapi/wallet_service.yml#/methods/address_history"
