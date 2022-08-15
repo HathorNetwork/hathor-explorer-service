@@ -9,7 +9,8 @@ def es_hit_to_result(hit: dict) -> dict:
         'name': hit['_source']['name'],
         'symbol': hit['_source']['symbol'],
         'transaction_timestamp': hit['_source']['transaction_timestamp'],
-        'sort': hit['sort']
+        'sort': hit['sort'],
+        'transactions': hit['transactions'],
     }
 
     if 'nft' in hit['_source']:

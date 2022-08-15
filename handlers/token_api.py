@@ -39,3 +39,23 @@ def get_tokens(
             "Content-Type": "application/json"
         }
     }
+
+@ApiGateway()
+def get_token(
+    event: ApiGatewayEvent,
+    _context: LambdaContext,
+    token_api: TokenApi = TokenApi()
+) -> dict:
+    """Get a specific token from its token_id"""
+
+    token_id = event.query.get("token_id")
+
+    response = token_api.get_tokens(search_text, sort_by, order, search_after_list)
+
+    return {
+        "statusCode": 200,
+        "body": json.dumps(response or {}),
+        "headers": {
+            "Content-Type": "application/json"
+        }
+    }

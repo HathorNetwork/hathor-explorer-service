@@ -9,3 +9,6 @@ class TokenApi:
 
     def get_tokens(self, search_text: str, sort_by: str, order: str, search_after: List[str]) -> dict:
         return self.token_api_gateway.get_tokens(search_text, sort_by, order, search_after)
+
+    def get_token(self, token_id: str) -> dict:
+        return self.token_api_gateway.get_tokens(token_id)
