@@ -50,7 +50,7 @@ def get_token(
 
     token_id = event.query.get("token_id")
 
-    response = token_api.get_tokens(search_text, sort_by, order, search_after_list)
+    response = token_api.get_token(token_id)
 
     return {
         "statusCode": 200,
