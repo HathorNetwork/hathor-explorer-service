@@ -49,7 +49,7 @@ SELECT address_balance.token_id AS token_id,
        token.symbol AS symbol,
        COUNT(*) OVER() as total
 FROM token INNER JOIN address_balance ON token.id = address_balance.token_id
-WHERE address_balance.address = :address
+WHERE address_balance.address = :address AND token.id != '00'
 ORDER BY address_balance.updated_at DESC
 LIMIT :limit OFFSET :offset'''
 
