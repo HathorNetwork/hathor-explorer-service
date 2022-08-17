@@ -38,6 +38,7 @@ class TestTokenApiGateway:
                                 'symbol': 'TST1',
                                 '@timestamp': '2022-04-19T13:56:04.371602Z',
                                 'name': 'Test1',
+                                'transactions': 0,
                                 'created_at': '2022-04-19T12:41:04Z',
                                 'transaction_timestamp': 1649473276,
                                 'id': '00000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a'
@@ -56,6 +57,7 @@ class TestTokenApiGateway:
                                 'symbol': 'TST2',
                                 '@timestamp': '2022-04-19T13:56:04.372449Z',
                                 'name': 'Test2',
+                                'transactions': 0,
                                 'created_at': '2022-04-19T12:41:07Z',
                                 'transaction_timestamp': 1000000000,
                                 'id': '10000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a'
@@ -79,6 +81,7 @@ class TestTokenApiGateway:
                     'id': '00000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a',
                     'name': 'Test1',
                     'symbol': 'TST1',
+                    'transactions': 0,
                     'transaction_timestamp': 1649473276,
                     'sort': [
                         '00000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a',
@@ -90,6 +93,7 @@ class TestTokenApiGateway:
                     'id': '10000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a',
                     'name': 'Test2',
                     'symbol': 'TST2',
+                    'transactions': 0,
                     'transaction_timestamp': 1000000000,
                     'sort': [
                         '10000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a',
