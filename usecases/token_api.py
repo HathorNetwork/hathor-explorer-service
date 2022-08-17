@@ -11,4 +11,4 @@ class TokenApi:
         return self.token_api_gateway.get_tokens(search_text, sort_by, order, search_after)
 
     def get_token(self, token_id: str) -> dict:
-        return self.token_api_gateway.get_tokens(token_id)
+        return self.token_api_gateway.get_token(token_id)

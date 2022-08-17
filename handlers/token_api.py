@@ -40,6 +40,7 @@ def get_tokens(
         }
     }
 
+
 @ApiGateway()
 def get_token(
     event: ApiGatewayEvent,
@@ -49,6 +50,9 @@ def get_token(
     """Get a specific token from its token_id"""
 
     token_id = event.query.get("token_id")
+
+    if token_id is None:
+        raise ApiError("Invalid token_id")
 
     response = token_api.get_token(token_id)
 
