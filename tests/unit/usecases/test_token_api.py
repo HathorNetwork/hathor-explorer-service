@@ -48,3 +48,31 @@ class TestTokenApi:
         token_api_gateway.get_tokens.assert_called_once_with("New", "", "", [])
         assert result
         assert sorted(result) == sorted(obj)
+
+    def test_get_token(self, token_api_gateway):
+        obj = {
+            "hits": [
+                {
+                    "id": "00",
+                    "name": "Hathor",
+                    "symbol": "HTR",
+                    "transaction_timestamp": 1649473276,
+                    "sort": [
+                        "00",
+                        1649473276
+                    ],
+                    "nft": False
+                }
+            ],
+            "has_next": False
+        }
+
+        token_api_gateway.get_tokens = MagicMock(return_value=obj)
+
+        token_api = TokenApi(token_api_gateway)
+
+        result = token_api.get_token("00")
+        token_api_gateway.get_token.assert_called_once_with("00")
+
+        assert result
+        assert sorted(result) == sorted(obj)
