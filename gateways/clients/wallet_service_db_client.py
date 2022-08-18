@@ -48,10 +48,15 @@ SELECT address_balance.token_id AS token_id,
        token.name AS name,
        token.symbol AS symbol,
        COUNT(*) OVER() as total
-FROM token RIGHT OUTER JOIN address_balance ON token.id = address_balance.token_id
-WHERE address_balance.address = :address
+FROM token INNER JOIN address_balance ON token.id = address_balance.token_id
+WHERE address_balance.address = :address AND token.id != '00'
 ORDER BY address_balance.updated_at DESC
 LIMIT :limit OFFSET :offset'''
+
+address_has_htr_query: str = '''\
+SELECT '00' as token_id, 'Hathor' as name, 'HTR' as symbol
+WHERE EXISTS (SELECT 1 FROM address_balance WHERE address = :address and token_id = '00')
+'''
 
 
 def get_engine():
@@ -102,8 +107,24 @@ class WalletServiceDBClient:
 
     def get_address_tokens(self, address: str, limit: int, offset: int) -> List[dict]:
         result: List[dict] = []
+        found_htr: bool = False
         with self.engine.connect() as connection:
-            cursor = connection.execute(text(address_tokens_query), address=address, offset=offset, limit=limit)
+            if offset == 0:
+                # We only search for HTR on the first page
+                cursor = connection.execute(text(address_has_htr_query), address=address)
+                htr = cursor.one_or_none()
+                cursor.close()
+                if htr:
+                    found_htr = True
+                    result.append(htr._asdict())
+
+            cursor = connection.execute(
+                    text(address_tokens_query),
+                    address=address,
+                    offset=offset,
+                    limit=(limit-1) if found_htr else limit,
+                    )
             for row in cursor:
                 result.append(row._asdict())
+
         return result
