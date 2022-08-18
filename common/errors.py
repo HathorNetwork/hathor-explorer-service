@@ -20,3 +20,11 @@ class HathorCoreTimeout(Exception):
 
 class EventValidationError(Exception):
     pass
+
+
+class RdsError(Exception):
+    pass
+
+
+class RdsNotFoundError(RdsError):
+    pass
