@@ -91,6 +91,10 @@ jobs:
           ELASTIC_INDEX: testnet-token
           ELASTIC_TX_INDEX: testnet-tx
           ELASTIC_TOKEN_BALANCES_INDEX: testnet-token-balance
+          WALLET_SERVICE_DB_USERNAME: ${{ secrets.TESTNET_WALLET_SVC_DB_USERNAME }}
+          WALLET_SERVICE_DB_PASSWORD: ${{ secrets.TESTNET_WALLET_SVC_DB_PASSWORD }}
+          WALLET_SERVICE_DB_HOST: ${{ secrets.TESTNET_WALLET_SVC_DB_HOST }}
+          WALLET_SERVICE_DB_NAME: ${{ secrets.TESTNET_WALLET_SVC_DB_NAME }}
       - name: Deploy Lambdas Mainnet
         if: ${{ needs.init.outputs.environment == 'mainnet' }}
         run: |
@@ -109,6 +113,10 @@ jobs:
           ELASTIC_INDEX: mainnet-token
           ELASTIC_TX_INDEX: mainnet-tx
           ELASTIC_TOKEN_BALANCES_INDEX: mainnet-token-balance
+          WALLET_SERVICE_DB_USERNAME: ${{ secrets.MAINNET_WALLET_SVC_DB_USERNAME }}
+          WALLET_SERVICE_DB_PASSWORD: ${{ secrets.MAINNET_WALLET_SVC_DB_PASSWORD }}
+          WALLET_SERVICE_DB_HOST: ${{ secrets.MAINNET_WALLET_SVC_DB_HOST }}
+          WALLET_SERVICE_DB_NAME: ${{ secrets.MAINNET_WALLET_SVC_DB_NAME }}
       - name: Deploy Daemons Testnet
         if: ${{ needs.init.outputs.environment == 'testnet' }}
         run: |
