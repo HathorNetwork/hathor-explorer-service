@@ -33,10 +33,10 @@ class TokenApiGateway:
             'size': 1,
             'request_timeout': int(ELASTIC_SEARCH_TIMEOUT),
             'query': {
-                'id': token_id,
+                'match': {
+                    'id': token_id,
+                }
             }
         }
 
-        response = self.elastic_search_client.run(body)
-
-        return elastic_search_utils.treat_response(response)
+        return elastic_search_utils.treat_response(self.elastic_search_client.run(body))

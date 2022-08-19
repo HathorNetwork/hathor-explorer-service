@@ -84,6 +84,7 @@ class TestElasticSearchUtils:
                             "name": "Test1",
                             "created_at": "2022-04-19T12:41:04Z",
                             "transaction_timestamp": 1649473276,
+                            "transactions": 3,
                             "id": "00000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a"
                         },
                         "sort": [
@@ -102,6 +103,7 @@ class TestElasticSearchUtils:
                             "name": "Test2",
                             "created_at": "2022-04-19T12:41:07Z",
                             "transaction_timestamp": 1000000000,
+                            "transactions": 3,
                             "id": "10000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a"
                         },
                         "sort": [
@@ -123,6 +125,7 @@ class TestElasticSearchUtils:
                         "00000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a",
                         1649473276
                     ],
+                    "transactions_count": 3,
                     "nft": False
                 },
                 {
@@ -134,6 +137,7 @@ class TestElasticSearchUtils:
                         "10000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a",
                         1000000000
                     ],
+                    "transactions_count": 3,
                     "nft": False
                 }
             ],
@@ -141,4 +145,6 @@ class TestElasticSearchUtils:
         }
 
         result = utils.treat_response(es_response)
+        print(result)
+        print(expected_treated_response)
         assert result == expected_treated_response

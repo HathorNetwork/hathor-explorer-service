@@ -19,7 +19,7 @@ class TestTokenApi:
                     "name": "Test1",
                     "symbol": "TST1",
                     "transaction_timestamp": 1649473276,
-                    "transactions": 0,
+                    "transactions": 3,
                     "sort": [
                         "00000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a",
                         1649473276
@@ -31,7 +31,7 @@ class TestTokenApi:
                     "name": "Test2",
                     "symbol": "TST2",
                     "transaction_timestamp": 1000000000,
-                    "transactions": 0,
+                    "transactions": 3,
                     "sort": [
                         "10000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a",
                         1000000000
@@ -59,7 +59,7 @@ class TestTokenApi:
                     "name": "Hathor",
                     "symbol": "HTR",
                     "transaction_timestamp": 1649473276,
-                    "transactions": 0,
+                    "transactions_count": 3,
                     "sort": [
                         "00",
                         1649473276
@@ -67,15 +67,15 @@ class TestTokenApi:
                     "nft": False
                 }
             ],
-            "has_next": False
         }
 
-        token_api_gateway.get_tokens = MagicMock(return_value=obj)
+        token_api_gateway.get_token = MagicMock(return_value=obj)
 
         token_api = TokenApi(token_api_gateway)
 
-        result = token_api.get_token("00")
-        token_api_gateway.get_token.assert_called_once_with("00")
-
+        result = token_api.get_token(
+                "10000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a")
+        token_api_gateway.get_token.assert_called_once_with(
+                "10000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a")
         assert result
         assert sorted(result) == sorted(obj)

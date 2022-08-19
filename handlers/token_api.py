@@ -49,12 +49,15 @@ def get_token(
 ) -> dict:
     """Get a specific token from its token_id"""
 
-    token_id = event.query.get("token_id")
+    token_id = event.path["token_id"]
 
     if token_id is None:
         raise ApiError("Invalid token_id")
 
     response = token_api.get_token(token_id)
+
+    if len(response['hits']) == 0:
+        raise ApiError("Token not found")
 
     return {
         "statusCode": 200,

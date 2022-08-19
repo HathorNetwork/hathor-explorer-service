@@ -31,9 +31,6 @@ class TestTokenBalancesApiGateway:
                     'hits': []
                 },
                 'aggregations': {
-                    'transaction_sum': {
-                        'value': 478227.0
-                    },
                     'address_count': {
                         'value': 10868
                     }
@@ -46,7 +43,6 @@ class TestTokenBalancesApiGateway:
 
         expected_result = {
             'addresses': 10868,
-            'transactions': 478227,
         }
 
         elastic_search_client.search.assert_called_once()

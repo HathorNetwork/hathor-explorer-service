@@ -81,24 +81,26 @@ class TestTokenApiGateway:
                     'id': '00000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a',
                     'name': 'Test1',
                     'symbol': 'TST1',
-                    'transactions': 0,
                     'transaction_timestamp': 1649473276,
+                    'transactions_count': 0,
                     'sort': [
                         '00000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a',
                         1649473276
                     ],
+                    'transactions_count': 0,
                     'nft': False
                 },
                 {
                     'id': '10000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a',
                     'name': 'Test2',
                     'symbol': 'TST2',
-                    'transactions': 0,
                     'transaction_timestamp': 1000000000,
+                    'transactions_count': 0,
                     'sort': [
                         '10000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a',
                         1000000000
                     ],
+                    'transactions_count': 0,
                     'nft': False
                 }
             ],
