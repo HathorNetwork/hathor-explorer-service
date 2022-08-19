@@ -31,11 +31,7 @@ class TestWalletServiceDBClient:
         limit = fake.pyint()
         offset = fake.pyint()
 
-        # we only check the first entry for the `total` value since all should contain the same `total`
-        t1dict = token1.to_dict()
-        t1dict['total'] = total
-
-        db_client.get_address_tokens.return_value = [t1dict, token2.to_dict(), htr_token_dict]
+        db_client.get_address_tokens.return_value = (total, [htr_token_dict, token1.to_dict(), token2.to_dict()])
 
         gw = WalletServiceGateway(db_client)
 
@@ -43,7 +39,7 @@ class TestWalletServiceDBClient:
 
         assert total_returned == total
         assert len(returned) == 3
-        assert all([ret == exp for ret, exp in zip(returned, [token1, token2, htr_token])])
+        assert all([ret == exp for ret, exp in zip(returned, [htr_token, token1, token2])])
 
         assert db_client.get_address_tokens.called_once_with(address, limit, offset)
 

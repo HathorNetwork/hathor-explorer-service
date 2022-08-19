@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, List, Optional
+from typing import TYPE_CHECKING, List, Optional, Tuple
 
 from sqlalchemy.engine import URL, create_engine
 from sqlalchemy.exc import MultipleResultsFound, NoResultFound
@@ -47,7 +47,6 @@ address_tokens_query: str = '''\
 SELECT address_balance.token_id AS token_id,
        token.name AS name,
        token.symbol AS symbol,
-       COUNT(*) OVER() as total
 FROM token INNER JOIN address_balance ON token.id = address_balance.token_id
 WHERE address_balance.address = :address AND token.id != '00'
 ORDER BY address_balance.updated_at DESC
@@ -57,6 +56,12 @@ address_has_htr_query: str = '''\
 SELECT '00' as token_id, 'Hathor' as name, 'HTR' as symbol
 WHERE EXISTS (SELECT 1 FROM address_balance WHERE address = :address and token_id = '00')
 '''
+
+address_tokens_count_query = '''\
+SELECT COUNT(*) as total
+FROM token INNER JOIN address_balance
+ON token.id = address_balance.token_id
+WHERE address_balance.address = :address'''
 
 
 def get_engine():
@@ -105,10 +110,19 @@ class WalletServiceDBClient:
 
         return result
 
-    def get_address_tokens(self, address: str, limit: int, offset: int) -> List[dict]:
+    def get_address_tokens(self, address: str, limit: int, offset: int) -> Tuple[int, List[dict]]:
         result: List[dict] = []
         found_htr: bool = False
+        total: int = 0
         with self.engine.connect() as connection:
+            cursor = connection.execute(text(address_tokens_count_query), address=address)
+            try:
+                count_result = cursor.one()
+                total = count_result['total']
+            except (NoResultFound, MultipleResultsFound):
+                raise RdsError('Could not fetch token count')
+            finally:
+                cursor.close()
             if offset == 0:
                 # We only search for HTR on the first page
                 cursor = connection.execute(text(address_has_htr_query), address=address)
@@ -127,4 +141,4 @@ class WalletServiceDBClient:
             for row in cursor:
                 result.append(row._asdict())
 
-        return result
+        return total, result
