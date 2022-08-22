@@ -25,7 +25,6 @@ class TestElasticSearchUtils:
         search_after = []
 
         result = utils.build_search_query(search_text, sort_by, order, search_after)
-        print(result)
         assert result['query'] is not None
         assert result['query']['multi_match'] is not None
         assert result['query']['multi_match']['query'] == search_text
@@ -145,6 +144,4 @@ class TestElasticSearchUtils:
         }
 
         result = utils.treat_response(es_response)
-        print(result)
-        print(expected_treated_response)
         assert result == expected_treated_response
