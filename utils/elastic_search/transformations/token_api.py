@@ -10,8 +10,11 @@ def es_hit_to_result(hit: dict) -> dict:
         'symbol': hit['_source']['symbol'],
         'transaction_timestamp': hit['_source']['transaction_timestamp'],
         'transactions_count': hit['_source']['transactions'],
-        'sort': hit['sort'],
     }
+
+    # If we are searching for a single result, we won't have sort in the result
+    if 'sort' in hit:
+        result['sort'] = hit['sort']
 
     if 'nft' in hit['_source']:
         result['nft'] = hit['_source']['nft']
