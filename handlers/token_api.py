@@ -47,8 +47,9 @@ def get_token(
     _context: LambdaContext,
     token_api: TokenApi = TokenApi()
 ) -> dict:
-    """Get a specific token from its token_id"""
-
+    """Get a specific token from the elastic_search index
+       given an token_id
+    """
     token_id = event.path["token_id"]
 
     if token_id is None:
