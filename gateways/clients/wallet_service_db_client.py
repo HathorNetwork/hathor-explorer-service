@@ -116,7 +116,8 @@ class WalletServiceDBClient:
         ''' Fetch the tokens an address has any history with.
 
         HTR will always be the first token if HTR is on the token history.
-        This is done by querying for HTR first if we are on the first page (`offset` == 0) then querying for other tokens.
+        This is done by querying for HTR first if we are on the first page (`offset` == 0)
+        then querying for other tokens.
 
         The total number of tokens on the address history is also returned.
         '''
