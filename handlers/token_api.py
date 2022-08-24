@@ -62,7 +62,7 @@ def get_token(
 
     return {
         "statusCode": 200,
-        "body": json.dumps(response or {}),
+        "body": json.dumps(response),
         "headers": {
             "Content-Type": "application/json"
         }
