@@ -110,3 +110,91 @@ class TestTokenApiGateway:
         elastic_search_client.search.assert_called_once()
 
         assert result == expected_result
+
+    def test_get_token(self, elastic_search_client):
+        elastic_search_client.search = MagicMock(
+            return_value={
+                "took": 70,
+                "timed_out": False,
+                "_shards": {
+                    "total": 1,
+                    "successful": 1,
+                    "skipped": 0,
+                    "failed": 0
+                },
+                "hits": {
+                    "total": {
+                        "value": 1,
+                        "relation": "eq"
+                    },
+                    "max_score": 4.592441,
+                    "hits": [
+                        {
+                            "_index": "token-index",
+                            "_id": "00",
+                            "_score": 4.592441,
+                            "_source": {
+                                "transaction_timestamp": None,
+                                "transactions": 2061288,
+                                "name": "Hathor",
+                                "created_at": "2022-08-19T15:38:55Z",
+                                "id": "00",
+                                "@timestamp": "2022-08-24T13:42:10.124937Z",
+                                "symbol": "HTR",
+                                "updated_at": "2022-08-24T13:42:00Z"
+                            }
+                        }
+                    ]
+                }
+            }
+        )
+
+        gateway = TokenApiGateway(elastic_search_client=elastic_search_client)
+        result = gateway.get_token("00")
+
+        expected_result = {
+            "hits": [
+                {
+                    "id": "00",
+                    "name": "Hathor",
+                    "symbol": "HTR",
+                    "transaction_timestamp": None,
+                    "transactions_count": 2061288,
+                    "nft": False
+                }
+            ],
+            "has_next": False,
+        }
+
+        elastic_search_client.search.assert_called_once()
+        assert result == expected_result
+
+        elastic_search_client.search = MagicMock(
+            return_value={
+                "took": 70,
+                "timed_out": False,
+                "_shards": {
+                    "total": 1,
+                    "successful": 1,
+                    "skipped": 0,
+                    "failed": 0
+                },
+                "hits": {
+                    "total": {
+                        "value": 0,
+                        "relation": "eq"
+                    },
+                    "max_score": None,
+                    "hits": []
+                }
+            }
+        )
+
+        expected_result = {
+            "hits": [],
+            "has_next": False,
+        }
+
+        result_not_found = gateway.get_token("missing_token")
+
+        assert result_not_found == expected_result
