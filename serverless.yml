@@ -288,6 +288,7 @@ functions:
             ttlInSeconds: 300
             cacheKeyParameters:
               - name: request.header.origin
+              - name: request.path.token_id
 
   get_best_chain_height:
     handler: handlers/block_api.get_best_chain_height
