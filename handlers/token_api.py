@@ -57,7 +57,7 @@ def get_token(
 
     response = token_api.get_token(token_id)
 
-    if len(response['hits']) == 0:
+    if len(response["hits"]) == 0:
         raise ApiError("Token not found")
 
     return {
