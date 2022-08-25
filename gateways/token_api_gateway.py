@@ -32,6 +32,7 @@ class TokenApiGateway:
         body = {
             'size': 1,
             'request_timeout': int(ELASTIC_SEARCH_TIMEOUT),
+            'index': ELASTIC_INDEX,
             'query': {
                 'match': {
                     'id': token_id,
