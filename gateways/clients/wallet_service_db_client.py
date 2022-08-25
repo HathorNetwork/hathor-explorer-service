@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, List, Optional
+from typing import TYPE_CHECKING, List, Optional, Tuple
 
 from sqlalchemy.engine import URL, create_engine
 from sqlalchemy.exc import MultipleResultsFound, NoResultFound
@@ -46,8 +46,7 @@ LIMIT :limit OFFSET :offset'''
 address_tokens_query: str = '''\
 SELECT address_balance.token_id AS token_id,
        token.name AS name,
-       token.symbol AS symbol,
-       COUNT(*) OVER() as total
+       token.symbol AS symbol
 FROM token INNER JOIN address_balance ON token.id = address_balance.token_id
 WHERE address_balance.address = :address AND token.id != '00'
 ORDER BY address_balance.updated_at DESC
@@ -57,6 +56,12 @@ address_has_htr_query: str = '''\
 SELECT '00' as token_id, 'Hathor' as name, 'HTR' as symbol
 WHERE EXISTS (SELECT 1 FROM address_balance WHERE address = :address and token_id = '00')
 '''
+
+address_tokens_count_query = '''\
+SELECT COUNT(*) as total
+FROM token INNER JOIN address_balance
+ON token.id = address_balance.token_id
+WHERE address_balance.address = :address'''
 
 
 def get_engine():
@@ -82,6 +87,7 @@ class WalletServiceDBClient:
         self.engine = engine or get_engine()
 
     def get_address_balance(self, address: str, token: str) -> dict:
+        ''' Fetch the token balance of an address.'''
         result: 'Row'
         with self.engine.connect() as connection:
             cursor = connection.execute(text(address_balance_query), address=address, token=token)
@@ -96,6 +102,7 @@ class WalletServiceDBClient:
         return result._asdict()
 
     def get_address_history(self, address: str, token: str, limit: int, offset: int) -> List[dict]:
+        ''' Fetch the transaction history for an address/token pair.'''
         result: List[dict] = []
         with self.engine.connect() as connection:
             cursor = connection.execute(
@@ -105,10 +112,28 @@ class WalletServiceDBClient:
 
         return result
 
-    def get_address_tokens(self, address: str, limit: int, offset: int) -> List[dict]:
+    def get_address_tokens(self, address: str, limit: int, offset: int) -> Tuple[int, List[dict]]:
+        ''' Fetch the tokens an address has any history with.
+
+        HTR will always be the first token if HTR is on the token history.
+        This is done by querying for HTR first if we are on the first page (`offset` == 0)
+        then querying for other tokens.
+
+        The total number of tokens on the address history is also returned.
+        '''
         result: List[dict] = []
         found_htr: bool = False
+        total: int = 0
         with self.engine.connect() as connection:
+            # First, we query for total number of tokens on the address history
+            cursor = connection.execute(text(address_tokens_count_query), address=address)
+            try:
+                count_result = cursor.one()
+                total = count_result['total']
+            except (NoResultFound, MultipleResultsFound):
+                raise RdsError('Could not fetch token count')
+            finally:
+                cursor.close()
             if offset == 0:
                 # We only search for HTR on the first page
                 cursor = connection.execute(text(address_has_htr_query), address=address)
@@ -118,6 +143,7 @@ class WalletServiceDBClient:
                     found_htr = True
                     result.append(htr._asdict())
 
+            # Search for custom tokens
             cursor = connection.execute(
                     text(address_tokens_query),
                     address=address,
@@ -127,4 +153,4 @@ class WalletServiceDBClient:
             for row in cursor:
                 result.append(row._asdict())
 
-        return result
+        return total, result
