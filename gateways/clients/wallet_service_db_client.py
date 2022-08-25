@@ -44,12 +44,17 @@ LIMIT :limit OFFSET :offset'''
 
 
 address_tokens_query: str = '''\
-SELECT address_balance.token_id AS token_id,
+SELECT token.id AS token_id,
        token.name AS name,
        token.symbol AS symbol
-FROM token INNER JOIN address_balance ON token.id = address_balance.token_id
-WHERE address_balance.address = :address AND token.id != '00'
-ORDER BY address_balance.updated_at DESC
+FROM token INNER JOIN (
+        SELECT token_id, MAX(timestamp) as timestamp
+        FROM address_tx_history
+        WHERE address = :address AND token_id != '00'
+        GROUP BY token_id
+    ) address_tokens
+ON token.id = address_tokens.token_id
+ORDER BY address_tokens.timestamp DESC
 LIMIT :limit OFFSET :offset'''
 
 address_has_htr_query: str = '''\
