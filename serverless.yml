@@ -268,6 +268,28 @@ functions:
               - name: request.querystring.search_after
               - name: request.header.origin
 
+  # This get_token will get tokens from the elasticsearch index
+  es_get_token_handler:
+    handler: handlers/token_api.get_token
+    timeout: 15
+    maximumRetryAttempts: 0
+    package:
+      patterns:
+        - 'handlers/token_api.py'
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: tokens/{token_id}
+          method: get
+          cors: true
+          caching:
+            enabled: true
+            ttlInSeconds: 300
+            cacheKeyParameters:
+              - name: request.header.origin
+              - name: request.path.token_id
+
   get_best_chain_height:
     handler: handlers/block_api.get_best_chain_height
     timeout: 30

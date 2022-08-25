@@ -23,7 +23,6 @@ class WalletServiceGateway:
 
         Returns the total number of different tokens and a list of tokens found.
         """
-        tokens = self.db_client.get_address_tokens(address, limit, offset)
-        total: int = tokens[0]['total'] if len(tokens) > 0 else 0
+        total, tokens = self.db_client.get_address_tokens(address, limit, offset)
 
         return total, [TokenEntry.from_dict(token) for token in tokens]

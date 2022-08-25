@@ -19,6 +19,7 @@ SORTABLE_FIELDS_BY_INDEX = {
         'id': 'keyword',
         'name': 'keyword',
         'symbol': 'keyword',
+        'transactions_count': 'integer',
     },
     ELASTIC_TOKEN_BALANCES_INDEX: {
         'address': 'keyword',

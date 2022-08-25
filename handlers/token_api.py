@@ -39,3 +39,31 @@ def get_tokens(
             "Content-Type": "application/json"
         }
     }
+
+
+@ApiGateway()
+def get_token(
+    event: ApiGatewayEvent,
+    _context: LambdaContext,
+    token_api: TokenApi = TokenApi()
+) -> dict:
+    """Get a specific token from the elastic_search index
+       given an token_id
+    """
+    token_id = event.path["token_id"]
+
+    if token_id is None:
+        raise ApiError("Invalid token_id")
+
+    response = token_api.get_token(token_id)
+
+    if len(response["hits"]) == 0:
+        raise ApiError("not_found")
+
+    return {
+        "statusCode": 200,
+        "body": json.dumps(response),
+        "headers": {
+            "Content-Type": "application/json"
+        }
+    }

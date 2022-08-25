@@ -39,7 +39,6 @@ class TokenBalancesApiGateway:
     def get_token_information(self, token_id: str) -> dict:
         """Retrieve total number of addresses and transactions for a given token_id
         """
-
         body = {
             'size': 0,
             'query': self._build_filtered_query(token_id),
@@ -51,18 +50,12 @@ class TokenBalancesApiGateway:
                         'field': 'address.keyword'
                     }
                 },
-                'transaction_sum': {
-                    'sum': {
-                        'field': 'transactions'
-                    }
-                }
             }
         }
 
         response = self.elastic_search_client.run(body)
 
         return {
-            'transactions': response['aggregations']['transaction_sum']['value'],
             'addresses': response['aggregations']['address_count']['value']
         }
 

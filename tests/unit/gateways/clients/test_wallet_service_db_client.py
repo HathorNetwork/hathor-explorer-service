@@ -11,6 +11,7 @@ from gateways.clients.wallet_service_db_client import (
     address_balance_query,
     address_has_htr_query,
     address_history_query,
+    address_tokens_count_query,
     address_tokens_query,
 )
 
@@ -104,11 +105,22 @@ class TestWalletServiceDBClient:
             client.get_address_balance(address, token)
 
     def test_get_address_tokens(self, engine, connection):
-        cursor = [
-            self.row_from_dict('dict_value_1'),
-            self.row_from_dict('dict_value_2'),
-        ]
-        connection.execute.return_value = cursor
+        fake_total = fake.random_int()
+
+        def cursor_func(q, **kwargs):
+            if q.text == address_tokens_count_query:
+                cursor = MagicMock()
+                cursor.one.return_value = {'total': fake_total}
+                return cursor
+            elif q.text == address_tokens_query:
+                return [
+                    self.row_from_dict('dict_value_1'),
+                    self.row_from_dict('dict_value_2'),
+                ]
+            else:
+                raise Exception('Running unexpected query')
+
+        connection.execute.side_effect = cursor_func
 
         client = WalletServiceDBClient(engine)
 
@@ -117,26 +129,42 @@ class TestWalletServiceDBClient:
         offset = fake.random_int(min=1)
 
         # Should return the dict value of the request
-        assert client.get_address_tokens(address, limit, offset) == ['dict_value_1', 'dict_value_2']
+        total, tokens = client.get_address_tokens(address, limit, offset)
+        assert total == fake_total
+        # Should return the dict value of the request
+        assert tokens == ['dict_value_1', 'dict_value_2']
 
         # Should pass the expected args to execute
-        # Should be called only once if offset > 0
         print(connection.execute.call_args_list)
-        connection.execute.assert_called_once_with(ANY, address=address, limit=limit, offset=offset)
+        assert connection.execute.call_count == 2
+        connection.execute.assert_has_calls([
+            call(ANY, address=address),
+            call(ANY, address=address, limit=limit, offset=offset),
+        ])
         # Should use the correct query for this method
-        assert connection.execute.call_args[0][0].text == address_tokens_query
+        assert connection.execute.call_args_list[0][0][0].text == address_tokens_count_query
+        assert connection.execute.call_args_list[1][0][0].text == address_tokens_query
 
     def test_get_address_tokens_with_htr(self, engine, connection):
+        fake_total = fake.random_int()
+
         def cursor_func(q, **kwargs):
             if q.text == address_has_htr_query:
                 cursor = MagicMock()
                 cursor.one_or_none.return_value = self.row_from_dict('htr_dict_value')
                 return cursor
-            else:
+            elif q.text == address_tokens_count_query:
+                cursor = MagicMock()
+                cursor.one.return_value = {'total': fake_total}
+                return cursor
+            elif q.text == address_tokens_query:
                 return [
                     self.row_from_dict('dict_value_1'),
                     self.row_from_dict('dict_value_2'),
                 ]
+            else:
+                raise Exception('Running unexpected query')
+
         connection.execute.side_effect = cursor_func
 
         client = WalletServiceDBClient(engine)
@@ -145,30 +173,43 @@ class TestWalletServiceDBClient:
         limit = fake.random_int()
 
         # Should return the dict value of the request
-        assert client.get_address_tokens(address, limit, 0) == ['htr_dict_value', 'dict_value_1', 'dict_value_2']
+        total, tokens = client.get_address_tokens(address, limit, 0)
+        assert total == fake_total
+        # Should return the dict value of the request
+        assert tokens == ['htr_dict_value', 'dict_value_1', 'dict_value_2']
 
         # Should pass the expected args to execute
         print(connection.execute.call_args_list)
-        assert connection.execute.call_count == 2
+        assert connection.execute.call_count == 3
         connection.execute.assert_has_calls([
+            call(ANY, address=address),
             call(ANY, address=address),
             call(ANY, address=address, limit=limit-1, offset=0),
         ])
         # Should use the correct queries for the method
-        assert connection.execute.call_args_list[0][0][0].text == address_has_htr_query
-        assert connection.execute.call_args_list[1][0][0].text == address_tokens_query
+        assert connection.execute.call_args_list[0][0][0].text == address_tokens_count_query
+        assert connection.execute.call_args_list[1][0][0].text == address_has_htr_query
+        assert connection.execute.call_args_list[2][0][0].text == address_tokens_query
 
     def test_get_address_tokens_without_htr(self, engine, connection):
+        fake_total = fake.random_int()
+
         def cursor_func(q, **kwargs):
             if q.text == address_has_htr_query:
                 cursor = MagicMock()
                 cursor.one_or_none.return_value = None
                 return cursor
-            else:
+            elif q.text == address_tokens_count_query:
+                cursor = MagicMock()
+                cursor.one.return_value = {'total': fake_total}
+                return cursor
+            elif q.text == address_tokens_query:
                 return [
                     self.row_from_dict('dict_value_1'),
                     self.row_from_dict('dict_value_2'),
                 ]
+            else:
+                raise Exception('Running unexpected query')
         connection.execute.side_effect = cursor_func
 
         client = WalletServiceDBClient(engine)
@@ -176,16 +217,20 @@ class TestWalletServiceDBClient:
         address = fake.pystr()
         limit = fake.random_int()
 
+        total, tokens = client.get_address_tokens(address, limit, 0)
+        assert total == fake_total
         # Should return the dict value of the request
-        assert client.get_address_tokens(address, limit, 0) == ['dict_value_1', 'dict_value_2']
+        assert tokens == ['dict_value_1', 'dict_value_2']
 
         # Should pass the expected args to execute
         print(connection.execute.call_args_list)
-        assert connection.execute.call_count == 2
+        assert connection.execute.call_count == 3
         connection.execute.assert_has_calls([
+            call(ANY, address=address),
             call(ANY, address=address),
             call(ANY, address=address, limit=limit, offset=0),
         ])
         # Should use the correct queries for the method
-        assert connection.execute.call_args_list[0][0][0].text == address_has_htr_query
-        assert connection.execute.call_args_list[1][0][0].text == address_tokens_query
+        assert connection.execute.call_args_list[0][0][0].text == address_tokens_count_query
+        assert connection.execute.call_args_list[1][0][0].text == address_has_htr_query
+        assert connection.execute.call_args_list[2][0][0].text == address_tokens_query
