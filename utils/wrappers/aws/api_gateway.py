@@ -54,7 +54,7 @@ class ApiGateway:
 
             try:
                 api_gateway_event = ApiGatewayEvent(event, context)
-                result = function_to_call(api_gateway_event, context, *args, **kwargs)  # type: ignore
+                result = function_to_call(api_gateway_event, context, *args, **kwargs)
 
                 if result.get('headers') is None:
                     result['headers'] = {}

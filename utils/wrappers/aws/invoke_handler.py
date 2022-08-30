@@ -38,7 +38,7 @@ class InvokeHandler:
     ) -> Callable[[InvokeEvent, LambdaContext, Any], dict]:
         def wrapper(event: InvokeEvent, context: LambdaContext, *args: Any, **kwargs: Any) -> dict:
             try:
-                result = function_to_call(event, context, *args, **kwargs)  # type: ignore
+                result = function_to_call(event, context, *args, **kwargs)
 
                 return result
             except Exception as error:

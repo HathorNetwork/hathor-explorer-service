@@ -1,5 +1,5 @@
 
-py_sources = common/ daemons/ domain/ gateways/ handlers/ tests/ usecases/ utils/
+py_sources = common/ daemons/ domain/ gateways/ handlers/ usecases/ utils/
 pytest_flags = -p no:warnings --cov=. --cov-report=html --cov-report=term --cov-report=xml --cov-fail-under=90
 mypy_flags = --warn-unused-configs --disallow-incomplete-defs --no-implicit-optional --warn-redundant-casts --warn-unused-ignores
 
@@ -26,27 +26,27 @@ clean-all: clean
 mypy:
 	mypy $(mypy_flags) ${py_sources}
 
-.PHONY: flake8
-flake8:
-	flake8 $(py_sources)
+.PHONY: black-check
+black-check:
+	black --check $(py_sources) tests/
+
+.PHONY: black
+black:
+	black $(py_sources) tests/
 
 .PHONY: isort-check
 isort-check:
-	isort --ac --check-only $(py_sources)
+	isort --ac --check-only $(py_sources) tests/
 
 .PHONY: check
-check: flake8 isort-check mypy
-
-.PHONY: yapf
-yapf:
-	yapf -rip $(py_sources)
+check: isort-check black-check mypy
 
 .PHONY: isort
 isort:
-	isort --ac $(py_sources)
+	isort --ac $(py_sources) tests/
 
 .PHONY: fmt
-fmt: yapf isort
+fmt: black isort
 
 .PHONY: test
 test:
