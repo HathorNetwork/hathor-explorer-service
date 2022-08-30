@@ -6,7 +6,6 @@ from gateways.token_api_gateway import TokenApiGateway
 
 
 class TestTokenApiGateway:
-
     @fixture
     def elastic_search_client(self):
         return MagicMock()
@@ -14,97 +13,89 @@ class TestTokenApiGateway:
     def test_get_tokens(self, elastic_search_client):
         elastic_search_client.search = MagicMock(
             return_value={
-                'took': 0,
-                'timed_out': False,
-                '_shards': {
-                    'total': 1,
-                    'successful': 1,
-                    'skipped': 0,
-                    'failed': 0
-                },
-                'hits': {
-                    'total': {
-                        'value': 2,
-                        'relation': 'eq'
-                    },
-                    'max_score': None,
-                    'hits': [
+                "took": 0,
+                "timed_out": False,
+                "_shards": {"total": 1, "successful": 1, "skipped": 0, "failed": 0},
+                "hits": {
+                    "total": {"value": 2, "relation": "eq"},
+                    "max_score": None,
+                    "hits": [
                         {
-                            '_index': 'dev-token',
-                            '_id': '00000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a',
-                            '_score': None,
-                            '_source': {
-                                'updated_at': '2022-04-19T13:55:30Z',
-                                'symbol': 'TST1',
-                                '@timestamp': '2022-04-19T13:56:04.371602Z',
-                                'name': 'Test1',
-                                'transactions': 0,
-                                'created_at': '2022-04-19T12:41:04Z',
-                                'transaction_timestamp': 1649473276,
-                                'id': '00000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a'
+                            "_index": "dev-token",
+                            "_id": "00000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a",
+                            "_score": None,
+                            "_source": {
+                                "updated_at": "2022-04-19T13:55:30Z",
+                                "symbol": "TST1",
+                                "@timestamp": "2022-04-19T13:56:04.371602Z",
+                                "name": "Test1",
+                                "transactions": 0,
+                                "created_at": "2022-04-19T12:41:04Z",
+                                "transaction_timestamp": 1649473276,
+                                "id": "00000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a",
                             },
-                            'sort': [
-                                '00000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a',
-                                1649473276
-                            ]
+                            "sort": [
+                                "00000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a",
+                                1649473276,
+                            ],
                         },
                         {
-                            '_index': 'dev-token',
-                            '_id': '10000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a',
-                            '_score': None,
-                            '_source': {
-                                'updated_at': '2022-04-19T13:55:30Z',
-                                'symbol': 'TST2',
-                                '@timestamp': '2022-04-19T13:56:04.372449Z',
-                                'name': 'Test2',
-                                'transactions': 0,
-                                'created_at': '2022-04-19T12:41:07Z',
-                                'transaction_timestamp': 1000000000,
-                                'id': '10000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a'
+                            "_index": "dev-token",
+                            "_id": "10000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a",
+                            "_score": None,
+                            "_source": {
+                                "updated_at": "2022-04-19T13:55:30Z",
+                                "symbol": "TST2",
+                                "@timestamp": "2022-04-19T13:56:04.372449Z",
+                                "name": "Test2",
+                                "transactions": 0,
+                                "created_at": "2022-04-19T12:41:07Z",
+                                "transaction_timestamp": 1000000000,
+                                "id": "10000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a",
                             },
-                            'sort': [
-                                '10000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a',
-                                1000000000
-                            ]
-                        }
-                    ]
-                }
+                            "sort": [
+                                "10000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a",
+                                1000000000,
+                            ],
+                        },
+                    ],
+                },
             }
         )
 
         gateway = TokenApiGateway(elastic_search_client=elastic_search_client)
-        result = gateway.get_tokens('', '', '', '')
+        result = gateway.get_tokens("", "", "", "")
 
         expected_result = {
-            'hits': [
+            "hits": [
                 {
-                    'id': '00000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a',
-                    'name': 'Test1',
-                    'symbol': 'TST1',
-                    'transaction_timestamp': 1649473276,
-                    'transactions_count': 0,
-                    'sort': [
-                        '00000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a',
-                        1649473276
+                    "id": "00000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a",
+                    "name": "Test1",
+                    "symbol": "TST1",
+                    "transaction_timestamp": 1649473276,
+                    "transactions_count": 0,
+                    "sort": [
+                        "00000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a",
+                        1649473276,
                     ],
-                    'transactions_count': 0,
-                    'nft': False
+                    "transactions_count": 0,
+                    "nft": False,
                 },
                 {
-                    'id': '10000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a',
-                    'name': 'Test2',
-                    'symbol': 'TST2',
-                    'transaction_timestamp': 1000000000,
-                    'transactions_count': 0,
-                    'sort': [
-                        '10000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a',
-                        1000000000
+                    "id": "10000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a",
+                    "name": "Test2",
+                    "symbol": "TST2",
+                    "transaction_timestamp": 1000000000,
+                    "transactions_count": 0,
+                    "sort": [
+                        "10000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a",
+                        1000000000,
                     ],
-                    'transactions_count': 0,
-                    'nft': False
-                }
+                    "transactions_count": 0,
+                    "nft": False,
+                },
             ],
-            'has_next': False,
+            "has_next": False,
         }
 
         elastic_search_client.search.assert_called_once()
@@ -116,17 +107,9 @@ class TestTokenApiGateway:
             return_value={
                 "took": 70,
                 "timed_out": False,
-                "_shards": {
-                    "total": 1,
-                    "successful": 1,
-                    "skipped": 0,
-                    "failed": 0
-                },
+                "_shards": {"total": 1, "successful": 1, "skipped": 0, "failed": 0},
                 "hits": {
-                    "total": {
-                        "value": 1,
-                        "relation": "eq"
-                    },
+                    "total": {"value": 1, "relation": "eq"},
                     "max_score": 4.592441,
                     "hits": [
                         {
@@ -141,11 +124,11 @@ class TestTokenApiGateway:
                                 "id": "00",
                                 "@timestamp": "2022-08-24T13:42:10.124937Z",
                                 "symbol": "HTR",
-                                "updated_at": "2022-08-24T13:42:00Z"
-                            }
+                                "updated_at": "2022-08-24T13:42:00Z",
+                            },
                         }
-                    ]
-                }
+                    ],
+                },
             }
         )
 
@@ -160,7 +143,7 @@ class TestTokenApiGateway:
                     "symbol": "HTR",
                     "transaction_timestamp": None,
                     "transactions_count": 2061288,
-                    "nft": False
+                    "nft": False,
                 }
             ],
             "has_next": False,
@@ -173,20 +156,12 @@ class TestTokenApiGateway:
             return_value={
                 "took": 70,
                 "timed_out": False,
-                "_shards": {
-                    "total": 1,
-                    "successful": 1,
-                    "skipped": 0,
-                    "failed": 0
-                },
+                "_shards": {"total": 1, "successful": 1, "skipped": 0, "failed": 0},
                 "hits": {
-                    "total": {
-                        "value": 0,
-                        "relation": "eq"
-                    },
+                    "total": {"value": 0, "relation": "eq"},
                     "max_score": None,
-                    "hits": []
-                }
+                    "hits": [],
+                },
             }
         )
 

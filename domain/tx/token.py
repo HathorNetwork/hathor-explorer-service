@@ -28,6 +28,7 @@ class Token:
     :param can_melt: True if can melt Tokens, False otherwise
     :type can_melt: bool
     """
+
     id: str
     name: str
     symbol: str
@@ -37,7 +38,7 @@ class Token:
     can_melt: bool
 
     def to_dict(self) -> dict:
-        """ Convert a Token instance into dict
+        """Convert a Token instance into dict
 
         :return: Dict representations of Token
         :rtype: dict
@@ -45,8 +46,8 @@ class Token:
         return asdict(self)
 
     @classmethod
-    def from_dict(cls, dikt: dict) -> 'Token':
-        """ Creates a new Token instance from a given dict (inverse operation of `to_dict`)
+    def from_dict(cls, dikt: dict) -> "Token":
+        """Creates a new Token instance from a given dict (inverse operation of `to_dict`)
 
         :param dikt: Dict with Token structure and data
         :type dikt: dict

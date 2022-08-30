@@ -7,7 +7,6 @@ from usecases.get_node import GetNode
 
 
 class TestGetNode:
-
     @fixture
     def node_gateway(self):
         return MagicMock()
@@ -22,13 +21,13 @@ class TestGetNode:
         result = get_node.get(node.id)
 
         assert result
-        assert result['id'] == node.id
+        assert result["id"] == node.id
 
     def test_get_not_found(self, node_gateway):
         node_gateway.get_node = MagicMock(return_value=None)
 
         get_node = GetNode(node_gateway)
 
-        result = get_node.get('abcdef1234567890')
+        result = get_node.get("abcdef1234567890")
 
         assert result is None

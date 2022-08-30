@@ -11,12 +11,6 @@ def handle(node_status: dict, _context: None = None) -> dict:
     result_aggregate = aggregate_node_data.aggregate()
 
     if result_save and result_aggregate:
-        return {
-            "statusCode": 200,
-            "body": "{}"
-        }
+        return {"statusCode": 200, "body": "{}"}
 
-    return {
-        "statusCode": 400,
-        "body": "{}"
-    }
+    return {"statusCode": 400, "body": "{}"}

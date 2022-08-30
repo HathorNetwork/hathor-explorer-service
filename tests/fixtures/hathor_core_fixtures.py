@@ -5,9 +5,7 @@ HATHOR_CORE_MAINNET_GET_STATUS = {
         "state": "READY",
         "network": "mainnet",
         "uptime": 175439.6831355095,
-        "entrypoints": [
-            "tcp://34.218.233.215:40403"
-        ]
+        "entrypoints": ["tcp://34.218.233.215:40403"],
     },
     "peers_whitelist": [
         "b51190d99e057f85232b20472bdf61350a762c33ee5d6e05b1726d009eb00475",
@@ -139,219 +137,189 @@ HATHOR_CORE_MAINNET_GET_STATUS = {
         "55d23ab0effd490d093fa3c841dccef7a22d45a1efa78331a3a658c7e7a781a9",
         "4a8957be8e735970b8a23ed5fb88ce60967f8efe9de1a7b86f1261a7ff46fc23",
         "c68251cd14fb3d02eb743f39c5663f291f17d40f466fc0207eae28a82cd4e0ba",
-        "ee9296ee3d2ef014b180b7b86038cf72e3a2ddc8e3ea429080375d9843fe0b9e"
+        "ee9296ee3d2ef014b180b7b86038cf72e3a2ddc8e3ea429080375d9843fe0b9e",
     ],
     "known_peers": [
         {
             "id": "49c9cdeddc8a5ee94c177628686aba07bca53c481819c921ff16cdd39614bc1c",
-            "entrypoints": [
-                "tcp://3.66.218.70:40403"
-            ],
-            "flags": []
+            "entrypoints": ["tcp://3.66.218.70:40403"],
+            "flags": [],
         },
         {
             "id": "f21b70d66cbe2e733415f9d51c0e86cb708d7ea7b6217e14887de6fe148b0299",
-            "entrypoints": [
-                "tcp://54.187.128.69:40403"
-            ],
-            "flags": []
+            "entrypoints": ["tcp://54.187.128.69:40403"],
+            "flags": [],
         },
         {
             "id": "164e0fd4cfc0bcd8347699f040d00a01787e4d05f7ee6683e8aef9ae3cf4ce30",
-            "entrypoints": [
-                "tcp://34.223.88.1:40403"
-            ],
-            "flags": []
+            "entrypoints": ["tcp://34.223.88.1:40403"],
+            "flags": [],
         },
         {
             "id": "6004281f6237f5a0958d9afe668fb917a8be6c34957360cab77ec36070359afe",
-            "entrypoints": [
-                "tcp://54.169.172.62:40403"
-            ],
-            "flags": []
+            "entrypoints": ["tcp://54.169.172.62:40403"],
+            "flags": [],
         },
         {
             "id": "413cbe26b2968d22b2dd3d19c08da7b5c89228698c02d298c2995cd1183b0ce6",
             "entrypoints": [],
-            "flags": []
+            "flags": [],
         },
         {
             "id": "95b5c5b90a478a1a8f441381610a02a6681963f044530242d993f2aeaa06d375",
-            "entrypoints": [
-                "tcp://44.192.109.28:40403"
-            ],
-            "flags": []
+            "entrypoints": ["tcp://44.192.109.28:40403"],
+            "flags": [],
         },
         {
             "id": "1475656808bd368628be96b3e50f9031b4f3f328643e29c80a07a19ca2483b76",
-            "entrypoints": [
-                "tcp://3.239.236.129:40403"
-            ],
-            "flags": []
+            "entrypoints": ["tcp://3.239.236.129:40403"],
+            "flags": [],
         },
         {
             "id": "5a14f918f6250047b000ed36e4cba9b429f2219545fe5649101678d62cef4035",
             "entrypoints": [],
-            "flags": []
+            "flags": [],
         },
         {
             "id": "31b12e7ea407d5db7320634a627c16c3f8620e6f0369e7a11abd06ac7b887a19",
             "entrypoints": [],
-            "flags": []
+            "flags": [],
         },
         {
             "id": "ac050e51f79c465e728a6b0e8454a3b84e9ea87f027e726290665445899e62bf",
             "entrypoints": [],
-            "flags": []
+            "flags": [],
         },
         {
             "id": "0bdef61af05ba973eb5576e9f1ce7ff08f0bee56f8206cf3bfc2c37d2f7ba1ff",
-            "entrypoints": [
-                "tcp://52.194.223.212:40403"
-            ],
-            "flags": []
+            "entrypoints": ["tcp://52.194.223.212:40403"],
+            "flags": [],
         },
         {
             "id": "95ad39e88654ae6784a11063abe37e8b2b61becfd2e107a74da297577a532199",
             "entrypoints": [],
-            "flags": []
+            "flags": [],
         },
         {
             "id": "64d6af921b002ebe59f520226b15b5847f0adbe1763221ca030bec0c98a1e1c5",
-            "entrypoints": [
-                "tcp://52.56.99.138:40403"
-            ],
-            "flags": []
+            "entrypoints": ["tcp://52.56.99.138:40403"],
+            "flags": [],
         },
         {
             "id": "cb82a73e9d445b76f3c5df523c4541a78890459e36a5fa4b27f5a581bd96ae28",
             "entrypoints": [],
-            "flags": []
+            "flags": [],
         },
         {
             "id": "698c3dddb70a3b3b4b79ba319ddb22726f329654530638630629374d362d7479",
-            "entrypoints": [
-                "tcp://18.192.204.73:40403"
-            ],
-            "flags": []
+            "entrypoints": ["tcp://18.192.204.73:40403"],
+            "flags": [],
         },
         {
             "id": "f69602ec3ba62f135698903a847b1b4425b7667e26295b2897dce1eb08d285f3",
             "entrypoints": [],
-            "flags": []
+            "flags": [],
         },
         {
             "id": "42839c1d0b8561675242d0b9d27b619a4a5a5fbedc5b5727bebcb0936dcffa0e",
             "entrypoints": [],
-            "flags": []
+            "flags": [],
         },
         {
             "id": "532a8bc013483b75e8003f2cc2bfc64b13790134521c75fecf8cbdff535c652e",
             "entrypoints": [],
-            "flags": []
+            "flags": [],
         },
         {
             "id": "3c38ec36d9ca88999201828365ba6d4ca3087f9a45396865553ba0198a0088d6",
             "entrypoints": [],
-            "flags": []
+            "flags": [],
         },
         {
             "id": "f8f81cbdd70dc03987f6b2aeadc95b064394a5ba407beadd9bde31c766756522",
             "entrypoints": [],
-            "flags": []
+            "flags": [],
         },
         {
             "id": "8801235f3148a42cf7576b5f6a679959c83f1ce8cce55807711b189efa1d6161",
             "entrypoints": [],
-            "flags": []
+            "flags": [],
         },
         {
             "id": "4d37200677e53dae99b6b4201fa373e30490dce8f35d671ce0a2a1aad9327f7f",
             "entrypoints": [],
-            "flags": []
+            "flags": [],
         },
         {
             "id": "4a18fdaf0baa7441592c00ea9167ffc2254bd6d4a07f031d9b30aeb132443631",
             "entrypoints": [],
-            "flags": []
+            "flags": [],
         },
         {
             "id": "083ff2ab543ca5bc00f5e20233ab343de9f600dc8405ff605f3a913f50e9ab8a",
             "entrypoints": [],
-            "flags": []
+            "flags": [],
         },
         {
             "id": "876fb230aaa4831cd4d62ee2c453cb5cf4d92f86af8f1a9b97b69924a480a8df",
-            "entrypoints": [
-                "tcp://3.235.192.39:40403"
-            ],
-            "flags": []
+            "entrypoints": ["tcp://3.235.192.39:40403"],
+            "flags": [],
         },
         {
             "id": "a7926161dabf57b301da78147ed314aa324101e199ddcba197eaccf99821febb",
-            "entrypoints": [
-                "tcp://3.236.27.202:40403"
-            ],
-            "flags": []
+            "entrypoints": ["tcp://3.236.27.202:40403"],
+            "flags": [],
         },
         {
             "id": "0a3526d558070f92784d3e8c09765db8e7e8bc020639bde8ee64f4b7b02d013f",
-            "entrypoints": [
-                "tcp://3.66.87.62:40403"
-            ],
-            "flags": []
+            "entrypoints": ["tcp://3.66.87.62:40403"],
+            "flags": [],
         },
         {
             "id": "2d856e865683f0851ea8b875b548e729fb35c508ce38290f393f2ff4ec7013b9",
-            "entrypoints": [
-                "tcp://34.219.0.60:40403"
-            ],
-            "flags": []
+            "entrypoints": ["tcp://34.219.0.60:40403"],
+            "flags": [],
         },
         {
             "id": "3c90f89f7f5e0c5ec48b810d78f37f8bc60363bc49f536771e90c1c04b56bf43",
-            "entrypoints": [
-                "tcp://3.126.91.114:40403"
-            ],
-            "flags": []
+            "entrypoints": ["tcp://3.126.91.114:40403"],
+            "flags": [],
         },
         {
             "id": "692dd6e602381a95f840763f0ea2bf189220c82dd1fe3a403ffc16c5731c428d",
-            "entrypoints": [
-                "tcp://18.141.24.155:40403"
-            ],
-            "flags": []
+            "entrypoints": ["tcp://18.141.24.155:40403"],
+            "flags": [],
         },
         {
             "id": "1ba45f948775d5276947fd6bcde1f512cd5761038a5f334ca2b2ac4cb75b17d6",
             "entrypoints": [],
-            "flags": []
+            "flags": [],
         },
         {
             "id": "cf8d374ae343eb47fda52d7f274e1437ef73a60ad8ad5a4783490a9a692e086f",
             "entrypoints": [],
-            "flags": []
+            "flags": [],
         },
         {
             "id": "8a5a75c70161d5e670d3e0be33690b6c9a93f8de275ae6daab87a3a16bd2a565",
             "entrypoints": [],
-            "flags": []
+            "flags": [],
         },
         {
             "id": "c68251cd14fb3d02eb743f39c5663f291f17d40f466fc0207eae28a82cd4e0ba",
             "entrypoints": [],
-            "flags": []
+            "flags": [],
         },
         {
             "id": "21101120bef959fba4744d7963882cc20938f68e65e1b6989569272ce5ba0098",
             "entrypoints": [],
-            "flags": []
+            "flags": [],
         },
         {
             "id": "ee9296ee3d2ef014b180b7b86038cf72e3a2ddc8e3ea429080375d9843fe0b9e",
             "entrypoints": [],
-            "flags": []
-        }
+            "flags": [],
+        },
     ],
     "connections": {
         "connected_peers": [
@@ -365,12 +333,10 @@ HATHOR_CORE_MAINNET_GET_STATUS = {
                 "plugins": {
                     "node-sync-timestamp": {
                         "latest_timestamp": 1622151490,
-                        "synced_timestamp": 1622151490
+                        "synced_timestamp": 1622151490,
                     }
                 },
-                "warning_flags": [
-                    "no_peer_id_url"
-                ]
+                "warning_flags": ["no_peer_id_url"],
             },
             {
                 "id": "f21b70d66cbe2e733415f9d51c0e86cb708d7ea7b6217e14887de6fe148b0299",
@@ -382,10 +348,10 @@ HATHOR_CORE_MAINNET_GET_STATUS = {
                 "plugins": {
                     "node-sync-timestamp": {
                         "latest_timestamp": 1622151490,
-                        "synced_timestamp": 1622151490
+                        "synced_timestamp": 1622151490,
                     }
                 },
-                "warning_flags": []
+                "warning_flags": [],
             },
             {
                 "id": "164e0fd4cfc0bcd8347699f040d00a01787e4d05f7ee6683e8aef9ae3cf4ce30",
@@ -397,10 +363,10 @@ HATHOR_CORE_MAINNET_GET_STATUS = {
                 "plugins": {
                     "node-sync-timestamp": {
                         "latest_timestamp": 1622151490,
-                        "synced_timestamp": 1622151490
+                        "synced_timestamp": 1622151490,
                     }
                 },
-                "warning_flags": []
+                "warning_flags": [],
             },
             {
                 "id": "6004281f6237f5a0958d9afe668fb917a8be6c34957360cab77ec36070359afe",
@@ -412,12 +378,10 @@ HATHOR_CORE_MAINNET_GET_STATUS = {
                 "plugins": {
                     "node-sync-timestamp": {
                         "latest_timestamp": 1622151490,
-                        "synced_timestamp": 1622151490
+                        "synced_timestamp": 1622151490,
                     }
                 },
-                "warning_flags": [
-                    "no_peer_id_url"
-                ]
+                "warning_flags": ["no_peer_id_url"],
             },
             {
                 "id": "413cbe26b2968d22b2dd3d19c08da7b5c89228698c02d298c2995cd1183b0ce6",
@@ -429,12 +393,10 @@ HATHOR_CORE_MAINNET_GET_STATUS = {
                 "plugins": {
                     "node-sync-timestamp": {
                         "latest_timestamp": 1622151490,
-                        "synced_timestamp": 1622151490
+                        "synced_timestamp": 1622151490,
                     }
                 },
-                "warning_flags": [
-                    "no_entrypoints"
-                ]
+                "warning_flags": ["no_entrypoints"],
             },
             {
                 "id": "95b5c5b90a478a1a8f441381610a02a6681963f044530242d993f2aeaa06d375",
@@ -446,10 +408,10 @@ HATHOR_CORE_MAINNET_GET_STATUS = {
                 "plugins": {
                     "node-sync-timestamp": {
                         "latest_timestamp": 1622151490,
-                        "synced_timestamp": 1622151490
+                        "synced_timestamp": 1622151490,
                     }
                 },
-                "warning_flags": []
+                "warning_flags": [],
             },
             {
                 "id": "1475656808bd368628be96b3e50f9031b4f3f328643e29c80a07a19ca2483b76",
@@ -461,10 +423,10 @@ HATHOR_CORE_MAINNET_GET_STATUS = {
                 "plugins": {
                     "node-sync-timestamp": {
                         "latest_timestamp": 1622151490,
-                        "synced_timestamp": 1622151490
+                        "synced_timestamp": 1622151490,
                     }
                 },
-                "warning_flags": []
+                "warning_flags": [],
             },
             {
                 "id": "5a14f918f6250047b000ed36e4cba9b429f2219545fe5649101678d62cef4035",
@@ -476,12 +438,10 @@ HATHOR_CORE_MAINNET_GET_STATUS = {
                 "plugins": {
                     "node-sync-timestamp": {
                         "latest_timestamp": 1622151490,
-                        "synced_timestamp": 1622151490
+                        "synced_timestamp": 1622151490,
                     }
                 },
-                "warning_flags": [
-                    "no_entrypoints"
-                ]
+                "warning_flags": ["no_entrypoints"],
             },
             {
                 "id": "31b12e7ea407d5db7320634a627c16c3f8620e6f0369e7a11abd06ac7b887a19",
@@ -493,12 +453,10 @@ HATHOR_CORE_MAINNET_GET_STATUS = {
                 "plugins": {
                     "node-sync-timestamp": {
                         "latest_timestamp": 1622151490,
-                        "synced_timestamp": 1622151490
+                        "synced_timestamp": 1622151490,
                     }
                 },
-                "warning_flags": [
-                    "no_entrypoints"
-                ]
+                "warning_flags": ["no_entrypoints"],
             },
             {
                 "id": "ac050e51f79c465e728a6b0e8454a3b84e9ea87f027e726290665445899e62bf",
@@ -510,12 +468,10 @@ HATHOR_CORE_MAINNET_GET_STATUS = {
                 "plugins": {
                     "node-sync-timestamp": {
                         "latest_timestamp": 1622151490,
-                        "synced_timestamp": 1622151490
+                        "synced_timestamp": 1622151490,
                     }
                 },
-                "warning_flags": [
-                    "no_entrypoints"
-                ]
+                "warning_flags": ["no_entrypoints"],
             },
             {
                 "id": "0bdef61af05ba973eb5576e9f1ce7ff08f0bee56f8206cf3bfc2c37d2f7ba1ff",
@@ -527,12 +483,10 @@ HATHOR_CORE_MAINNET_GET_STATUS = {
                 "plugins": {
                     "node-sync-timestamp": {
                         "latest_timestamp": 1622151490,
-                        "synced_timestamp": 1622151490
+                        "synced_timestamp": 1622151490,
                     }
                 },
-                "warning_flags": [
-                    "no_peer_id_url"
-                ]
+                "warning_flags": ["no_peer_id_url"],
             },
             {
                 "id": "95ad39e88654ae6784a11063abe37e8b2b61becfd2e107a74da297577a532199",
@@ -544,12 +498,10 @@ HATHOR_CORE_MAINNET_GET_STATUS = {
                 "plugins": {
                     "node-sync-timestamp": {
                         "latest_timestamp": 1622151490,
-                        "synced_timestamp": 1622151490
+                        "synced_timestamp": 1622151490,
                     }
                 },
-                "warning_flags": [
-                    "no_entrypoints"
-                ]
+                "warning_flags": ["no_entrypoints"],
             },
             {
                 "id": "64d6af921b002ebe59f520226b15b5847f0adbe1763221ca030bec0c98a1e1c5",
@@ -561,10 +513,10 @@ HATHOR_CORE_MAINNET_GET_STATUS = {
                 "plugins": {
                     "node-sync-timestamp": {
                         "latest_timestamp": 1622151490,
-                        "synced_timestamp": 1622151490
+                        "synced_timestamp": 1622151490,
                     }
                 },
-                "warning_flags": []
+                "warning_flags": [],
             },
             {
                 "id": "cb82a73e9d445b76f3c5df523c4541a78890459e36a5fa4b27f5a581bd96ae28",
@@ -576,12 +528,10 @@ HATHOR_CORE_MAINNET_GET_STATUS = {
                 "plugins": {
                     "node-sync-timestamp": {
                         "latest_timestamp": 1622151490,
-                        "synced_timestamp": 1622151490
+                        "synced_timestamp": 1622151490,
                     }
                 },
-                "warning_flags": [
-                    "no_entrypoints"
-                ]
+                "warning_flags": ["no_entrypoints"],
             },
             {
                 "id": "698c3dddb70a3b3b4b79ba319ddb22726f329654530638630629374d362d7479",
@@ -593,10 +543,10 @@ HATHOR_CORE_MAINNET_GET_STATUS = {
                 "plugins": {
                     "node-sync-timestamp": {
                         "latest_timestamp": 1622151490,
-                        "synced_timestamp": 1622151490
+                        "synced_timestamp": 1622151490,
                     }
                 },
-                "warning_flags": []
+                "warning_flags": [],
             },
             {
                 "id": "f69602ec3ba62f135698903a847b1b4425b7667e26295b2897dce1eb08d285f3",
@@ -608,12 +558,10 @@ HATHOR_CORE_MAINNET_GET_STATUS = {
                 "plugins": {
                     "node-sync-timestamp": {
                         "latest_timestamp": 1622151490,
-                        "synced_timestamp": 1622151490
+                        "synced_timestamp": 1622151490,
                     }
                 },
-                "warning_flags": [
-                    "no_entrypoints"
-                ]
+                "warning_flags": ["no_entrypoints"],
             },
             {
                 "id": "42839c1d0b8561675242d0b9d27b619a4a5a5fbedc5b5727bebcb0936dcffa0e",
@@ -625,12 +573,10 @@ HATHOR_CORE_MAINNET_GET_STATUS = {
                 "plugins": {
                     "node-sync-timestamp": {
                         "latest_timestamp": 1622151490,
-                        "synced_timestamp": 1622151490
+                        "synced_timestamp": 1622151490,
                     }
                 },
-                "warning_flags": [
-                    "no_entrypoints"
-                ]
+                "warning_flags": ["no_entrypoints"],
             },
             {
                 "id": "532a8bc013483b75e8003f2cc2bfc64b13790134521c75fecf8cbdff535c652e",
@@ -642,12 +588,10 @@ HATHOR_CORE_MAINNET_GET_STATUS = {
                 "plugins": {
                     "node-sync-timestamp": {
                         "latest_timestamp": 1622097038,
-                        "synced_timestamp": 1622097038
+                        "synced_timestamp": 1622097038,
                     }
                 },
-                "warning_flags": [
-                    "no_entrypoints"
-                ]
+                "warning_flags": ["no_entrypoints"],
             },
             {
                 "id": "3c38ec36d9ca88999201828365ba6d4ca3087f9a45396865553ba0198a0088d6",
@@ -659,12 +603,10 @@ HATHOR_CORE_MAINNET_GET_STATUS = {
                 "plugins": {
                     "node-sync-timestamp": {
                         "latest_timestamp": 1622151490,
-                        "synced_timestamp": 1622151490
+                        "synced_timestamp": 1622151490,
                     }
                 },
-                "warning_flags": [
-                    "no_entrypoints"
-                ]
+                "warning_flags": ["no_entrypoints"],
             },
             {
                 "id": "f8f81cbdd70dc03987f6b2aeadc95b064394a5ba407beadd9bde31c766756522",
@@ -676,12 +618,10 @@ HATHOR_CORE_MAINNET_GET_STATUS = {
                 "plugins": {
                     "node-sync-timestamp": {
                         "latest_timestamp": 1622096474,
-                        "synced_timestamp": 1622096474
+                        "synced_timestamp": 1622096474,
                     }
                 },
-                "warning_flags": [
-                    "no_entrypoints"
-                ]
+                "warning_flags": ["no_entrypoints"],
             },
             {
                 "id": "8801235f3148a42cf7576b5f6a679959c83f1ce8cce55807711b189efa1d6161",
@@ -693,12 +633,10 @@ HATHOR_CORE_MAINNET_GET_STATUS = {
                 "plugins": {
                     "node-sync-timestamp": {
                         "latest_timestamp": 1622151490,
-                        "synced_timestamp": 1622151490
+                        "synced_timestamp": 1622151490,
                     }
                 },
-                "warning_flags": [
-                    "no_entrypoints"
-                ]
+                "warning_flags": ["no_entrypoints"],
             },
             {
                 "id": "4d37200677e53dae99b6b4201fa373e30490dce8f35d671ce0a2a1aad9327f7f",
@@ -710,12 +648,10 @@ HATHOR_CORE_MAINNET_GET_STATUS = {
                 "plugins": {
                     "node-sync-timestamp": {
                         "latest_timestamp": 1622151490,
-                        "synced_timestamp": 1622151490
+                        "synced_timestamp": 1622151490,
                     }
                 },
-                "warning_flags": [
-                    "no_entrypoints"
-                ]
+                "warning_flags": ["no_entrypoints"],
             },
             {
                 "id": "4a18fdaf0baa7441592c00ea9167ffc2254bd6d4a07f031d9b30aeb132443631",
@@ -727,12 +663,10 @@ HATHOR_CORE_MAINNET_GET_STATUS = {
                 "plugins": {
                     "node-sync-timestamp": {
                         "latest_timestamp": 1622151490,
-                        "synced_timestamp": 1622151490
+                        "synced_timestamp": 1622151490,
                     }
                 },
-                "warning_flags": [
-                    "no_entrypoints"
-                ]
+                "warning_flags": ["no_entrypoints"],
             },
             {
                 "id": "083ff2ab543ca5bc00f5e20233ab343de9f600dc8405ff605f3a913f50e9ab8a",
@@ -744,12 +678,10 @@ HATHOR_CORE_MAINNET_GET_STATUS = {
                 "plugins": {
                     "node-sync-timestamp": {
                         "latest_timestamp": 1622097038,
-                        "synced_timestamp": 1622097038
+                        "synced_timestamp": 1622097038,
                     }
                 },
-                "warning_flags": [
-                    "no_entrypoints"
-                ]
+                "warning_flags": ["no_entrypoints"],
             },
             {
                 "id": "2d856e865683f0851ea8b875b548e729fb35c508ce38290f393f2ff4ec7013b9",
@@ -761,12 +693,10 @@ HATHOR_CORE_MAINNET_GET_STATUS = {
                 "plugins": {
                     "node-sync-timestamp": {
                         "latest_timestamp": 1622151490,
-                        "synced_timestamp": 1622151490
+                        "synced_timestamp": 1622151490,
                     }
                 },
-                "warning_flags": [
-                    "no_peer_id_url"
-                ]
+                "warning_flags": ["no_peer_id_url"],
             },
             {
                 "id": "876fb230aaa4831cd4d62ee2c453cb5cf4d92f86af8f1a9b97b69924a480a8df",
@@ -778,10 +708,10 @@ HATHOR_CORE_MAINNET_GET_STATUS = {
                 "plugins": {
                     "node-sync-timestamp": {
                         "latest_timestamp": 1622151490,
-                        "synced_timestamp": 1622151490
+                        "synced_timestamp": 1622151490,
                     }
                 },
-                "warning_flags": []
+                "warning_flags": [],
             },
             {
                 "id": "1ba45f948775d5276947fd6bcde1f512cd5761038a5f334ca2b2ac4cb75b17d6",
@@ -793,12 +723,10 @@ HATHOR_CORE_MAINNET_GET_STATUS = {
                 "plugins": {
                     "node-sync-timestamp": {
                         "latest_timestamp": 1622151490,
-                        "synced_timestamp": 1622151490
+                        "synced_timestamp": 1622151490,
                     }
                 },
-                "warning_flags": [
-                    "no_entrypoints"
-                ]
+                "warning_flags": ["no_entrypoints"],
             },
             {
                 "id": "cf8d374ae343eb47fda52d7f274e1437ef73a60ad8ad5a4783490a9a692e086f",
@@ -810,12 +738,10 @@ HATHOR_CORE_MAINNET_GET_STATUS = {
                 "plugins": {
                     "node-sync-timestamp": {
                         "latest_timestamp": 1622151490,
-                        "synced_timestamp": 1622151490
+                        "synced_timestamp": 1622151490,
                     }
                 },
-                "warning_flags": [
-                    "no_entrypoints"
-                ]
+                "warning_flags": ["no_entrypoints"],
             },
             {
                 "id": "3c90f89f7f5e0c5ec48b810d78f37f8bc60363bc49f536771e90c1c04b56bf43",
@@ -827,12 +753,10 @@ HATHOR_CORE_MAINNET_GET_STATUS = {
                 "plugins": {
                     "node-sync-timestamp": {
                         "latest_timestamp": 1622151490,
-                        "synced_timestamp": 1622151490
+                        "synced_timestamp": 1622151490,
                     }
                 },
-                "warning_flags": [
-                    "no_peer_id_url"
-                ]
+                "warning_flags": ["no_peer_id_url"],
             },
             {
                 "id": "a7926161dabf57b301da78147ed314aa324101e199ddcba197eaccf99821febb",
@@ -844,12 +768,10 @@ HATHOR_CORE_MAINNET_GET_STATUS = {
                 "plugins": {
                     "node-sync-timestamp": {
                         "latest_timestamp": 1622151490,
-                        "synced_timestamp": 1622151490
+                        "synced_timestamp": 1622151490,
                     }
                 },
-                "warning_flags": [
-                    "no_peer_id_url"
-                ]
+                "warning_flags": ["no_peer_id_url"],
             },
             {
                 "id": "692dd6e602381a95f840763f0ea2bf189220c82dd1fe3a403ffc16c5731c428d",
@@ -861,12 +783,10 @@ HATHOR_CORE_MAINNET_GET_STATUS = {
                 "plugins": {
                     "node-sync-timestamp": {
                         "latest_timestamp": 1622151490,
-                        "synced_timestamp": 1622151490
+                        "synced_timestamp": 1622151490,
                     }
                 },
-                "warning_flags": [
-                    "no_peer_id_url"
-                ]
+                "warning_flags": ["no_peer_id_url"],
             },
             {
                 "id": "0a3526d558070f92784d3e8c09765db8e7e8bc020639bde8ee64f4b7b02d013f",
@@ -878,12 +798,10 @@ HATHOR_CORE_MAINNET_GET_STATUS = {
                 "plugins": {
                     "node-sync-timestamp": {
                         "latest_timestamp": 1622151490,
-                        "synced_timestamp": 1622151490
+                        "synced_timestamp": 1622151490,
                     }
                 },
-                "warning_flags": [
-                    "no_peer_id_url"
-                ]
+                "warning_flags": ["no_peer_id_url"],
             },
             {
                 "id": "ee9296ee3d2ef014b180b7b86038cf72e3a2ddc8e3ea429080375d9843fe0b9e",
@@ -895,21 +813,16 @@ HATHOR_CORE_MAINNET_GET_STATUS = {
                 "plugins": {
                     "node-sync-timestamp": {
                         "latest_timestamp": 1593265159,
-                        "synced_timestamp": 1593265159
+                        "synced_timestamp": 1593265159,
                     }
                 },
-                "warning_flags": [
-                    "no_entrypoints"
-                ]
-            }
+                "warning_flags": ["no_entrypoints"],
+            },
         ],
         "handshaking_peers": [],
-        "connecting_peers": []
+        "connecting_peers": [],
     },
-    "dag": {
-        "first_timestamp": 1578075305,
-        "latest_timestamp": 1622151490
-    }
+    "dag": {"first_timestamp": 1578075305, "latest_timestamp": 1622151490},
 }
 
 HATHOR_CORE_TESTNET_GET_STATUS = {
@@ -919,62 +832,50 @@ HATHOR_CORE_TESTNET_GET_STATUS = {
         "state": "READY",
         "network": "testnet-golf",
         "uptime": 166938.68822145462,
-        "entrypoints": [
-            "tcp://3.21.242.244:40403"
-        ]
+        "entrypoints": ["tcp://3.21.242.244:40403"],
     },
     "peers_whitelist": [],
     "known_peers": [
         {
             "id": "3bd946c584161fecae2061203a194687b33b04e9ae91b661c8112b540a4b03b2",
-            "entrypoints": [
-                "tcp://18.224.246.21:40403"
-            ],
-            "flags": []
+            "entrypoints": ["tcp://18.224.246.21:40403"],
+            "flags": [],
         },
         {
             "id": "52fa4af19e83efe253de76fb901cac5c875e989a99652b3fc34bb0410ae491d0",
-            "entrypoints": [
-                "tcp://13.59.9.13:40403"
-            ],
-            "flags": []
+            "entrypoints": ["tcp://13.59.9.13:40403"],
+            "flags": [],
         },
         {
             "id": "71df2e6c0927491eb439c68d45b3690d22e4c15beaa174e2487a117c46abd944",
             "entrypoints": [],
-            "flags": []
+            "flags": [],
         },
         {
             "id": "6c3030c4cee442b6db7db8b63230c24869205895cd20be026877e04dcbda1fde",
-            "entrypoints": [
-                "tcp://3.250.18.64:40403"
-            ],
-            "flags": []
+            "entrypoints": ["tcp://3.250.18.64:40403"],
+            "flags": [],
         },
         {
             "id": "9e55c0b044558618110c06ca77e169749ac8769dc4f22b83724abf474a1ed00b",
-            "entrypoints": [
-                "tcp://34.248.33.25:40403"
-            ],
-            "flags": []
+            "entrypoints": ["tcp://34.248.33.25:40403"],
+            "flags": [],
         },
         {
             "id": "545db626fea7f35918130d63dd2e12828c634ffdeab1d46375fc4de46f3d4d35",
-            "entrypoints": [
-                "tcp://52.30.56.230:40403"
-            ],
-            "flags": []
+            "entrypoints": ["tcp://52.30.56.230:40403"],
+            "flags": [],
         },
         {
             "id": "3da2dec9d0346e793d07e00f15136ca0b635b1a6be293b0d9902215c3dc71804",
             "entrypoints": [],
-            "flags": []
+            "flags": [],
         },
         {
             "id": "f5f0209976da744c71470e83d19496828e457dce59cf3f20c8f73cb2e2b9f003",
             "entrypoints": [],
-            "flags": []
-        }
+            "flags": [],
+        },
     ],
     "connections": {
         "connected_peers": [
@@ -988,12 +889,10 @@ HATHOR_CORE_TESTNET_GET_STATUS = {
                 "plugins": {
                     "node-sync-timestamp": {
                         "latest_timestamp": 1622140105,
-                        "synced_timestamp": 1622140105
+                        "synced_timestamp": 1622140105,
                     }
                 },
-                "warning_flags": [
-                    "no_entrypoints"
-                ]
+                "warning_flags": ["no_entrypoints"],
             },
             {
                 "id": "545db626fea7f35918130d63dd2e12828c634ffdeab1d46375fc4de46f3d4d35",
@@ -1005,10 +904,10 @@ HATHOR_CORE_TESTNET_GET_STATUS = {
                 "plugins": {
                     "node-sync-timestamp": {
                         "latest_timestamp": 1622140105,
-                        "synced_timestamp": 1622140105
+                        "synced_timestamp": 1622140105,
                     }
                 },
-                "warning_flags": []
+                "warning_flags": [],
             },
             {
                 "id": "3da2dec9d0346e793d07e00f15136ca0b635b1a6be293b0d9902215c3dc71804",
@@ -1020,30 +919,25 @@ HATHOR_CORE_TESTNET_GET_STATUS = {
                 "plugins": {
                     "node-sync-timestamp": {
                         "latest_timestamp": 1622140105,
-                        "synced_timestamp": 1622140105
+                        "synced_timestamp": 1622140105,
                     }
                 },
-                "warning_flags": [
-                    "no_entrypoints"
-                ]
-            }
+                "warning_flags": ["no_entrypoints"],
+            },
         ],
         "handshaking_peers": [],
         "connecting_peers": [
             {
                 "deferred": "<Deferred at 0xfffec7bbc450>",
-                "address": "3.250.18.64:40403"
+                "address": "3.250.18.64:40403",
             },
             {
                 "deferred": "<Deferred at 0xfffec7c15850>",
-                "address": "3.250.18.64:40403"
-            }
-        ]
+                "address": "3.250.18.64:40403",
+            },
+        ],
     },
-    "dag": {
-        "first_timestamp": 1577836800,
-        "latest_timestamp": 1622140105
-    }
+    "dag": {"first_timestamp": 1577836800, "latest_timestamp": 1622140105},
 }
 
 
@@ -1051,23 +945,20 @@ HATHOR_CORE_GET_TOKEN = {
     "melt": [
         {
             "tx_id": "0058dacaa9cb6e120e825fa40f738273f3bf87e82c8b376158695a4fb42e187d",
-            "index": 3
+            "index": 3,
         }
     ],
     "mint": [
         {
             "tx_id": "0058dacaa9cb6e120e825fa40f738273f3bf87e82c8b376158695a4fb42e187d",
-            "index": 2
+            "index": 2,
         }
     ],
     "name": "HTR Token",
     "success": True,
     "symbol": "TOKEN",
     "total": 10000000,
-    "transactions_count": 11
+    "transactions_count": 11,
 }
 
-HATHOR_CORE_GET_TOKEN_INVALID = {
-    "message": "Unknown token",
-    "success": False
-}
+HATHOR_CORE_GET_TOKEN_INVALID = {"message": "Unknown token", "success": False}

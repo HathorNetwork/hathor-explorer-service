@@ -3,29 +3,37 @@ from typing import Any, List, Optional
 
 from redis import StrictRedis
 
-from common.configuration import REDIS_DB, REDIS_HOST, REDIS_KEY_PREFIX, REDIS_PORT, REDIS_TIMEOUT
+from common.configuration import (
+    REDIS_DB,
+    REDIS_HOST,
+    REDIS_KEY_PREFIX,
+    REDIS_PORT,
+    REDIS_TIMEOUT,
+)
 
-NODE_COLLECTION_NAME = 'node'
-NETWORK_COLLECTION_NAME = 'network'
-ADDRESS_BLACKLIST_COLLECTION_NAME = 'node_api:address:blacklist'
+NODE_COLLECTION_NAME = "node"
+NETWORK_COLLECTION_NAME = "network"
+ADDRESS_BLACKLIST_COLLECTION_NAME = "node_api:address:blacklist"
 
 
 class CacheClient:
-    """This is an abstraction and convenience for redis
-    """
+    """This is an abstraction and convenience for redis"""
+
     def __init__(self) -> None:
         client_args = {
-            'host': REDIS_HOST,
-            'port': REDIS_PORT,
-            'db': REDIS_DB,
-            'socket_timeout': REDIS_TIMEOUT,
+            "host": REDIS_HOST,
+            "port": REDIS_PORT,
+            "db": REDIS_DB,
+            "socket_timeout": REDIS_TIMEOUT,
         }
 
         client_args = {k: v for k, v in client_args.items() if v is not None}
 
         self.client = StrictRedis(**client_args)
 
-    def set(self, collection: str, key: str, value: Any, ttl: Optional[int] = None) -> Optional[bool]:
+    def set(
+        self, collection: str, key: str, value: Any, ttl: Optional[int] = None
+    ) -> Optional[bool]:
         """Saves a dict into cache
 
         :param collection: a name to separate contexts
@@ -39,7 +47,9 @@ class CacheClient:
         :return: if it saved successfuly or not
         :rtype: bool
         """
-        return self.client.set(self._get_context_key(collection, key), json.dumps(value), ttl)
+        return self.client.set(
+            self._get_context_key(collection, key), json.dumps(value), ttl
+        )
 
     def get(self, collection: str, key: str) -> Optional[Any]:
         """Retrieves a dict from cache
@@ -67,7 +77,9 @@ class CacheClient:
         """
         return [
             self._extract_key_from_context(key.decode())
-            for key in self.client.scan_iter(self._get_context_collection(collection)+'.*')
+            for key in self.client.scan_iter(
+                self._get_context_collection(collection) + ".*"
+            )
         ]
 
     def _extract_key_from_context(self, key: str) -> str:
@@ -78,7 +90,7 @@ class CacheClient:
         :return: simple version of key, as it is required on `get` and `set` methods
         :rtype: str
         """
-        parts = key.split('.')
+        parts = key.split(".")
         return parts[-1]
 
     def _get_context_collection(self, collection: str) -> str:

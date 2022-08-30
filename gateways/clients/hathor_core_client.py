@@ -11,22 +11,21 @@ from common.logging import get_logger
 
 logger = get_logger()
 
-ADDRESS_BALANCE_ENDPOINT = '/v1a/thin_wallet/address_balance'
-ADDRESS_SEARCH_ENDPOINT = '/v1a/thin_wallet/address_search'
-DASHBOARD_TX_ENDPOINT = '/v1a/dashboard_tx'
-DECODE_TX_ENDPOINT = '/v1a/decode_tx'
-PUSH_TX_ENDPOINT = '/v1a/push_tx'
-GRAPHVIZ_DOT_NEIGHBORS_ENDPOINT = '/v1a/graphviz/neighbours.dot/'
-STATUS_ENDPOINT = '/v1a/status'
-TOKEN_ENDPOINT = '/v1a/thin_wallet/token'
-TOKEN_HISTORY_ENDPOINT = '/v1a/thin_wallet/token_history'
-TRANSACTION_ENDPOINT = '/v1a/transaction'
-TX_ACC_WEIGHT_ENDPOINT = '/v1a/transaction_acc_weight'
-VERSION_ENDPOINT = '/v1a/version'
+ADDRESS_BALANCE_ENDPOINT = "/v1a/thin_wallet/address_balance"
+ADDRESS_SEARCH_ENDPOINT = "/v1a/thin_wallet/address_search"
+DASHBOARD_TX_ENDPOINT = "/v1a/dashboard_tx"
+DECODE_TX_ENDPOINT = "/v1a/decode_tx"
+PUSH_TX_ENDPOINT = "/v1a/push_tx"
+GRAPHVIZ_DOT_NEIGHBORS_ENDPOINT = "/v1a/graphviz/neighbours.dot/"
+STATUS_ENDPOINT = "/v1a/status"
+TOKEN_ENDPOINT = "/v1a/thin_wallet/token"
+TOKEN_HISTORY_ENDPOINT = "/v1a/thin_wallet/token_history"
+TRANSACTION_ENDPOINT = "/v1a/transaction"
+TX_ACC_WEIGHT_ENDPOINT = "/v1a/transaction_acc_weight"
+VERSION_ENDPOINT = "/v1a/version"
 
 
 class HathorCoreAsyncClient:
-
     def __init__(self, domain: Optional[str] = None) -> None:
         """Client to make async requests
 
@@ -36,7 +35,9 @@ class HathorCoreAsyncClient:
         self.domain = domain or HATHOR_CORE_DOMAIN
         self.log = logger.new(client="async")
 
-    async def get(self, path: str, callback: Callable[[dict], None], params: Optional[dict] = None) -> None:
+    async def get(
+        self, path: str, callback: Callable[[dict], None], params: Optional[dict] = None
+    ) -> None:
         """Make a get request async
 
         :param path: path to be requested
@@ -56,11 +57,12 @@ class HathorCoreAsyncClient:
                             "hathor_core_error",
                             path=path,
                             status=response.status,
-                            body=await response.text())
+                            body=await response.text(),
+                        )
                     callback(await response.json())
         except Exception as e:
             self.log.error("hathor_core_error", path=path, error=repr(e))
-            callback({'error': repr(e)})
+            callback({"error": repr(e)})
 
 
 class HathorCoreClient:
@@ -69,11 +71,14 @@ class HathorCoreClient:
     :param domain: domain where the requests will be made, defaults to config `hathor_core_domain`
     :type domain: str, optional
     """
+
     def __init__(self, domain: Optional[str] = None) -> None:
         self.domain = domain or HATHOR_CORE_DOMAIN
         self.log = logger.new(client="sync")
 
-    def get_text(self, path: str, params: Optional[dict] = None, **kwargs: Any) -> Optional[str]:
+    def get_text(
+        self, path: str, params: Optional[dict] = None, **kwargs: Any
+    ) -> Optional[str]:
         """Make a get request
 
         :param path: path to be requested
@@ -91,21 +96,24 @@ class HathorCoreClient:
             response = requests.get(url, params=params, **kwargs)
             if response.status_code != 200:
                 self.log.warning(
-                        "hathor_core_error",
-                        path=path,
-                        status=response.status_code,
-                        body=response.text)
+                    "hathor_core_error",
+                    path=path,
+                    status=response.status_code,
+                    body=response.text,
+                )
                 return None
 
             return response.text
         except requests.ReadTimeout:
             self.log.error("hathor_core_error", error="timeout", path=path)
-            raise HathorCoreTimeout('timeout')
+            raise HathorCoreTimeout("timeout")
         except Exception as e:
             self.log.error("hathor_core_error", error=repr(e), path=path)
-            return json.dumps({'error': repr(e)})
+            return json.dumps({"error": repr(e)})
 
-    def get(self, path: str, params: Optional[dict] = None, **kwargs: Any) -> Optional[dict]:
+    def get(
+        self, path: str, params: Optional[dict] = None, **kwargs: Any
+    ) -> Optional[dict]:
         """Make a get request expecting a json encoded response
 
         :param path: path to be requested
@@ -124,4 +132,4 @@ class HathorCoreClient:
             return json.loads(text)
         except json.JSONDecodeError as e:
             self.log.error("hathor_core_error", error=repr(e), path=path)
-            return {'error': repr(e)}
+            return {"error": repr(e)}

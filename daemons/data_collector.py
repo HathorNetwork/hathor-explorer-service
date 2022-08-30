@@ -6,7 +6,6 @@ from usecases.collect_nodes_statuses import CollectNodesStatuses
 
 
 class DataCollector:
-
     async def run(self) -> None:
         await CollectNodesStatuses().collect()
 

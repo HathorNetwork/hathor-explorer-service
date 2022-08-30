@@ -6,8 +6,8 @@ from common.configuration import LAMBDA_INVOKE_URL
 
 
 class LambdaClient:
-    """This is an abstraction for boto3 lambda client
-    """
+    """This is an abstraction for boto3 lambda client"""
+
     def __init__(self) -> None:
         session = boto3.session.Session()
         if LAMBDA_INVOKE_URL is None:
@@ -28,10 +28,8 @@ class LambdaClient:
         :rtype: int
         """
         return self.client.invoke(
-            InvocationType='Event',
-            FunctionName=function,
-            Payload=json.dumps(payload)
-        )['StatusCode']
+            InvocationType="Event", FunctionName=function, Payload=json.dumps(payload)
+        )["StatusCode"]
 
     def invoke(self, function: str, payload: dict) -> dict:
         """Invoke lambda syncronously
@@ -54,7 +52,4 @@ class LambdaClient:
         :return: Request response
         :rtype: dict
         """
-        return self.client.invoke(
-            FunctionName=function,
-            Payload=json.dumps(payload)
-        )
+        return self.client.invoke(FunctionName=function, Payload=json.dumps(payload))

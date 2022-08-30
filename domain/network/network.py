@@ -44,6 +44,7 @@ class AggregatedPeer:
     :type connected_to: Set[str]
 
     """
+
     id: str
     app_version: str
     uptime: float
@@ -57,7 +58,7 @@ class AggregatedPeer:
     connected_to: Set[str]
 
     @classmethod
-    def from_peer(cls, peer: Peer) -> 'AggregatedPeer':
+    def from_peer(cls, peer: Peer) -> "AggregatedPeer":
         """Create an AggregatedPeer from a Peer
 
         :param peer: Peer instance
@@ -77,17 +78,17 @@ class AggregatedPeer:
             sync_timestamp=peer.sync_timestamp,
             warning_flags=peer.warning_flags,
             entrypoints=peer.entrypoints,
-            connected_to=set()
+            connected_to=set(),
         )
 
     def to_dict(self) -> dict:
-        """ Convert a AggregatedPeer instance into dict
+        """Convert a AggregatedPeer instance into dict
 
         :return: The dict representation of the AggregatedPeer
         :rtype: dict
         """
         obj = asdict(self)
-        obj['connected_to'] = list(obj['connected_to'])
+        obj["connected_to"] = list(obj["connected_to"])
         return obj
 
     def add_connected_to(self, node_id: str) -> None:
@@ -125,6 +126,7 @@ class AggregatedNode:
     :type connected_peers: List[str]
 
     """
+
     id: str
     app_version: str
     uptime: float
@@ -134,7 +136,7 @@ class AggregatedNode:
     connected_peers: List[str]
 
     @classmethod
-    def from_node(cls, node: Node) -> 'AggregatedNode':
+    def from_node(cls, node: Node) -> "AggregatedNode":
         """Create an AggregatedNode from a Node
 
         :param peer: Node instance
@@ -150,11 +152,11 @@ class AggregatedNode:
             state=node.state,
             latest_timestamp=node.latest_timestamp,
             entrypoints=node.entrypoints,
-            connected_peers=[peer.id for peer in node.connected_peers]
+            connected_peers=[peer.id for peer in node.connected_peers],
         )
 
     def to_dict(self) -> dict:
-        """ Convert a AggregatedNode instance into dict
+        """Convert a AggregatedNode instance into dict
 
         :return: The dict representation of the AggregatedNode
         :rtype: dict
@@ -172,22 +174,23 @@ class Network:
     :param peers: List of network peers
     :type peers: List[:py:class:`domain.network.network.AggregatedPeer`]
     """
+
     nodes: List[AggregatedNode]
     peers: List[AggregatedPeer]
 
     def to_dict(self) -> dict:
-        """ Convert a Network instance into dict
+        """Convert a Network instance into dict
 
         :return: The dict representation of the Network
         :rtype: dict
         """
         return {
-            'nodes': [node.to_dict() for node in self.nodes],
-            'peers': [peer.to_dict() for peer in self.peers],
+            "nodes": [node.to_dict() for node in self.nodes],
+            "peers": [peer.to_dict() for peer in self.peers],
         }
 
     @classmethod
-    def from_dict(cls, dikt: dict) -> 'Network':
+    def from_dict(cls, dikt: dict) -> "Network":
         return from_dict(
             data_class=cls,
             data=dikt,

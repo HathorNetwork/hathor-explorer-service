@@ -9,9 +9,7 @@ from utils.wrappers.aws.api_gateway import ApiGateway, ApiGatewayEvent
 
 @ApiGateway()
 def get_tokens(
-    event: ApiGatewayEvent,
-    _context: LambdaContext,
-    token_api: TokenApi = TokenApi()
+    event: ApiGatewayEvent, _context: LambdaContext, token_api: TokenApi = TokenApi()
 ) -> dict:
     """Get tokens from user search"""
 
@@ -35,20 +33,16 @@ def get_tokens(
     return {
         "statusCode": 200,
         "body": json.dumps(response or {}),
-        "headers": {
-            "Content-Type": "application/json"
-        }
+        "headers": {"Content-Type": "application/json"},
     }
 
 
 @ApiGateway()
 def get_token(
-    event: ApiGatewayEvent,
-    _context: LambdaContext,
-    token_api: TokenApi = TokenApi()
+    event: ApiGatewayEvent, _context: LambdaContext, token_api: TokenApi = TokenApi()
 ) -> dict:
     """Get a specific token from the elastic_search index
-       given an token_id
+    given an token_id
     """
     token_id = event.path["token_id"]
 
@@ -63,7 +57,5 @@ def get_token(
     return {
         "statusCode": 200,
         "body": json.dumps(response),
-        "headers": {
-            "Content-Type": "application/json"
-        }
+        "headers": {"Content-Type": "application/json"},
     }

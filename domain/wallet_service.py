@@ -6,7 +6,7 @@ from dacite import from_dict
 
 @dataclass
 class TokenBalance:
-    """ Address Balance for a token.
+    """Address Balance for a token.
 
     :param token_id: Token unique id
     :type token_id: str
@@ -33,7 +33,7 @@ class TokenBalance:
     transactions: int
 
     def to_dict(self) -> dict:
-        """ Convert an instance into dict
+        """Convert an instance into dict
 
         :return: Dict representation
         :rtype: dict
@@ -41,13 +41,13 @@ class TokenBalance:
         return asdict(self)
 
     @classmethod
-    def from_dict(cls, dikt: dict) -> 'TokenBalance':
+    def from_dict(cls, dikt: dict) -> "TokenBalance":
         return from_dict(data_class=cls, data=dikt)
 
 
 @dataclass
 class TxHistoryEntry:
-    """ Transaction history item.
+    """Transaction history item.
 
     :param tx_id: Transaction unique id
     :type tx_id: str
@@ -76,7 +76,7 @@ class TxHistoryEntry:
     height: Union[int, None]
 
     def to_dict(self) -> dict:
-        """ Convert an instance into dict
+        """Convert an instance into dict
 
         :return: Dict representation
         :rtype: dict
@@ -84,13 +84,13 @@ class TxHistoryEntry:
         return asdict(self)
 
     @classmethod
-    def from_dict(cls, dikt: dict) -> 'TxHistoryEntry':
+    def from_dict(cls, dikt: dict) -> "TxHistoryEntry":
         return from_dict(data_class=cls, data=dikt)
 
 
 @dataclass
 class TokenEntry:
-    """ Token table entry.
+    """Token table entry.
 
     :param token_id: Token unique id
     :type token_id: str
@@ -107,7 +107,7 @@ class TokenEntry:
     symbol: str
 
     def to_dict(self) -> dict:
-        """ Convert an instance into dict
+        """Convert an instance into dict
 
         :return: Dict representation
         :rtype: dict
@@ -115,8 +115,8 @@ class TokenEntry:
         return asdict(self)
 
     @classmethod
-    def from_dict(cls, dikt: dict) -> 'TokenEntry':
-        token_id = dikt.get('token_id')
-        if token_id == '00':
-            return cls(token_id='00', name='Hathor', symbol='HTR')
+    def from_dict(cls, dikt: dict) -> "TokenEntry":
+        token_id = dikt.get("token_id")
+        if token_id == "00":
+            return cls(token_id="00", name="Hathor", symbol="HTR")
         return from_dict(data_class=cls, data=dikt)

@@ -11,7 +11,7 @@ from utils.wrappers.aws.api_gateway import ApiGateway, ApiGatewayEvent
 def handle(
     event: ApiGatewayEvent,
     __: LambdaContext,
-    list_available_nodes: Union[ListAvailableNodes, None] = None
+    list_available_nodes: Union[ListAvailableNodes, None] = None,
 ) -> dict:
 
     list_available_nodes = list_available_nodes or ListAvailableNodes()
@@ -20,7 +20,5 @@ def handle(
     return {
         "statusCode": 200,
         "body": json.dumps(response),
-        "headers": {
-            "Content-Type": "application/json"
-        }
+        "headers": {"Content-Type": "application/json"},
     }
