@@ -1,2 +1,0 @@
-[run]
-omit = tests/*,node_modules/*,daemons/*,daemons_runner.py,*/**/__init__.py

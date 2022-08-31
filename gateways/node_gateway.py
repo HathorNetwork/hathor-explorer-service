@@ -4,7 +4,11 @@ from common.configuration import DATA_AGGREGATOR_LAMBDA_NAME, NODE_CACHE_TTL
 from common.errors import ConfigError
 from domain.network.network import AggregatedNode, AggregatedPeer, Network
 from domain.network.node import Node
-from gateways.clients.cache_client import NETWORK_COLLECTION_NAME, NODE_COLLECTION_NAME, CacheClient
+from gateways.clients.cache_client import (
+    NETWORK_COLLECTION_NAME,
+    NODE_COLLECTION_NAME,
+    CacheClient,
+)
 from gateways.clients.hathor_core_client import STATUS_ENDPOINT, HathorCoreAsyncClient
 from gateways.clients.lambda_client import LambdaClient
 
@@ -19,13 +23,16 @@ class NodeGateway:
     :param lambda_client: lambda client for lambda invocations, defaults to LambdaClient
     :type lambda_client: Union[LambdaClient, None], optional
     """
+
     def __init__(
         self,
         hathor_core_async_client: Union[HathorCoreAsyncClient, None] = None,
         cache_client: Union[CacheClient, None] = None,
-        lambda_client: Union[LambdaClient, None] = None
+        lambda_client: Union[LambdaClient, None] = None,
     ) -> None:
-        self.hathor_core_async_client = hathor_core_async_client or HathorCoreAsyncClient()
+        self.hathor_core_async_client = (
+            hathor_core_async_client or HathorCoreAsyncClient()
+        )
         self.cache_client = cache_client or CacheClient()
         self.lambda_client = lambda_client or LambdaClient()
 
@@ -50,7 +57,7 @@ class NodeGateway:
         if lambda_name is not None:
             return self.lambda_client.invoke_async(lambda_name, payload.to_dict())
 
-        raise ConfigError('No lambda name in config')
+        raise ConfigError("No lambda name in config")
 
     def save_node(self, id: str, node: Node) -> Union[bool, None]:
         """Saves Node data into cache with id as key
@@ -62,7 +69,9 @@ class NodeGateway:
         :return: If saved successfuly or not
         :rtype: bool
         """
-        return self.cache_client.set(NODE_COLLECTION_NAME, id, node.to_dict(), NODE_CACHE_TTL)
+        return self.cache_client.set(
+            NODE_COLLECTION_NAME, id, node.to_dict(), NODE_CACHE_TTL
+        )
 
     def get_node(self, id: str) -> Union[Node, None]:
         """Retrives node data for given id
@@ -87,7 +96,7 @@ class NodeGateway:
         :return: If saved successfuly or not
         :rtype: bool
         """
-        return self.cache_client.set(NETWORK_COLLECTION_NAME, 'v1', network.to_dict())
+        return self.cache_client.set(NETWORK_COLLECTION_NAME, "v1", network.to_dict())
 
     def get_network(self) -> Union[Network, None]:
         """Retrives network data
@@ -95,7 +104,7 @@ class NodeGateway:
         :return: Network data or None if nothing found
         :rtype: Union[Node, None]
         """
-        value = self.cache_client.get(NETWORK_COLLECTION_NAME, 'v1')
+        value = self.cache_client.get(NETWORK_COLLECTION_NAME, "v1")
 
         if value is not None:
             return Network.from_dict(value)

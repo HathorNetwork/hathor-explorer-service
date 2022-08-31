@@ -9,10 +9,9 @@ from usecases.aggregate_node_data import AggregateNodeData, EarlyStopDiff
 
 
 class TestEarlyStopDiff:
-
     def test_multiple_diffs(self):
-        data11 = {'a': 1, 'b': 2}
-        data12 = {'a': 3, 'b': 4}
+        data11 = {"a": 1, "b": 2}
+        data12 = {"a": 3, "b": 4}
         diff1 = DeepDiff(data11, data12, custom_operators=[EarlyStopDiff()])
         # On the diff tree each key represents a type of modification (e.g. values_changed, dictionary_item_removed)
         # Each value is a list of differences of this type
@@ -20,23 +19,23 @@ class TestEarlyStopDiff:
         print(diff1)
         assert sum(len(v) for v in diff1.tree.values()) == 1
 
-        data21 = {'a': 1, 'b': 1}
-        data22 = {'b': 2, 'c': 1, 'd': 1}
+        data21 = {"a": 1, "b": 1}
+        data22 = {"b": 2, "c": 1, "d": 1}
         diff2 = DeepDiff(data21, data22, custom_operators=[EarlyStopDiff()])
         # The only instance where we would have more than 1 difference is when we remove or add a key
         # Then it's 1 for each removed or added key, ignoring changes on values
         print(diff2)
         assert sum(len(v) for v in diff2.tree.values()) == 3
 
-        data31 = {'foo': {'a': 1, 'b': 2}, 'foz': {'some': 'thing'}}
-        data32 = {'foo': {'a': 2, 'b': 2}, 'foz': {'to': 'change'}}
+        data31 = {"foo": {"a": 1, "b": 2}, "foz": {"some": "thing"}}
+        data32 = {"foo": {"a": 2, "b": 2}, "foz": {"to": "change"}}
         diff3 = DeepDiff(data31, data32, custom_operators=[EarlyStopDiff()])
         # DFS on ordered keys means we wont check 'foz' since we found a diff on a subkey of 'foo'
         print(diff3)
         assert sum(len(v) for v in diff3.tree.values()) == 1
 
-        data41 = {'foo': {'a': 1, 'b': 2}, 'foz': {'some': 'thing'}}
-        data42 = {'foo': {'a': 1, 'b': 2}, 'foz': {'to': 'change'}}
+        data41 = {"foo": {"a": 1, "b": 2}, "foz": {"some": "thing"}}
+        data42 = {"foo": {"a": 1, "b": 2}, "foz": {"to": "change"}}
         diff4 = DeepDiff(data41, data42, custom_operators=[EarlyStopDiff()])
         # It also means we will check on 'foz' if we dont find diffs on 'foo'
         print(diff4)
@@ -44,7 +43,6 @@ class TestEarlyStopDiff:
 
 
 class TestAggregateNodeData:
-
     @fixture
     def node_gateway(self):
         return MagicMock()

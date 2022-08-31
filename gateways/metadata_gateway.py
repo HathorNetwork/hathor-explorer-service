@@ -10,7 +10,6 @@ logger = get_logger()
 
 
 class MetadataGateway:
-
     def __init__(self, s3_client: Optional[S3Client] = None) -> None:
         self.s3_client = s3_client or S3Client()
 
@@ -61,7 +60,9 @@ class MetadataGateway:
         try:
             return json.loads(raw_metadata)
         except ValueError:
-            logger.warning('Metadata object {} is not a valid json'.format(s3_object_name))
+            logger.warning(
+                "Metadata object {} is not a valid json".format(s3_object_name)
+            )
             return None
 
     def _metadata_bucket(self) -> str:
@@ -75,7 +76,7 @@ class MetadataGateway:
         metadata_bucket = METADATA_BUCKET
 
         if metadata_bucket is None:
-            raise ConfigError('No bucket name in config')
+            raise ConfigError("No bucket name in config")
 
         return metadata_bucket
 

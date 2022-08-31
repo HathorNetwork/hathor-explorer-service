@@ -7,7 +7,6 @@ from usecases.save_node_data import SaveNodeData
 
 
 class TestSaveNodeData:
-
     @fixture
     def node_gateway(self):
         return MagicMock()

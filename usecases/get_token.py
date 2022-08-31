@@ -4,7 +4,6 @@ from gateways.token_gateway import TokenGateway
 
 
 class GetToken:
-
     def __init__(self, token_gateway: Union[TokenGateway, None] = None) -> None:
         self.token_gateway = token_gateway or TokenGateway()
 

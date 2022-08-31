@@ -4,13 +4,15 @@ from common.errors import HathorCoreTimeout
 from gateways.node_api_gateway import NodeApiGateway
 
 ADDRESS_BLACKLIST_RESPONSE = {
-    'success': False,
-    'message': 'Timeout due to too many transaction',
+    "success": False,
+    "message": "Timeout due to too many transaction",
 }
 
 
 class NodeApi:
-    def __init__(self, node_api_gateway: Optional[NodeApiGateway] = None) -> Optional[None]:
+    def __init__(
+        self, node_api_gateway: Optional[NodeApiGateway] = None
+    ) -> Optional[None]:
         self.node_api_gateway = node_api_gateway or NodeApiGateway()
 
     def get_address_balance(self, address: str) -> Optional[dict]:
@@ -25,19 +27,21 @@ class NodeApi:
             return ADDRESS_BLACKLIST_RESPONSE
 
     def get_address_search(
-            self, address: str, count: int, page: Optional[str] = None,
-            hash: Optional[str] = None, token: Optional[str] = None) -> Optional[dict]:
+        self,
+        address: str,
+        count: int,
+        page: Optional[str] = None,
+        hash: Optional[str] = None,
+        token: Optional[str] = None,
+    ) -> Optional[dict]:
         # check if blacklisted
         if self.node_api_gateway.is_blacklisted_address(address):
             return ADDRESS_BLACKLIST_RESPONSE
 
         try:
             return self.node_api_gateway.get_address_search(
-                    address,
-                    count,
-                    page,
-                    hash,
-                    token)
+                address, count, page, hash, token
+            )
         except HathorCoreTimeout:
             self.node_api_gateway.blacklist_address(address)
             return ADDRESS_BLACKLIST_RESPONSE
@@ -52,12 +56,13 @@ class NodeApi:
         return self.node_api_gateway.get_transaction_acc_weight(id)
 
     def get_token_history(
-            self,
-            id: str,
-            count: int,
-            hash: Optional[str] = None,
-            page: Optional[str] = None,
-            timestamp: Optional[int] = None) -> Optional[dict]:
+        self,
+        id: str,
+        count: int,
+        hash: Optional[str] = None,
+        page: Optional[str] = None,
+        timestamp: Optional[int] = None,
+    ) -> Optional[dict]:
         return self.node_api_gateway.get_token_history(id, count, hash, page, timestamp)
 
     def get_transaction(self, id: str) -> Optional[dict]:
@@ -69,17 +74,22 @@ class NodeApi:
     def push_tx(self, hex_tx: str) -> Optional[dict]:
         return self.node_api_gateway.push_tx(hex_tx)
 
-    def graphviz_dot_neighbors(self, tx: str, graph_type: str, max_level: int) -> Optional[str]:
+    def graphviz_dot_neighbors(
+        self, tx: str, graph_type: str, max_level: int
+    ) -> Optional[str]:
         return self.node_api_gateway.graphviz_dot_neighbors(tx, graph_type, max_level)
 
     def list_transactions(
-            self,
-            type: str,
-            count: int,
-            hash: Optional[str] = None,
-            page: Optional[str] = None,
-            timestamp: Optional[int] = None) -> Optional[dict]:
-        return self.node_api_gateway.list_transactions(type, count, hash, page, timestamp)
+        self,
+        type: str,
+        count: int,
+        hash: Optional[str] = None,
+        page: Optional[str] = None,
+        timestamp: Optional[int] = None,
+    ) -> Optional[dict]:
+        return self.node_api_gateway.list_transactions(
+            type, count, hash, page, timestamp
+        )
 
     def get_token(self, id: str) -> Optional[dict]:
         return self.node_api_gateway.get_token(id)

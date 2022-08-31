@@ -4,7 +4,6 @@ from gateways.node_gateway import NodeGateway
 
 
 class GetNode:
-
     def __init__(self, node_gateway: Optional[NodeGateway] = None) -> None:
         self.node_gateway = node_gateway or NodeGateway()
 
