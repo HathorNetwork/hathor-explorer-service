@@ -61,15 +61,16 @@ class TestWalletServiceDBClient:
         address = fake.pystr()
         token = fake.sha256()
         limit = fake.pyint()
-        offset = fake.pyint()
+        last_ts = fake.pyint()
+        last_tx = fake.pystr()
 
-        returned = gw.address_history(address, token, limit, offset)
+        returned = gw.address_history(address, token, limit, last_tx, last_ts)
 
         assert len(returned) == 2
         assert all([ret == exp for ret, exp in zip(returned, [tx1, tx2])])
 
         assert db_client.get_address_history.called_once_with(
-            address, token, limit, offset
+            address, token, limit, last_tx, last_ts
         )
 
     def test_address_balance(self, db_client):
