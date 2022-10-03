@@ -5,6 +5,7 @@ from gateways.clients.wallet_service_db_client import WalletServiceDBClient
 
 
 class WalletServiceGateway:
+
     def __init__(self, db_client: Optional[WalletServiceDBClient] = None):
         self.db_client = db_client or WalletServiceDBClient()
 
@@ -13,11 +14,15 @@ class WalletServiceGateway:
         balance = self.db_client.get_address_balance(address, token)
         return TokenBalance.from_dict(balance)
 
-    def address_history(
-        self, address: str, token: str, limit: int, offset: int
-    ) -> List[TxHistoryEntry]:
-        """Fetch the tx history for an address/token pair, paginated."""
-        history = self.db_client.get_address_history(address, token, limit, offset)
+    def address_history(self,
+                        address: str,
+                        token: str,
+                        limit: int,
+                        last_tx: str,
+                        last_ts: int) -> List[TxHistoryEntry]:
+        """ Fetch the tx history for an address/token pair, paginated."""
+        history = self.db_client.get_address_history(address, token, limit,
+                                                     last_tx, last_ts)
         return [TxHistoryEntry.from_dict(tx) for tx in history]
 
     def address_tokens(
