@@ -67,8 +67,7 @@ def handle_address_history(
     if limit > 100:
         raise ApiError("invalid_parameters")
 
-    response = wallet_service.address_history(address, token, limit,
-                                              last_tx, last_ts)
+    response = wallet_service.address_history(address, token, limit, last_tx, last_ts)
 
     return {
         "statusCode": 200,

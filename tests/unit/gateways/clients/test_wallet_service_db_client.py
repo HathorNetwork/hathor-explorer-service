@@ -58,8 +58,7 @@ class TestWalletServiceDBClient:
         last_tx = fake.pystr()
 
         # Should return the dict value of the request
-        assert client.get_address_history(address, token, limit,
-                                          last_tx, last_ts) == [
+        assert client.get_address_history(address, token, limit, last_tx, last_ts) == [
             "dict_value_1",
             "dict_value_2",
         ]
@@ -71,7 +70,7 @@ class TestWalletServiceDBClient:
             token=token,
             limit=limit,
             last_tx=last_tx,
-            last_ts=last_ts
+            last_ts=last_ts,
         )
         # Should use the correct query for this method
         assert connection.execute.call_args[0][0].text == address_history_query

@@ -5,7 +5,6 @@ from gateways.clients.wallet_service_db_client import WalletServiceDBClient
 
 
 class WalletServiceGateway:
-
     def __init__(self, db_client: Optional[WalletServiceDBClient] = None):
         self.db_client = db_client or WalletServiceDBClient()
 
@@ -14,29 +13,27 @@ class WalletServiceGateway:
         balance = self.db_client.get_address_balance(address, token)
         return TokenBalance.from_dict(balance)
 
-    def address_history(self,
-                        address: str,
-                        token: str,
-                        limit: int,
-                        last_tx: str,
-                        last_ts: int) -> dict:
-        """ Fetch the tx history for an address/token pair, paginated."""
-        history = self.db_client.get_address_history(address, token, limit,
-                                                     last_tx, last_ts)
+    def address_history(
+        self, address: str, token: str, limit: int, last_tx: str, last_ts: int
+    ) -> dict:
+        """Fetch the tx history for an address/token pair, paginated."""
+        history = self.db_client.get_address_history(
+            address, token, limit, last_tx, last_ts
+        )
 
         has_next = False
         has_previous = False
 
         if len(history) > 0:
-            has_next = bool(history[0]['has_next'])
-            has_previous = bool(history[0]['has_previous'])
+            has_next = bool(history[0]["has_next"])
+            has_previous = bool(history[0]["has_previous"])
 
         tx_history = [TxHistoryEntry.from_dict(tx) for tx in history]
 
         return {
             "has_next": has_next,
             "has_previous": has_previous,
-            "history": tx_history
+            "history": tx_history,
         }
 
     def address_tokens(

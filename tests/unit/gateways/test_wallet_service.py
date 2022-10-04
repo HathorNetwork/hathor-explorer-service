@@ -69,8 +69,8 @@ class TestWalletServiceDBClient:
 
         returned = gw.address_history(address, token, limit, last_tx, last_ts)
 
-        assert len(returned['history']) == 2
-        assert all([ret == exp for ret, exp in zip(returned['history'], [tx1, tx2])])
+        assert len(returned["history"]) == 2
+        assert all([ret == exp for ret, exp in zip(returned["history"], [tx1, tx2])])
 
         assert db_client.get_address_history.called_once_with(
             address, token, limit, last_tx, last_ts
