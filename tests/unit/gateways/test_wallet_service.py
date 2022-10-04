@@ -54,20 +54,23 @@ class TestWalletServiceDBClient:
     def test_address_history(self, db_client):
         tx1 = TxHistoryEntryFactory()
         tx2 = TxHistoryEntryFactory()
-        db_client.get_address_history.return_value = [tx1.to_dict(), tx2.to_dict()]
+        db_client.get_address_history.return_value = [
+            {**tx1.to_dict(), "has_next": 1, "has_previous": 0},
+            {**tx2.to_dict(), "has_next": 1, "has_previous": 0},
+        ]
 
         gw = WalletServiceGateway(db_client)
 
         address = fake.pystr()
         token = fake.sha256()
         limit = fake.pyint()
-        last_ts = fake.pyint()
         last_tx = fake.pystr()
+        last_ts = fake.pyint()
 
         returned = gw.address_history(address, token, limit, last_tx, last_ts)
 
-        assert len(returned) == 2
-        assert all([ret == exp for ret, exp in zip(returned, [tx1, tx2])])
+        assert len(returned['history']) == 2
+        assert all([ret == exp for ret, exp in zip(returned['history'], [tx1, tx2])])
 
         assert db_client.get_address_history.called_once_with(
             address, token, limit, last_tx, last_ts

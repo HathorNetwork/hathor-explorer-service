@@ -135,7 +135,7 @@ class WalletServiceDBClient:
                             address: str,
                             token: str,
                             limit: int,
-                            last_tx_id: str,
+                            last_tx: str,
                             last_ts: str) -> List[dict]:
         ''' Fetch the transaction history for an address/token pair.'''
         result: List[dict] = []
@@ -145,7 +145,7 @@ class WalletServiceDBClient:
                     address=address,
                     token=token,
                     limit=limit,
-                    last_tx_id=last_tx_id,
+                    last_tx=last_tx,
                     last_ts=last_ts)
 
             for row in cursor:

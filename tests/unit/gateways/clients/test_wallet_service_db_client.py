@@ -54,17 +54,24 @@ class TestWalletServiceDBClient:
         address = "H" + fake.pystr()
         token = fake.sha256()
         limit = fake.random_int()
-        offset = fake.random_int()
+        last_ts = fake.random_int()
+        last_tx = fake.pystr()
 
         # Should return the dict value of the request
-        assert client.get_address_history(address, token, limit, offset) == [
+        assert client.get_address_history(address, token, limit,
+                                          last_tx, last_ts) == [
             "dict_value_1",
             "dict_value_2",
         ]
 
         # Should pass the expected args to execute
         connection.execute.assert_called_once_with(
-            ANY, address=address, token=token, limit=limit, offset=offset
+            ANY,
+            address=address,
+            token=token,
+            limit=limit,
+            last_tx=last_tx,
+            last_ts=last_ts
         )
         # Should use the correct query for this method
         assert connection.execute.call_args[0][0].text == address_history_query
