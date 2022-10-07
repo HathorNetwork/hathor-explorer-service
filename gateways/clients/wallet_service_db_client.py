@@ -40,26 +40,25 @@ address_history_query = """\
          (
           SELECT 1 FROM address_tx_history
            WHERE address_tx_history.address = :address
-             AND (address_tx_history.timestamp, address_tx_history.tx_id) > (:last_ts, :last_tx_id)
+             AND (address_tx_history.timestamp, address_tx_history.tx_id) < (:last_ts, :last_tx)
              AND address_tx_history.token_id = :token
            LIMIT 1
-          OFFSET :limit
+          OFFSET 10
          ) AS has_next,
 	       (
           SELECT 1 FROM address_tx_history
            WHERE address_tx_history.address = :address
-             AND (address_tx_history.timestamp, address_tx_history.tx_id) < (:last_ts, :last_tx_id)
+             AND (address_tx_history.timestamp, address_tx_history.tx_id) > (:last_ts, :last_tx)
              AND address_tx_history.token_id = :token
            LIMIT 1
-          OFFSET :limit
          ) AS has_previous
     FROM address_tx_history INNER JOIN transaction ON address_tx_history.tx_id = transaction.tx_id
    WHERE transaction.voided = FALSE
      AND address_tx_history.address = :address
      AND address_tx_history.token_id = :token
-     AND (address_tx_history.timestamp, address_tx_history.tx_id) < (:last_ts, :last_tx_id)
+     AND (address_tx_history.timestamp, address_tx_history.tx_id) < (:last_ts, :last_tx)
 ORDER BY timestamp DESC, tx_id DESC
-   LIMIT :limit"""
+   LIMIT 10"""
 
 address_tokens_query: str = """\
     SELECT token.id AS token_id,

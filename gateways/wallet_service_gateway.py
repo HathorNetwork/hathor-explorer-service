@@ -33,7 +33,7 @@ class WalletServiceGateway:
         return {
             "has_next": has_next,
             "has_previous": has_previous,
-            "history": tx_history,
+            "history": [tx.to_dict() for tx in tx_history],
         }
 
     def address_tokens(
