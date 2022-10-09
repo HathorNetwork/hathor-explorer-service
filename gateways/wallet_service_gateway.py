@@ -22,17 +22,14 @@ class WalletServiceGateway:
         )
 
         has_next = False
-        has_previous = False
 
         if len(history) > 0:
             has_next = bool(history[0]["has_next"])
-            has_previous = bool(history[0]["has_previous"])
 
         tx_history = [TxHistoryEntry.from_dict(tx) for tx in history]
 
         return {
             "has_next": has_next,
-            "has_previous": has_previous,
             "history": [tx.to_dict() for tx in tx_history],
         }
 

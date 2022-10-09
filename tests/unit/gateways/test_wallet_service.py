@@ -55,8 +55,8 @@ class TestWalletServiceDBClient:
         tx1 = TxHistoryEntryFactory()
         tx2 = TxHistoryEntryFactory()
         db_client.get_address_history.return_value = [
-            {**tx1.to_dict(), "has_next": 1, "has_previous": 0},
-            {**tx2.to_dict(), "has_next": 1, "has_previous": 0},
+            {**tx1.to_dict(), "has_next": 1},
+            {**tx2.to_dict(), "has_next": 1},
         ]
 
         gw = WalletServiceGateway(db_client)

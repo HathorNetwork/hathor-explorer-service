@@ -40,18 +40,15 @@ address_history_query = """\
          (
           SELECT 1 FROM address_tx_history
            WHERE address_tx_history.address = :address
-             AND (address_tx_history.timestamp, address_tx_history.tx_id) < (:last_ts, :last_tx)
+             AND (
+                ((ISNULL(:last_tx) = 0) AND (address_tx_history.timestamp, address_tx_history.tx_id) < (:last_ts, :last_tx))
+                OR
+                ((ISNULL(:last_tx) = 1) AND (address_tx_history.timestamp, address_tx_history.tx_id) > (0, NULL))
+             )
              AND address_tx_history.token_id = :token
            LIMIT 1
           OFFSET 10
-         ) AS has_next,
-         (
-          SELECT 1 FROM address_tx_history
-           WHERE address_tx_history.address = :address
-             AND (address_tx_history.timestamp, address_tx_history.tx_id) > (:last_ts, :last_tx)
-             AND address_tx_history.token_id = :token
-           LIMIT 1
-         ) AS has_previous
+         ) AS has_next
     FROM address_tx_history INNER JOIN transaction ON address_tx_history.tx_id = transaction.tx_id
    WHERE transaction.voided = FALSE
      AND address_tx_history.address = :address

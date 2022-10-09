@@ -33,8 +33,7 @@ class TestWalletService:
     def test_address_history(self, wallet_service_gateway):
         return_obj = {
             "history": [TxHistoryEntryFactory() for _ in range(fake.random_int(min=1, max=10))],
-            "has_next": True,
-            "has_previous": False
+            "has_next": True
         }
 
         wallet_service_gateway.address_history.return_value = return_obj
