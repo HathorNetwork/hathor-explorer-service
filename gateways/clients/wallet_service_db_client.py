@@ -45,7 +45,7 @@ address_history_query = """\
            LIMIT 1
           OFFSET 10
          ) AS has_next,
-	       (
+         (
           SELECT 1 FROM address_tx_history
            WHERE address_tx_history.address = :address
              AND (address_tx_history.timestamp, address_tx_history.tx_id) > (:last_ts, :last_tx)
