@@ -56,7 +56,11 @@ address_history_query = """\
    WHERE transaction.voided = FALSE
      AND address_tx_history.address = :address
      AND address_tx_history.token_id = :token
-     AND (address_tx_history.timestamp, address_tx_history.tx_id) < (:last_ts, :last_tx)
+     AND (
+        ((ISNULL(:last_tx) = 0) AND (address_tx_history.timestamp, address_tx_history.tx_id) < (:last_ts, :last_tx))
+        OR
+        ((ISNULL(:last_tx) = 1) AND (address_tx_history.timestamp, address_tx_history.tx_id) > (0, NULL))
+     )
 ORDER BY timestamp DESC, tx_id DESC
    LIMIT 10"""
 
