@@ -32,8 +32,10 @@ class TestWalletService:
 
     def test_address_history(self, wallet_service_gateway):
         return_obj = {
-            "history": [TxHistoryEntryFactory() for _ in range(fake.random_int(min=1, max=10))],
-            "has_next": True
+            "history": [
+                TxHistoryEntryFactory() for _ in range(fake.random_int(min=1, max=10))
+            ],
+            "has_next": True,
         }
 
         wallet_service_gateway.address_history.return_value = return_obj
@@ -47,7 +49,12 @@ class TestWalletService:
         ws = WalletService(wallet_service_gateway)
 
         expected_history = [obj.to_dict() for obj in return_obj["history"]]
-        returned = [obj.to_dict() for obj in ws.address_history(addr, token, limit, last_tx, last_ts)["history"]]
+        returned = [
+            obj.to_dict()
+            for obj in ws.address_history(addr, token, limit, last_tx, last_ts)[
+                "history"
+            ]
+        ]
 
         assert len(returned) == len(expected_history)
         assert all([ret == obj for ret, obj in zip(returned, expected_history)])
