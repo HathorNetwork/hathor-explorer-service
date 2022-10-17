@@ -33,7 +33,7 @@ class TestWalletService:
     def test_address_history(self, wallet_service_gateway):
         return_obj = {
             "history": [
-                TxHistoryEntryFactory() for _ in range(fake.random_int(min=1, max=10))
+                TxHistoryEntryFactory().to_dict() for _ in range(fake.random_int(min=1, max=10))
             ],
             "has_next": True,
         }
@@ -43,14 +43,14 @@ class TestWalletService:
         addr = fake.pystr()
         token = fake.sha256()
         limit = fake.pyint()
-        last_tx = fake.pystr()
+        last_tx = fake.sha256()
         last_ts = fake.pyint()
 
         ws = WalletService(wallet_service_gateway)
 
-        expected_history = [obj.to_dict() for obj in return_obj["history"]]
+        expected_history = [obj for obj in return_obj["history"]]
         returned = [
-            obj.to_dict()
+            obj
             for obj in ws.address_history(addr, token, limit, last_tx, last_ts)[
                 "history"
             ]
