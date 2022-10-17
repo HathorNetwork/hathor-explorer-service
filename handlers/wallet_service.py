@@ -64,6 +64,9 @@ def handle_address_history(
     except ValueError:
         raise ApiError("invalid_parameters")
 
+    if last_ts < 0:
+        raise ApiError("invalid_parameters")
+
     if limit > 100:
         raise ApiError("invalid_parameters")
 
