@@ -640,7 +640,8 @@ functions:
               - name: request.querystring.address
               - name: request.querystring.token
               - name: request.querystring.limit
-              - name: request.querystring.offset
+              - name: request.querystring.last_tx
+              - name: request.querystring.last_ts
               - name: request.header.origin
 
   walletServiceAddressTokens:
