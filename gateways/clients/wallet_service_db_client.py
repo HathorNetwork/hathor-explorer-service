@@ -47,7 +47,7 @@ address_history_query = """\
              )
              AND address_tx_history.token_id = :token
            LIMIT 1
-          OFFSET 10
+          OFFSET :limit
          ) AS has_next
     FROM address_tx_history INNER JOIN transaction ON address_tx_history.tx_id = transaction.tx_id
    WHERE transaction.voided = FALSE
@@ -59,7 +59,7 @@ address_history_query = """\
         ((ISNULL(:last_tx) = 1) AND (address_tx_history.timestamp, address_tx_history.tx_id) > (0, NULL))
      )
 ORDER BY timestamp DESC, tx_id DESC
-   LIMIT 10"""
+   LIMIT :limit"""
 
 address_tokens_query: str = """\
     SELECT token.id AS token_id,
