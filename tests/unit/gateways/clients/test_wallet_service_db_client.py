@@ -55,7 +55,7 @@ class TestWalletServiceDBClient:
         token = fake.sha256()
         limit = fake.random_int()
         last_ts = fake.random_int()
-        last_tx = fake.pystr()
+        last_tx = fake.sha256()
 
         # Should return the dict value of the request
         assert client.get_address_history(address, token, limit, last_tx, last_ts) == [

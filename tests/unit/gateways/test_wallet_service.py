@@ -64,7 +64,7 @@ class TestWalletServiceDBClient:
         address = fake.pystr()
         token = fake.sha256()
         limit = fake.pyint()
-        last_tx = fake.pystr()
+        last_tx = fake.sha256()
         last_ts = fake.pyint()
 
         returned = gw.address_history(address, token, limit, last_tx, last_ts)
