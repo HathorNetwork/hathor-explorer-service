@@ -31,23 +31,31 @@ class TestWalletService:
         wallet_service_gateway.address_balance.assert_called_once_with(addr, token)
 
     def test_address_history(self, wallet_service_gateway):
-        objs = [TxHistoryEntryFactory() for _ in range(fake.random_int(min=1, max=10))]
-        wallet_service_gateway.address_history.return_value = objs
+        return_obj = {
+            "history": [
+                TxHistoryEntryFactory().to_dict()
+                for _ in range(fake.random_int(min=1, max=10))
+            ],
+            "has_next": True,
+        }
+
+        wallet_service_gateway.address_history.return_value = return_obj
 
         addr = fake.pystr()
         token = fake.sha256()
         limit = fake.pyint()
-        offset = fake.pyint()
+        last_tx = fake.sha256()
+        last_ts = fake.pyint()
 
         ws = WalletService(wallet_service_gateway)
 
-        expected = [obj.to_dict() for obj in objs]
-        returned = ws.address_history(addr, token, limit, offset)
+        expected_history = return_obj["history"]
+        returned = ws.address_history(addr, token, limit, last_tx, last_ts)["history"]
 
-        assert len(returned) == len(expected)
-        assert all([ret == obj for ret, obj in zip(returned, expected)])
+        assert len(returned) == len(expected_history)
+        assert all([ret == obj for ret, obj in zip(returned, expected_history)])
         wallet_service_gateway.address_history.assert_called_once_with(
-            addr, token, limit, offset
+            addr, token, limit, last_tx, last_ts
         )
 
     def test_address_tokens(self, wallet_service_gateway):

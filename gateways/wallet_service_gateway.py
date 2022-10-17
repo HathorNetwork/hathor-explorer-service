@@ -14,11 +14,24 @@ class WalletServiceGateway:
         return TokenBalance.from_dict(balance)
 
     def address_history(
-        self, address: str, token: str, limit: int, offset: int
-    ) -> List[TxHistoryEntry]:
+        self, address: str, token: str, limit: int, last_tx: str, last_ts: int
+    ) -> dict:
         """Fetch the tx history for an address/token pair, paginated."""
-        history = self.db_client.get_address_history(address, token, limit, offset)
-        return [TxHistoryEntry.from_dict(tx) for tx in history]
+        history = self.db_client.get_address_history(
+            address, token, limit, last_tx, last_ts
+        )
+
+        has_next = False
+
+        if len(history) > 0:
+            has_next = bool(history[0]["has_next"])
+
+        tx_history = [TxHistoryEntry.from_dict(tx) for tx in history]
+
+        return {
+            "has_next": has_next,
+            "history": [tx.to_dict() for tx in tx_history],
+        }
 
     def address_tokens(
         self, address: str, limit: int, offset: int

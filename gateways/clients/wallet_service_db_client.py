@@ -30,18 +30,36 @@ SELECT
 FROM address_balance
 WHERE address = :address AND token_id = :token LIMIT 1"""
 
-address_history_query: str = """\
-SELECT  address_tx_history.tx_id AS tx_id,
-        address_tx_history.token_id AS token_id,
-        address_tx_history.balance AS balance,
-        address_tx_history.timestamp AS timestamp,
-        transaction.version AS version,
-        transaction.height AS height
-FROM address_tx_history INNER JOIN transaction ON address_tx_history.tx_id = transaction.tx_id
-WHERE transaction.voided = FALSE AND address_tx_history.address = :address AND address_tx_history.token_id = :token
-ORDER BY timestamp DESC
-LIMIT :limit OFFSET :offset"""
-
+address_history_query = """\
+  SELECT address_tx_history.tx_id AS tx_id,
+         address_tx_history.token_id AS token_id,
+         address_tx_history.balance AS balance,
+         address_tx_history.timestamp AS timestamp,
+         transaction.version AS version,
+         transaction.height AS height,
+         (
+          SELECT 1 FROM address_tx_history
+           WHERE address_tx_history.address = :address
+             AND (
+                ((ISNULL(:last_tx) = 0) AND (address_tx_history.timestamp, address_tx_history.tx_id) < (:last_ts, :last_tx))
+                OR
+                ((ISNULL(:last_tx) = 1) AND (address_tx_history.timestamp, address_tx_history.tx_id) > (0, NULL))
+             )
+             AND address_tx_history.token_id = :token
+           LIMIT 1
+          OFFSET :limit
+         ) AS has_next
+    FROM address_tx_history INNER JOIN transaction ON address_tx_history.tx_id = transaction.tx_id
+   WHERE transaction.voided = FALSE
+     AND address_tx_history.address = :address
+     AND address_tx_history.token_id = :token
+     AND (
+        ((ISNULL(:last_tx) = 0) AND (address_tx_history.timestamp, address_tx_history.tx_id) < (:last_ts, :last_tx))
+        OR
+        ((ISNULL(:last_tx) = 1) AND (address_tx_history.timestamp, address_tx_history.tx_id) > (0, NULL))
+     )
+ORDER BY timestamp DESC, tx_id DESC
+   LIMIT :limit"""
 
 address_tokens_query: str = """\
     SELECT token.id AS token_id,
@@ -114,7 +132,7 @@ class WalletServiceDBClient:
         return result._asdict()
 
     def get_address_history(
-        self, address: str, token: str, limit: int, offset: int
+        self, address: str, token: str, limit: int, last_tx: str, last_ts: int
     ) -> List[dict]:
         """Fetch the transaction history for an address/token pair."""
         result: List[dict] = []
@@ -123,9 +141,11 @@ class WalletServiceDBClient:
                 text(address_history_query),
                 address=address,
                 token=token,
-                offset=offset,
                 limit=limit,
+                last_tx=last_tx,
+                last_ts=last_ts,
             )
+
             for row in cursor:
                 result.append(row._asdict())
 

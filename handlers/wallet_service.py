@@ -45,29 +45,32 @@ def handle_address_history(
     __: LambdaContext,
     wallet_service: Union[WalletService, None] = None,
 ) -> dict:
-
     wallet_service = wallet_service or WalletService()
 
     address: Optional[str] = event.query.get("address")
     token: Optional[str] = event.query.get("token")
+    last_tx: str = event.query.get("last_tx", None)
+    last_ts_str: str = event.query.get("last_ts", "0")
     limit_str: str = event.query.get("limit", "10")
-    offset_str: str = event.query.get("offset", "0")
 
     if address is None or token is None:
         raise ApiError("invalid_parameters")
 
     limit: int
-    offset: int
+    last_ts: int
     try:
         limit = int(limit_str)
-        offset = int(offset_str)
+        last_ts = int(last_ts_str)
     except ValueError:
+        raise ApiError("invalid_parameters")
+
+    if last_ts < 0:
         raise ApiError("invalid_parameters")
 
     if limit > 100:
         raise ApiError("invalid_parameters")
 
-    response = wallet_service.address_history(address, token, limit, offset)
+    response = wallet_service.address_history(address, token, limit, last_tx, last_ts)
 
     return {
         "statusCode": 200,
