@@ -5,12 +5,12 @@ def es_hit_to_result(hit: dict) -> dict:
     :type hit: dict
     """
     result = {
-        'address': hit['_source']['address'],
-        'token_id': hit['_source']['token_id'],
-        'unlocked_balance': hit['_source']['unlocked_balance'],
-        'locked_balance': hit['_source']['locked_balance'],
-        'total': hit['_source']['total'],
-        'sort': hit['sort']
+        "address": hit["_source"]["address"],
+        "token_id": hit["_source"]["token_id"],
+        "unlocked_balance": hit["_source"]["unlocked_balance"],
+        "locked_balance": hit["_source"]["locked_balance"],
+        "total": hit["_source"]["total"],
+        "sort": hit["sort"],
     }
 
     return result

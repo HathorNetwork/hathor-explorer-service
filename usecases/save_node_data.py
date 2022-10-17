@@ -5,7 +5,6 @@ from gateways.node_gateway import NodeGateway
 
 
 class SaveNodeData:
-
     def __init__(self, node_gateway: Union[NodeGateway, None] = None) -> None:
         self.node_gateway = node_gateway or NodeGateway()
 

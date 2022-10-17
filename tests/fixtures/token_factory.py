@@ -9,8 +9,8 @@ fake = Faker()
 
 
 def token_symbol(name):
-    first_name = name.split(' ')[0]
-    symbol = re.sub(r'[aeiou\s]', '', first_name).upper()[:5]
+    first_name = name.split(" ")[0]
+    symbol = re.sub(r"[aeiou\s]", "", first_name).upper()[:5]
     if len(symbol) < 3:
         symbol = f"{symbol}TK"[:3]
 

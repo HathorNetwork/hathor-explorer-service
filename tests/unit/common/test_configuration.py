@@ -2,7 +2,6 @@ from common.configuration import Environment
 
 
 class TestConfiguration:
-
     def test_environment_props(self):
         assert Environment.PROD.is_prod is True
         assert Environment.PROD.is_dev is False

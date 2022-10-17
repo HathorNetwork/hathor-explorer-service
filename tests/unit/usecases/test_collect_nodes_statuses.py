@@ -14,12 +14,11 @@ class AsyncMock(MagicMock):
 
 
 class TestCollectNodesStatuses:
-
     @fixture
     def node_gateway(self):
         return MagicMock()
 
-    @patch('usecases.collect_nodes_statuses.HATHOR_NODES', ['a', 'b'])
+    @patch("usecases.collect_nodes_statuses.HATHOR_NODES", ["a", "b"])
     async def test_collect(self, node_gateway):
         node = Node.from_status_dict(HATHOR_CORE_MAINNET_GET_STATUS)
         # XXX: filtering known_peers based on connected_peers
@@ -28,8 +27,12 @@ class TestCollectNodesStatuses:
             peer_id for peer_id in connected_peer_ids if peer_id in node.known_peers
         ]
 
-        node_gateway.get_node_status_async = AsyncMock(side_effect=lambda x: x(HATHOR_CORE_MAINNET_GET_STATUS))
-        with patch.object(NodeGateway, 'get_node_status_async', new=node_gateway.get_node_status_async):
+        node_gateway.get_node_status_async = AsyncMock(
+            side_effect=lambda x: x(HATHOR_CORE_MAINNET_GET_STATUS)
+        )
+        with patch.object(
+            NodeGateway, "get_node_status_async", new=node_gateway.get_node_status_async
+        ):
             node_gateway.send_node_to_data_aggregator = MagicMock()
 
             usecase = CollectNodesStatuses(node_gateway)

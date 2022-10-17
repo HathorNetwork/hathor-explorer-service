@@ -12,13 +12,11 @@ UNKNOWN_ERROR_MSG = {"error": "unknown_error"}
 
 @ApiGateway()
 def get_address_balance(
-    event: ApiGatewayEvent,
-    _context: LambdaContext,
-    node_api: Optional[NodeApi] = None
+    event: ApiGatewayEvent, _context: LambdaContext, node_api: Optional[NodeApi] = None
 ) -> dict:
     """Get the token balance of a given address.
 
-        *IMPORTANT: Any changes on the parameters should be reflected on the `cacheKeyParameters` for this method.
+    *IMPORTANT: Any changes on the parameters should be reflected on the `cacheKeyParameters` for this method.
     """
     node_api = node_api or NodeApi()
     address = event.query.get("address")
@@ -30,21 +28,17 @@ def get_address_balance(
     return {
         "statusCode": 200,
         "body": json.dumps(response or UNKNOWN_ERROR_MSG),
-        "headers": {
-            "Content-Type": "application/json"
-        }
+        "headers": {"Content-Type": "application/json"},
     }
 
 
 @ApiGateway()
 def get_address_search(
-    event: ApiGatewayEvent,
-    _context: LambdaContext,
-    node_api: Optional[NodeApi] = None
+    event: ApiGatewayEvent, _context: LambdaContext, node_api: Optional[NodeApi] = None
 ) -> dict:
     """Get a paginated list of transactions for a given address.
 
-        *IMPORTANT: Any changes on the parameters should be reflected on the `cacheKeyParameters` for this method.
+    *IMPORTANT: Any changes on the parameters should be reflected on the `cacheKeyParameters` for this method.
     """
     node_api = node_api or NodeApi()
 
@@ -65,21 +59,17 @@ def get_address_search(
     return {
         "statusCode": 200,
         "body": json.dumps(response or UNKNOWN_ERROR_MSG),
-        "headers": {
-            "Content-Type": "application/json"
-        }
+        "headers": {"Content-Type": "application/json"},
     }
 
 
 @ApiGateway()
 def get_version(
-    event: ApiGatewayEvent,
-    _context: LambdaContext,
-    node_api: Optional[NodeApi] = None
+    event: ApiGatewayEvent, _context: LambdaContext, node_api: Optional[NodeApi] = None
 ) -> dict:
     """Get the node version settings.
 
-        *IMPORTANT: Any changes on the parameters should be reflected on the `cacheKeyParameters` for this method.
+    *IMPORTANT: Any changes on the parameters should be reflected on the `cacheKeyParameters` for this method.
     """
     node_api = node_api or NodeApi()
 
@@ -88,21 +78,17 @@ def get_version(
     return {
         "statusCode": 200,
         "body": json.dumps(response or UNKNOWN_ERROR_MSG),
-        "headers": {
-            "Content-Type": "application/json"
-        }
+        "headers": {"Content-Type": "application/json"},
     }
 
 
 @ApiGateway()
 def get_dashboard_tx(
-    event: ApiGatewayEvent,
-    _context: LambdaContext,
-    node_api: Optional[NodeApi] = None
+    event: ApiGatewayEvent, _context: LambdaContext, node_api: Optional[NodeApi] = None
 ) -> dict:
     """Get the txs and blocks to be shown on the dashboard.
 
-        *IMPORTANT: Any changes on the parameters should be reflected on the `cacheKeyParameters` for this method.
+    *IMPORTANT: Any changes on the parameters should be reflected on the `cacheKeyParameters` for this method.
     """
     node_api = node_api or NodeApi()
 
@@ -117,21 +103,17 @@ def get_dashboard_tx(
     return {
         "statusCode": 200,
         "body": json.dumps(response or UNKNOWN_ERROR_MSG),
-        "headers": {
-            "Content-Type": "application/json"
-        }
+        "headers": {"Content-Type": "application/json"},
     }
 
 
 @ApiGateway()
 def get_transaction_acc_weight(
-    event: ApiGatewayEvent,
-    _context: LambdaContext,
-    node_api: Optional[NodeApi] = None
+    event: ApiGatewayEvent, _context: LambdaContext, node_api: Optional[NodeApi] = None
 ) -> dict:
     """Get a tx accumulated weight data.
 
-        *IMPORTANT: Any changes on the parameters should be reflected on the `cacheKeyParameters` for this method.
+    *IMPORTANT: Any changes on the parameters should be reflected on the `cacheKeyParameters` for this method.
     """
     node_api = node_api or NodeApi()
     id = event.query.get("id")
@@ -144,21 +126,17 @@ def get_transaction_acc_weight(
     return {
         "statusCode": 200,
         "body": json.dumps(response or UNKNOWN_ERROR_MSG),
-        "headers": {
-            "Content-Type": "application/json"
-        }
+        "headers": {"Content-Type": "application/json"},
     }
 
 
 @ApiGateway()
 def get_token_history(
-    event: ApiGatewayEvent,
-    _context: LambdaContext,
-    node_api: Optional[NodeApi] = None
+    event: ApiGatewayEvent, _context: LambdaContext, node_api: Optional[NodeApi] = None
 ) -> dict:
     """Get a paginated history of transactions for a given token id.
 
-        *IMPORTANT: Any changes on the parameters should be reflected on the `cacheKeyParameters` for this method.
+    *IMPORTANT: Any changes on the parameters should be reflected on the `cacheKeyParameters` for this method.
     """
     node_api = node_api or NodeApi()
 
@@ -180,21 +158,17 @@ def get_token_history(
     return {
         "statusCode": 200,
         "body": json.dumps(response or {}),
-        "headers": {
-            "Content-Type": "application/json"
-        }
+        "headers": {"Content-Type": "application/json"},
     }
 
 
 @ApiGateway()
 def get_transaction(
-    event: ApiGatewayEvent,
-    _context: LambdaContext,
-    node_api: Optional[NodeApi] = None
+    event: ApiGatewayEvent, _context: LambdaContext, node_api: Optional[NodeApi] = None
 ) -> dict:
     """Get transaction details given a tx_id.
 
-        *IMPORTANT: Any changes on the parameters should be reflected on the `cacheKeyParameters` for this method.
+    *IMPORTANT: Any changes on the parameters should be reflected on the `cacheKeyParameters` for this method.
     """
     node_api = node_api or NodeApi()
     id = event.query.get("id")
@@ -206,21 +180,17 @@ def get_transaction(
     return {
         "statusCode": 200,
         "body": json.dumps(response or UNKNOWN_ERROR_MSG),
-        "headers": {
-            "Content-Type": "application/json"
-        }
+        "headers": {"Content-Type": "application/json"},
     }
 
 
 @ApiGateway()
 def list_transactions(
-    event: ApiGatewayEvent,
-    _context: LambdaContext,
-    node_api: Optional[NodeApi] = None
+    event: ApiGatewayEvent, _context: LambdaContext, node_api: Optional[NodeApi] = None
 ) -> dict:
     """Get a pagination on blocks or transactions with details.
 
-        *IMPORTANT: Any changes on the parameters should be reflected on the `cacheKeyParameters` for this method.
+    *IMPORTANT: Any changes on the parameters should be reflected on the `cacheKeyParameters` for this method.
     """
     node_api = node_api or NodeApi()
 
@@ -242,21 +212,17 @@ def list_transactions(
     return {
         "statusCode": 200,
         "body": json.dumps(response or {}),
-        "headers": {
-            "Content-Type": "application/json"
-        }
+        "headers": {"Content-Type": "application/json"},
     }
 
 
 @ApiGateway()
 def get_token(
-    event: ApiGatewayEvent,
-    _context: LambdaContext,
-    node_api: Optional[NodeApi] = None
+    event: ApiGatewayEvent, _context: LambdaContext, node_api: Optional[NodeApi] = None
 ) -> dict:
     """Get token details given a token uid.
 
-        *IMPORTANT: Any changes on the parameters should be reflected on the `cacheKeyParameters` for this method.
+    *IMPORTANT: Any changes on the parameters should be reflected on the `cacheKeyParameters` for this method.
     """
     node_api = node_api or NodeApi()
     id = event.query.get("id")
@@ -268,17 +234,13 @@ def get_token(
     return {
         "statusCode": 200,
         "body": json.dumps(response or UNKNOWN_ERROR_MSG),
-        "headers": {
-            "Content-Type": "application/json"
-        }
+        "headers": {"Content-Type": "application/json"},
     }
 
 
 @ApiGateway()
 def decode_tx(
-    event: ApiGatewayEvent,
-    _context: LambdaContext,
-    node_api: Optional[NodeApi] = None
+    event: ApiGatewayEvent, _context: LambdaContext, node_api: Optional[NodeApi] = None
 ) -> dict:
     """Decode a tx by it's struct data hex encoded."""
     node_api = node_api or NodeApi()
@@ -290,17 +252,13 @@ def decode_tx(
     return {
         "statusCode": 200,
         "body": json.dumps(response or {}),
-        "headers": {
-            "Content-Type": "application/json"
-        }
+        "headers": {"Content-Type": "application/json"},
     }
 
 
 @ApiGateway()
 def push_tx(
-    event: ApiGatewayEvent,
-    _context: LambdaContext,
-    node_api: Optional[NodeApi] = None
+    event: ApiGatewayEvent, _context: LambdaContext, node_api: Optional[NodeApi] = None
 ) -> dict:
     """Push a transaction by it's struct data hex encoded."""
     node_api = node_api or NodeApi()
@@ -312,17 +270,13 @@ def push_tx(
     return {
         "statusCode": 200,
         "body": json.dumps(response or {}),
-        "headers": {
-            "Content-Type": "application/json"
-        }
+        "headers": {"Content-Type": "application/json"},
     }
 
 
 @ApiGateway()
 def graphviz_dot_neighbors(
-    event: ApiGatewayEvent,
-    _context: LambdaContext,
-    node_api: Optional[NodeApi] = None
+    event: ApiGatewayEvent, _context: LambdaContext, node_api: Optional[NodeApi] = None
 ) -> dict:
     """Generate file with the graph of neighbours of a tx in dot format."""
     node_api = node_api or NodeApi()
@@ -336,7 +290,5 @@ def graphviz_dot_neighbors(
     return {
         "statusCode": 200,
         "body": response,
-        "headers": {
-            "Content-Type": "application/json"
-        }
+        "headers": {"Content-Type": "application/json"},
     }

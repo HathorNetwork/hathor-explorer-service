@@ -11,34 +11,33 @@ InvokeEvent = Union[List[Any], dict, str, float, None]
 
 
 class MetadataUpdateEvent:
-
     def __init__(self, id: str, metadata: Union[dict, None] = None) -> None:
         self.id = id
         self.metadata = metadata or {}
 
     @classmethod
-    def from_event(cls, event: InvokeEvent) -> 'MetadataUpdateEvent':
+    def from_event(cls, event: InvokeEvent) -> "MetadataUpdateEvent":
         try:
             assert isinstance(event, dict)
-            assert 'id' in event
+            assert "id" in event
 
-            if 'metadata' in event:
-                assert isinstance(event['metadata'], dict)
+            if "metadata" in event:
+                assert isinstance(event["metadata"], dict)
 
-            return cls(event['id'], event.get('metadata'))
+            return cls(event["id"], event.get("metadata"))
         except AssertionError:
-            raise EventValidationError('event is not a metadata update event')
+            raise EventValidationError("event is not a metadata update event")
 
 
 class InvokeHandler:
-
     def __call__(
-            self,
-            function_to_call: Callable[[InvokeEvent, LambdaContext, Any], dict]
+        self, function_to_call: Callable[[InvokeEvent, LambdaContext, Any], dict]
     ) -> Callable[[InvokeEvent, LambdaContext, Any], dict]:
-        def wrapper(event: InvokeEvent, context: LambdaContext, *args: Any, **kwargs: Any) -> dict:
+        def wrapper(
+            event: InvokeEvent, context: LambdaContext, *args: Any, **kwargs: Any
+        ) -> dict:
             try:
-                result = function_to_call(event, context, *args, **kwargs)  # type: ignore
+                result = function_to_call(event, context, *args, **kwargs)
 
                 return result
             except Exception as error:

@@ -7,7 +7,6 @@ from usecases.get_network import GetNetwork
 
 
 class TestGetNetwork:
-
     @fixture
     def node_gateway(self):
         return MagicMock()
@@ -22,8 +21,8 @@ class TestGetNetwork:
         result = get_network.get()
 
         assert result
-        assert result['nodes'][0]['id'] == network.nodes[0].id
-        assert result['peers'][0]['id'] == network.peers[0].id
+        assert result["nodes"][0]["id"] == network.nodes[0].id
+        assert result["peers"][0]["id"] == network.peers[0].id
 
     def test_get_not_found(self, node_gateway):
         node_gateway.get_network = MagicMock(return_value=None)

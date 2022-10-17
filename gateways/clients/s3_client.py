@@ -6,14 +6,14 @@ from common.configuration import S3_ENDPOINT
 
 
 class S3Client:
-    """This is an abstraction for boto3 s3 client
-    """
+    """This is an abstraction for boto3 s3 client"""
+
     def __init__(self) -> None:
         session = Session()
         if S3_ENDPOINT is None:
-            self.client = session.client('s3')
+            self.client = session.client("s3")
         else:
-            self.client = session.client('s3', endpoint_url=S3_ENDPOINT)
+            self.client = session.client("s3", endpoint_url=S3_ENDPOINT)
 
     def load_file(self, bucket: str, file: str) -> Union[str, None]:
         """Loads contents from a file from s3 bucket
@@ -27,7 +27,7 @@ class S3Client:
         """
         try:
             response = self.client.get_object(Bucket=bucket, Key=file)
-            return response['Body'].read().decode()
+            return response["Body"].read().decode()
         except self.client.exceptions.NoSuchKey:
             # TODO: Add log here
             return None
@@ -49,6 +49,6 @@ class S3Client:
             Body=content.encode(),
             Bucket=bucket,
             Key=file,
-            ContentType='application/json'
+            ContentType="application/json",
         )
         return response

@@ -9,18 +9,18 @@ from utils.wrappers.aws.api_gateway import ApiGateway, ApiGatewayEvent
 
 
 @ApiGateway()
-def handle(event: ApiGatewayEvent, __: LambdaContext, get_network: Optional[GetNetwork] = None) -> dict:
+def handle(
+    event: ApiGatewayEvent, __: LambdaContext, get_network: Optional[GetNetwork] = None
+) -> dict:
 
     get_network = get_network or GetNetwork()
     response = get_network.get()
 
     if response is None:
-        raise ApiError('not_found')
+        raise ApiError("not_found")
 
     return {
         "statusCode": 200,
         "body": json.dumps(response),
-        "headers": {
-            "Content-Type": "application/json"
-        }
+        "headers": {"Content-Type": "application/json"},
     }

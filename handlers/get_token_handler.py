@@ -12,19 +12,17 @@ from utils.wrappers.aws.api_gateway import ApiGateway, ApiGatewayEvent
 def handle(
     event: ApiGatewayEvent,
     _context: LambdaContext,
-    get_token: Union[GetToken, None] = None
+    get_token: Union[GetToken, None] = None,
 ) -> dict:
 
     get_token = get_token or GetToken()
-    response = get_token.get(event.path['hash'])
+    response = get_token.get(event.path["hash"])
 
     if response is None:
-        raise ApiError('not_found')
+        raise ApiError("not_found")
 
     return {
         "statusCode": 200,
         "body": json.dumps(response),
-        "headers": {
-            "Content-Type": "application/json"
-        }
+        "headers": {"Content-Type": "application/json"},
     }

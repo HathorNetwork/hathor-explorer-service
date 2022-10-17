@@ -5,15 +5,15 @@ from typing import List
 
 class NodeState(str, Enum):
     # Node is still initializing
-    INITIALIZING = 'INITIALIZING'
+    INITIALIZING = "INITIALIZING"
 
     # Node is ready to establish new connections, sync, and exchange transactions.
-    READY = 'READY'
+    READY = "READY"
 
 
 @dataclass
 class Peer:
-    """ Information about a Peer connected to a node
+    """Information about a Peer connected to a node
 
     :param id: Peer id hash
     :type id: str
@@ -45,6 +45,7 @@ class Peer:
     :param entrypoints: List of entrypoints, if any
     :type entrypoints: List[str]
     """
+
     id: str
     app_version: str
     uptime: float
@@ -59,7 +60,7 @@ class Peer:
 
 @dataclass
 class Node:
-    """ Node information of a given node
+    """Node information of a given node
 
     :param id: Node id hash
     :type id: str
@@ -92,6 +93,7 @@ class Node:
     :type connected_peers: List[Peer]
 
     """
+
     id: str
     app_version: str
     state: NodeState
@@ -104,7 +106,7 @@ class Node:
     connected_peers: List[Peer]
 
     def to_dict(self) -> dict:
-        """ Convert a Node instance into dict
+        """Convert a Node instance into dict
 
         :return: The dict representation of the Node
         :rtype: dict
@@ -112,8 +114,8 @@ class Node:
         return asdict(self)
 
     @classmethod
-    def from_dict(cls, dikt: dict) -> 'Node':
-        """ Creates a new Node instance from a given dict (inverse operation of `to_dict`)
+    def from_dict(cls, dikt: dict) -> "Node":
+        """Creates a new Node instance from a given dict (inverse operation of `to_dict`)
 
         :param dikt: Dict with Node structure and data
         :type dikt: dict
@@ -121,20 +123,20 @@ class Node:
         :return: The new instance
         :rtype: :py:class:`domain.network.node.Node`
         """
-        dikt['state'] = NodeState(dikt['state'])
+        dikt["state"] = NodeState(dikt["state"])
 
         connected_peers = []
 
-        for peer in dikt['connected_peers']:
-            peer['state'] = NodeState(peer['state'])
+        for peer in dikt["connected_peers"]:
+            peer["state"] = NodeState(peer["state"])
             connected_peers.append(Peer(**peer))
 
-        dikt['connected_peers'] = connected_peers
+        dikt["connected_peers"] = connected_peers
 
         return Node(**dikt)
 
     @classmethod
-    def from_status_dict(cls, status: dict) -> 'Node':
+    def from_status_dict(cls, status: dict) -> "Node":
         """Convenience method to parse response to domain object
 
         :param dikt: Dict response of a request to node status endpoint
@@ -143,33 +145,41 @@ class Node:
         :return: A new Node class built from status data
         :rtype: Node
         """
-        peer_entrypoints = {peer['id']: peer['entrypoints'] for peer in status['known_peers']}
+        peer_entrypoints = {
+            peer["id"]: peer["entrypoints"] for peer in status["known_peers"]
+        }
 
         connected_peers = []
 
-        for peer in status['connections']['connected_peers']:
-            connected_peers.append(Peer(
-                id=peer['id'],
-                app_version=peer['app_version'],
-                uptime=peer['uptime'],
-                address=peer['address'],
-                state=NodeState(peer['state']),
-                last_message=peer['last_message'],
-                latest_timestamp=peer['plugins']['node-sync-timestamp']['latest_timestamp'],
-                sync_timestamp=peer['plugins']['node-sync-timestamp']['synced_timestamp'],
-                warning_flags=peer['warning_flags'],
-                entrypoints=peer_entrypoints[peer['id']]
-            ))
+        for peer in status["connections"]["connected_peers"]:
+            connected_peers.append(
+                Peer(
+                    id=peer["id"],
+                    app_version=peer["app_version"],
+                    uptime=peer["uptime"],
+                    address=peer["address"],
+                    state=NodeState(peer["state"]),
+                    last_message=peer["last_message"],
+                    latest_timestamp=peer["plugins"]["node-sync-timestamp"][
+                        "latest_timestamp"
+                    ],
+                    sync_timestamp=peer["plugins"]["node-sync-timestamp"][
+                        "synced_timestamp"
+                    ],
+                    warning_flags=peer["warning_flags"],
+                    entrypoints=peer_entrypoints[peer["id"]],
+                )
+            )
 
         return cls(
-            id=status['server']['id'],
-            app_version=status['server']['app_version'],
-            state=NodeState(status['server']['state']),
-            network=status['server']['network'],
-            uptime=status['server']['uptime'],
-            first_timestamp=status['dag']['first_timestamp'],
-            latest_timestamp=status['dag']['latest_timestamp'],
-            entrypoints=status['server']['entrypoints'],
+            id=status["server"]["id"],
+            app_version=status["server"]["app_version"],
+            state=NodeState(status["server"]["state"]),
+            network=status["server"]["network"],
+            uptime=status["server"]["uptime"],
+            first_timestamp=status["dag"]["first_timestamp"],
+            latest_timestamp=status["dag"]["latest_timestamp"],
+            entrypoints=status["server"]["entrypoints"],
             known_peers=[id for id in peer_entrypoints.keys()],
-            connected_peers=connected_peers
+            connected_peers=connected_peers,
         )
