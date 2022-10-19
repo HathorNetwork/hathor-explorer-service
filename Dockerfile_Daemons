@@ -17,4 +17,4 @@ RUN poetry config virtualenvs.create false \
 # copy the content of the local src directory to the working directory
 COPY . .
 # command to run on container start
-CMD [ "poetry", "run", "python", "-u", "./daemons_runner.py" ]
+CMD [ "python", "-u", "./daemons_runner.py" ]
