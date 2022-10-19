@@ -93,7 +93,7 @@ jobs:
           REDIS_PORT: 6379
           REDIS_DB: 0
           METADATA_BUCKET: hathor-explorer-metadata-dev
-          CORS_ALLOWED_REGEX: *
+          CORS_ALLOWED_REGEX: .*
           NODE_CACHE_TTL: 30
           ELASTIC_INDEX: dev-token
           ELASTIC_TX_INDEX: dev-tx
