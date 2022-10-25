@@ -18,6 +18,8 @@ class CollectNodesStatuses:
 
     async def collect(self) -> None:
         """Collect nodes statuses and send them to data aggregator"""
+        self.log.info(f"Collecting status from nodes {HATHOR_NODES}")
+
         for node in HATHOR_NODES:
             client = HathorCoreAsyncClient(node)
             node_gateway = NodeGateway(hathor_core_async_client=client)
