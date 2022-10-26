@@ -71,6 +71,7 @@ install:
 build:
 	docker-compose build
 
+.ONESHELL:
 .PHONY: deploy-daemons
 deploy-daemons:
 	if [ -z "${AWS_ACCOUNT_ID}" ]; then \
