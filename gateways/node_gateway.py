@@ -15,6 +15,7 @@ from gateways.clients.lambda_client import LambdaClient
 
 logger = get_logger()
 
+
 class NodeGateway:
     """Gateway for Node actions
 

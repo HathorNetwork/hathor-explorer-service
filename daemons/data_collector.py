@@ -2,10 +2,11 @@
 
 import asyncio
 
-from usecases.collect_nodes_statuses import CollectNodesStatuses
 from common.logging import get_logger
+from usecases.collect_nodes_statuses import CollectNodesStatuses
 
 logger = get_logger()
+
 
 class DataCollector:
     async def run(self) -> None:
