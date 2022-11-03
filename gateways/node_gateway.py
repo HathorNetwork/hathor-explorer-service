@@ -2,6 +2,7 @@ from typing import Callable, Dict, List, Union
 
 from common.configuration import DATA_AGGREGATOR_LAMBDA_NAME, NODE_CACHE_TTL
 from common.errors import ConfigError
+from common.logging import get_logger
 from domain.network.network import AggregatedNode, AggregatedPeer, Network
 from domain.network.node import Node
 from gateways.clients.cache_client import (
@@ -11,6 +12,8 @@ from gateways.clients.cache_client import (
 )
 from gateways.clients.hathor_core_client import STATUS_ENDPOINT, HathorCoreAsyncClient
 from gateways.clients.lambda_client import LambdaClient
+
+logger = get_logger()
 
 
 class NodeGateway:
@@ -35,6 +38,7 @@ class NodeGateway:
         )
         self.cache_client = cache_client or CacheClient()
         self.lambda_client = lambda_client or LambdaClient()
+        self.log = logger.new()
 
     async def get_node_status_async(self, callback: Callable[[dict], None]) -> None:
         """Retrieve status from full-node
@@ -55,6 +59,7 @@ class NodeGateway:
         lambda_name = DATA_AGGREGATOR_LAMBDA_NAME
 
         if lambda_name is not None:
+            self.log.info(f"Invoking lambda {lambda_name}")
             return self.lambda_client.invoke_async(lambda_name, payload.to_dict())
 
         raise ConfigError("No lambda name in config")

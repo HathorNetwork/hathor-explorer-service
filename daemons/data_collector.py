@@ -2,7 +2,10 @@
 
 import asyncio
 
+from common.logging import get_logger
 from usecases.collect_nodes_statuses import CollectNodesStatuses
+
+logger = get_logger()
 
 
 class DataCollector:
@@ -11,6 +14,8 @@ class DataCollector:
 
 
 def main() -> None:
+    log = logger.new()
+    log.info("Starting DataCollector")
     loop = asyncio.get_event_loop()
     try:
         data_collector = DataCollector()
@@ -19,7 +24,7 @@ def main() -> None:
     except KeyboardInterrupt:
         pass
     finally:
-        print("Closing Loop")
+        log.info("Closing DataCollector loop")
         loop.close()
 
 
