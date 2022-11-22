@@ -2,7 +2,6 @@ from unittest.mock import ANY, MagicMock, call
 
 import pytest
 from faker import Faker
-from pytest import fixture
 from sqlalchemy.exc import MultipleResultsFound, NoResultFound
 
 from common.errors import RdsError, RdsNotFoundError
@@ -19,11 +18,11 @@ fake = Faker()
 
 
 class TestWalletServiceDBClient:
-    @fixture
+    @pytest.fixture
     def connection(self):
         return MagicMock()
 
-    @fixture
+    @pytest.fixture
     def engine(self, connection):
         engine = MagicMock()
         conn_manager = MagicMock()

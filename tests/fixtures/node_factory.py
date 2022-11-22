@@ -1,5 +1,4 @@
-import factory
-from factory import List, lazy_attribute
+from factory import Factory, List, lazy_attribute
 from factory.declarations import SubFactory
 from faker import Faker
 
@@ -12,7 +11,7 @@ def entrypoint():
     return f"{fake.ipv4()}:{fake.port_number()}"
 
 
-class PeerFactory(factory.Factory):
+class PeerFactory(Factory):
     class Meta:
         model = Peer
 
@@ -42,7 +41,7 @@ class PeerFactory(factory.Factory):
     )
 
 
-class NodeFactory(factory.Factory):
+class NodeFactory(Factory):
     class Meta:
         model = Node
 

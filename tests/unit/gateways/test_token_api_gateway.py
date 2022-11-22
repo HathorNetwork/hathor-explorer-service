@@ -78,7 +78,6 @@ class TestTokenApiGateway:
                         "00000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a",
                         1649473276,
                     ],
-                    "transactions_count": 0,
                     "nft": False,
                 },
                 {
@@ -91,7 +90,6 @@ class TestTokenApiGateway:
                         "10000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a",
                         1000000000,
                     ],
-                    "transactions_count": 0,
                     "nft": False,
                 },
             ],
