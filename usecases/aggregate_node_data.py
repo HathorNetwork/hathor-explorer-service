@@ -42,6 +42,8 @@ class AggregateNodeData:
             "data_aggregator_ts", segment="read_old_network", time=read_time - agg_time
         )
 
+        networks_diff = None
+
         if old_network:
             regex_path_to_exclude = r"root\['(nodes|peers)'\]\[\d+\]\['uptime'\]"
             new_dict = new_network.to_dict()
