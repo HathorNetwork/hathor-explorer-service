@@ -2,7 +2,7 @@ name: deploy
 
 on:
   push:
-    branches: [main, dev, fix/deploy]
+    branches: [main, dev]
     tags: ['v*.*.*']
 
 env:
@@ -41,9 +41,6 @@ jobs:
             echo "Setting testnet environment"
             echo "::set-output name=environment::testnet"
           elif [[ "${{github.base_ref}}" == "dev" || "${{github.ref}}" == "refs/heads/dev" ]]; then
-            echo "Setting dev environment"
-            echo "::set-output name=environment::dev"
-          else
             echo "Setting dev environment"
             echo "::set-output name=environment::dev"
           fi
