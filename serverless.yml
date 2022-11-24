@@ -72,6 +72,7 @@ custom:
     host: 0.0.0.0
   pythonRequirements:
     layer: true
+    pythonBin: python3
   s3:
     host: localhost
     directory: /tmp
