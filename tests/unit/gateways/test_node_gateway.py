@@ -1,7 +1,6 @@
 from unittest.mock import MagicMock, patch
 
 import pytest
-from pytest import fixture
 
 from gateways.node_gateway import NodeGateway
 from tests.fixtures.network_factory import NetworkFactory
@@ -9,15 +8,15 @@ from tests.fixtures.node_factory import NodeFactory
 
 
 class TestNodeGateway:
-    @fixture
+    @pytest.fixture
     def lambda_client(self):
         return MagicMock()
 
-    @fixture
+    @pytest.fixture
     def cache_client(self):
         return MagicMock()
 
-    @fixture
+    @pytest.fixture
     def hathor_core_async_client(self):
         return MagicMock()
 

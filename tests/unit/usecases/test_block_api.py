@@ -27,7 +27,7 @@ class TestBlockApi:
         block_api = BlockApi(block_api_gateway)
 
         result = block_api.get_best_chain_height()
-        block_api_gateway.get_best_chain_height.assert_called_once
+        block_api_gateway.get_best_chain_height.assert_called_once()
         assert result
         assert result == GATEWAY_BEST_CHAIN_HEIGHT_SUCCESSFUL_RESPONSE
 
