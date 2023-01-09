@@ -10,9 +10,9 @@
     "serverless-plugin-aws-alerts": "^1.7.4"
   },
   "devDependencies": {
-    "serverless-offline": "^8.2.0",
+    "serverless-offline": "^8.8.1",
     "serverless-python-requirements": "^5.1.1",
-    "serverless-s3-local": "^0.6.17"
+    "serverless-s3-local": "^0.6.22"
   },
   "scripts": {
     "start": "serverless offline --printOutput"
