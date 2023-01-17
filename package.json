@@ -1,6 +1,6 @@
 {
   "name": "hathor-explorer-service",
-  "version": "0.7.5",
+  "version": "0.7.6",
   "description": "Hathor Explorer Service Serverless deps",
   "dependencies": {
     "@apidevtools/swagger-cli": "^4.0.4",
