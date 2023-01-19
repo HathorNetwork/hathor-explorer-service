@@ -4,7 +4,7 @@
   "description": "Hathor Explorer Service Serverless deps",
   "dependencies": {
     "@apidevtools/swagger-cli": "^4.0.4",
-    "serverless": "^2.44.0",
+    "serverless": "^3.26.0",
     "serverless-api-gateway-caching": "^1.7.2",
     "serverless-api-gateway-throttling": "^1.2.2",
     "serverless-plugin-aws-alerts": "^1.7.4"
