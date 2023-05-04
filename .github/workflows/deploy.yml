@@ -122,7 +122,7 @@ jobs:
           npx make deploy-lambdas stage=mainnet
         env:
           API_PORT: 3001
-          HATHOR_CORE_DOMAIN: node1.mainnet.hathor.network
+          HATHOR_CORE_DOMAIN: node.explorer.hathor.network
           HATHOR_NODES: node.explorer.hathor.network,node1.mainnet.hathor.network,node2.mainnet.hathor.network
           REDIS_KEY_PREFIX: hathor-explorer-service-mainnet
           REDIS_HOST: ${{ secrets.REDIS_HOST }}
