@@ -36,13 +36,13 @@ jobs:
         run: |
           if [[ "${{github.ref}}" == refs/tags/v* ]]; then
             echo "Setting mainnet environment"
-            echo "::set-output name=environment::mainnet"
+            echo "environment=mainnet" >> $GITHUB_OUTPUT
           elif [[ "${{github.base_ref}}" == "main" || "${{github.ref}}" == "refs/heads/main" ]]; then
             echo "Setting testnet environment"
-            echo "::set-output name=environment::testnet"
+            echo "environment=testnet" >> $GITHUB_OUTPUT
           elif [[ "${{github.base_ref}}" == "dev" || "${{github.ref}}" == "refs/heads/dev" ]]; then
             echo "Setting dev environment"
-            echo "::set-output name=environment::dev"
+            echo "environment=dev" >> $GITHUB_OUTPUT
           fi
 
   deploy:
