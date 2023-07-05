@@ -47,7 +47,7 @@ class TestNodeApiGateway:
         gateway = NodeApiGateway(hathor_core_client=hathor_client)
         result = gateway.get_address_balance("mock-address")
         hathor_client.get.assert_called_once_with(
-            "mock-endpoint", params={"address": "mock-address"}, timeout=14
+            "mock-endpoint", params={"address": "mock-address"}, timeout=10
         )
         assert result
         assert sorted(result) == sorted(obj)
@@ -66,7 +66,7 @@ class TestNodeApiGateway:
         gateway = NodeApiGateway(hathor_core_client=hathor_client)
         result = gateway.get_address_search("mock-address", 1)
         hathor_client.get.assert_called_once_with(
-            "mock-endpoint", params={"address": "mock-address", "count": 1}, timeout=14
+            "mock-endpoint", params={"address": "mock-address", "count": 1}, timeout=10
         )
         assert result
         assert sorted(result) == sorted(obj)
@@ -75,7 +75,7 @@ class TestNodeApiGateway:
         hathor_client.get.assert_called_with(
             "mock-endpoint",
             params={"address": "mock-address", "count": 5, "token": "mock-token"},
-            timeout=14,
+            timeout=10,
         )
         assert result
         assert sorted(result) == sorted(obj)
@@ -91,7 +91,7 @@ class TestNodeApiGateway:
                 "hash": "a-hash",
                 "page": "next",
             },
-            timeout=14,
+            timeout=10,
         )
         assert result
         assert sorted(result) == sorted(obj)

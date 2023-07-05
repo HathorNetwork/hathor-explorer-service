@@ -16,7 +16,9 @@ from gateways.clients.hathor_core_client import (
     HathorCoreClient,
 )
 
-# The default lambda timeout for Node API Lambdas is set to 6 seconds.
+# The default lambda timeout for Node API Lambdas is set to
+# 6 seconds. Therefore, the client should have a lower timeout,
+# to let the lambda shut down gracefully.
 NODE_API_TIMEOUT_IN_SECONDS = 5
 
 
@@ -59,7 +61,9 @@ class NodeApiGateway:
         return self.hathor_core_client.get(
             ADDRESS_BALANCE_ENDPOINT,
             params={"address": address},
-            timeout=14,  # lambda timeout 15s
+            # lambda timeout 15s, which is the sum of all lambda's steps timeout
+            # see: https://github.com/HathorNetwork/hathor-explorer-service/pull/93
+            timeout=10,
         )
 
     def get_address_search(
@@ -89,7 +93,9 @@ class NodeApiGateway:
         return self.hathor_core_client.get(
             ADDRESS_SEARCH_ENDPOINT,
             params=params,
-            timeout=14,  # lambda timeout 15s
+            # lambda timeout 15s, which is the sum of all lambda's steps timeout
+            # see: https://github.com/HathorNetwork/hathor-explorer-service/pull/93
+            timeout=10,  # lambda timeout 15s
         )
 
     def get_version(self) -> Optional[dict]:
