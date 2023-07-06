@@ -16,6 +16,11 @@ from gateways.clients.hathor_core_client import (
     HathorCoreClient,
 )
 
+# The default lambda timeout for Node API Lambdas is set to
+# 6 seconds. Therefore, the client should have a lower timeout,
+# to let the lambda shut down gracefully.
+NODE_API_TIMEOUT_IN_SECONDS = 5
+
 
 class NodeApiGateway:
     """Gateway to interact with the full-node api"""
@@ -56,6 +61,8 @@ class NodeApiGateway:
         return self.hathor_core_client.get(
             ADDRESS_BALANCE_ENDPOINT,
             params={"address": address},
+            # lambda timeout 15s, which is the sum of all lambda's steps timeout
+            # see: https://github.com/HathorNetwork/hathor-explorer-service/pull/93
             timeout=10,
         )
 
@@ -86,25 +93,35 @@ class NodeApiGateway:
         return self.hathor_core_client.get(
             ADDRESS_SEARCH_ENDPOINT,
             params=params,
-            timeout=10,
+            # lambda timeout 15s, which is the sum of all lambda's steps timeout
+            # see: https://github.com/HathorNetwork/hathor-explorer-service/pull/93
+            timeout=10,  # lambda timeout 15s
         )
 
     def get_version(self) -> Optional[dict]:
         """Retrieve version information"""
 
-        return self.hathor_core_client.get(VERSION_ENDPOINT)
+        return self.hathor_core_client.get(
+            VERSION_ENDPOINT, timeout=NODE_API_TIMEOUT_IN_SECONDS
+        )
 
     def get_dashboard_tx(self, block: int, tx: int) -> Optional[dict]:
         """Retrieve info on blocks and transaction to show on dashboard"""
 
         return self.hathor_core_client.get(
-            DASHBOARD_TX_ENDPOINT, params={"tx": tx, "block": block}
+            DASHBOARD_TX_ENDPOINT,
+            params={"tx": tx, "block": block},
+            timeout=NODE_API_TIMEOUT_IN_SECONDS,
         )
 
     def get_transaction_acc_weight(self, id: str) -> Optional[dict]:
         """Retrieve acc weight for a tx"""
 
-        return self.hathor_core_client.get(TX_ACC_WEIGHT_ENDPOINT, params={"id": id})
+        return self.hathor_core_client.get(
+            TX_ACC_WEIGHT_ENDPOINT,
+            params={"id": id},
+            timeout=NODE_API_TIMEOUT_IN_SECONDS,
+        )
 
     def get_token_history(
         self,
@@ -122,21 +139,31 @@ class NodeApiGateway:
             params["page"] = page
             params["timestamp"] = timestamp
 
-        return self.hathor_core_client.get(TOKEN_HISTORY_ENDPOINT, params=params)
+        return self.hathor_core_client.get(
+            TOKEN_HISTORY_ENDPOINT, params=params, timeout=NODE_API_TIMEOUT_IN_SECONDS
+        )
 
     def get_transaction(self, id: str) -> Optional[dict]:
         """Retrieve transaction by id"""
-        return self.hathor_core_client.get(TRANSACTION_ENDPOINT, params={"id": id})
+        return self.hathor_core_client.get(
+            TRANSACTION_ENDPOINT, params={"id": id}, timeout=NODE_API_TIMEOUT_IN_SECONDS
+        )
 
     def decode_tx(self, hex_tx: str) -> Optional[dict]:
         """Decode a transaction from it's hex encoded struct data."""
         return self.hathor_core_client.get(
-            DECODE_TX_ENDPOINT, params={"hex_tx": hex_tx}
+            DECODE_TX_ENDPOINT,
+            params={"hex_tx": hex_tx},
+            timeout=NODE_API_TIMEOUT_IN_SECONDS,
         )
 
     def push_tx(self, hex_tx: str) -> Optional[dict]:
         """Push a transaction from it's hex encoded struct data."""
-        return self.hathor_core_client.get(PUSH_TX_ENDPOINT, params={"hex_tx": hex_tx})
+        return self.hathor_core_client.get(
+            PUSH_TX_ENDPOINT,
+            params={"hex_tx": hex_tx},
+            timeout=NODE_API_TIMEOUT_IN_SECONDS,
+        )
 
     def graphviz_dot_neighbors(
         self, tx: str, graph_type: str, max_level: int
@@ -148,7 +175,9 @@ class NodeApiGateway:
             "max_level": max_level,
         }
         return self.hathor_core_client.get_text(
-            GRAPHVIZ_DOT_NEIGHBORS_ENDPOINT, params=data
+            GRAPHVIZ_DOT_NEIGHBORS_ENDPOINT,
+            params=data,
+            timeout=NODE_API_TIMEOUT_IN_SECONDS,
         )
 
     def list_transactions(
@@ -167,8 +196,12 @@ class NodeApiGateway:
             params["page"] = page
             params["timestamp"] = timestamp
 
-        return self.hathor_core_client.get(TRANSACTION_ENDPOINT, params=params)
+        return self.hathor_core_client.get(
+            TRANSACTION_ENDPOINT, params=params, timeout=NODE_API_TIMEOUT_IN_SECONDS
+        )
 
     def get_token(self, id: str) -> Optional[dict]:
         """Retrieve token by id"""
-        return self.hathor_core_client.get(TOKEN_ENDPOINT, params={"id": id})
+        return self.hathor_core_client.get(
+            TOKEN_ENDPOINT, params={"id": id}, timeout=NODE_API_TIMEOUT_IN_SECONDS
+        )
