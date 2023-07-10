@@ -390,6 +390,7 @@ functions:
 
   node_api_get_version:
     handler: handlers/node_api.get_version
+    timeout: 6
     maximumRetryAttempts: 0
     package:
       patterns:
@@ -409,6 +410,7 @@ functions:
 
   node_api_get_dashboard_tx:
     handler: handlers/node_api.get_dashboard_tx
+    timeout: 6
     maximumRetryAttempts: 0
     package:
       patterns:
@@ -430,6 +432,7 @@ functions:
 
   node_api_get_tx_acc_w:
     handler: handlers/node_api.get_transaction_acc_weight
+    timeout: 6
     maximumRetryAttempts: 0
     package:
       patterns:
@@ -450,6 +453,7 @@ functions:
 
   node_api_get_token_history:
     handler: handlers/node_api.get_token_history
+    timeout: 6
     maximumRetryAttempts: 0
     package:
       patterns:
@@ -474,6 +478,7 @@ functions:
 
   node_api_get_transaction:
     handler: handlers/node_api.get_transaction
+    timeout: 6
     maximumRetryAttempts: 0
     package:
       patterns:
@@ -494,6 +499,7 @@ functions:
 
   node_api_list_transactions:
     handler: handlers/node_api.list_transactions
+    timeout: 6
     maximumRetryAttempts: 0
     package:
       patterns:
@@ -518,6 +524,7 @@ functions:
 
   node_api_get_token:
     handler: handlers/node_api.get_token
+    timeout: 6
     maximumRetryAttempts: 0
     package:
       patterns:
@@ -538,6 +545,7 @@ functions:
 
   node_api_decode_tx:
     handler: handlers/node_api.decode_tx
+    timeout: 6
     maximumRetryAttempts: 0
     package:
       patterns:
@@ -558,6 +566,7 @@ functions:
 
   node_api_push_tx:
     handler: handlers/node_api.push_tx
+    timeout: 6
     maximumRetryAttempts: 0
     package:
       patterns:
@@ -578,6 +587,7 @@ functions:
 
   node_api_gviz_dot_neighbors:
     handler: handlers/node_api.graphviz_dot_neighbors
+    timeout: 6
     maximumRetryAttempts: 0
     package:
       patterns:

@@ -3,7 +3,7 @@ from unittest.mock import MagicMock, patch
 
 from pytest import fixture
 
-from gateways.node_api_gateway import NodeApiGateway
+from gateways.node_api_gateway import NODE_API_TIMEOUT_IN_SECONDS, NodeApiGateway
 from tests.fixtures.node_api_factory import (
     AddressBalanceFactory,
     AddressSearchFactory,
@@ -109,7 +109,9 @@ class TestNodeApiGateway:
         hathor_client.get = MagicMock(return_value=obj)
         gateway = NodeApiGateway(hathor_core_client=hathor_client)
         result = gateway.get_version()
-        hathor_client.get.assert_called_once_with("mock-endpoint")
+        hathor_client.get.assert_called_once_with(
+            "mock-endpoint", timeout=NODE_API_TIMEOUT_IN_SECONDS
+        )
         assert result
         assert sorted(result) == sorted(obj)
 
@@ -120,7 +122,9 @@ class TestNodeApiGateway:
         gateway = NodeApiGateway(hathor_core_client=hathor_client)
         result = gateway.get_dashboard_tx(15, 5)
         hathor_client.get.assert_called_once_with(
-            "mock-endpoint", params={"tx": 5, "block": 15}
+            "mock-endpoint",
+            params={"tx": 5, "block": 15},
+            timeout=NODE_API_TIMEOUT_IN_SECONDS,
         )
         assert result
         assert sorted(result) == sorted(obj)
@@ -132,7 +136,9 @@ class TestNodeApiGateway:
         gateway = NodeApiGateway(hathor_core_client=hathor_client)
         result = gateway.get_transaction_acc_weight("mock-txid")
         hathor_client.get.assert_called_once_with(
-            "mock-endpoint", params={"id": "mock-txid"}
+            "mock-endpoint",
+            params={"id": "mock-txid"},
+            timeout=NODE_API_TIMEOUT_IN_SECONDS,
         )
         assert result
         assert sorted(result) == sorted(obj)
@@ -144,7 +150,9 @@ class TestNodeApiGateway:
         gateway = NodeApiGateway(hathor_core_client=hathor_client)
         result = gateway.get_token_history("mock-id-1", 1)
         hathor_client.get.assert_called_once_with(
-            "mock-endpoint", params={"id": "mock-id-1", "count": 1}
+            "mock-endpoint",
+            params={"id": "mock-id-1", "count": 1},
+            timeout=NODE_API_TIMEOUT_IN_SECONDS,
         )
         assert result
         assert sorted(result) == sorted(obj)
@@ -159,6 +167,7 @@ class TestNodeApiGateway:
                 "page": None,
                 "timestamp": None,
             },
+            timeout=NODE_API_TIMEOUT_IN_SECONDS,
         )
         assert result
         assert sorted(result) == sorted(obj)
@@ -173,6 +182,7 @@ class TestNodeApiGateway:
                 "page": "next",
                 "timestamp": 123,
             },
+            timeout=NODE_API_TIMEOUT_IN_SECONDS,
         )
         assert result
         assert sorted(result) == sorted(obj)
@@ -184,7 +194,9 @@ class TestNodeApiGateway:
         gateway = NodeApiGateway(hathor_core_client=hathor_client)
         result = gateway.get_transaction("mock-txid")
         hathor_client.get.assert_called_once_with(
-            "mock-endpoint", params={"id": "mock-txid"}
+            "mock-endpoint",
+            params={"id": "mock-txid"},
+            timeout=NODE_API_TIMEOUT_IN_SECONDS,
         )
         assert result
         assert sorted(result) == sorted(obj)
@@ -196,7 +208,9 @@ class TestNodeApiGateway:
         gateway = NodeApiGateway(hathor_core_client=hathor_client)
         result = gateway.list_transactions("type-1", 1)
         hathor_client.get.assert_called_once_with(
-            "mock-endpoint", params={"type": "type-1", "count": 1}
+            "mock-endpoint",
+            params={"type": "type-1", "count": 1},
+            timeout=NODE_API_TIMEOUT_IN_SECONDS,
         )
         assert result
         assert sorted(result) == sorted(obj)
@@ -211,6 +225,7 @@ class TestNodeApiGateway:
                 "page": None,
                 "timestamp": None,
             },
+            timeout=NODE_API_TIMEOUT_IN_SECONDS,
         )
         assert result
         assert sorted(result) == sorted(obj)
@@ -225,6 +240,7 @@ class TestNodeApiGateway:
                 "page": "next",
                 "timestamp": 123,
             },
+            timeout=NODE_API_TIMEOUT_IN_SECONDS,
         )
         assert result
         assert sorted(result) == sorted(obj)
@@ -236,7 +252,9 @@ class TestNodeApiGateway:
         gateway = NodeApiGateway(hathor_core_client=hathor_client)
         result = gateway.get_token("mock-token-uid")
         hathor_client.get.assert_called_once_with(
-            "mock-endpoint", params={"id": "mock-token-uid"}
+            "mock-endpoint",
+            params={"id": "mock-token-uid"},
+            timeout=NODE_API_TIMEOUT_IN_SECONDS,
         )
         assert result
         assert sorted(result) == sorted(obj)
@@ -248,7 +266,9 @@ class TestNodeApiGateway:
         gateway = NodeApiGateway(hathor_core_client=hathor_client)
         result = gateway.decode_tx("hex-tx-data")
         hathor_client.get.assert_called_once_with(
-            "mock-endpoint", params={"hex_tx": "hex-tx-data"}
+            "mock-endpoint",
+            params={"hex_tx": "hex-tx-data"},
+            timeout=NODE_API_TIMEOUT_IN_SECONDS,
         )
         assert result
         assert sorted(result) == sorted(obj)
@@ -260,7 +280,9 @@ class TestNodeApiGateway:
         gateway = NodeApiGateway(hathor_core_client=hathor_client)
         result = gateway.push_tx("hex-tx-data")
         hathor_client.get.assert_called_once_with(
-            "mock-endpoint", params={"hex_tx": "hex-tx-data"}
+            "mock-endpoint",
+            params={"hex_tx": "hex-tx-data"},
+            timeout=NODE_API_TIMEOUT_IN_SECONDS,
         )
         assert result
         assert sorted(result) == sorted(obj)
@@ -276,6 +298,8 @@ class TestNodeApiGateway:
         hathor_client.get_text = MagicMock(return_value=obj)
         gateway = NodeApiGateway(hathor_core_client=hathor_client)
         result = gateway.graphviz_dot_neighbors(**data)
-        hathor_client.get_text.assert_called_once_with("mock-endpoint", params=data)
+        hathor_client.get_text.assert_called_once_with(
+            "mock-endpoint", params=data, timeout=NODE_API_TIMEOUT_IN_SECONDS
+        )
         assert result
         assert result == obj
