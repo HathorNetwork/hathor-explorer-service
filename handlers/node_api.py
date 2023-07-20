@@ -262,7 +262,7 @@ def push_tx(
 ) -> dict:
     """Push a transaction by it's struct data hex encoded."""
     node_api = node_api or NodeApi()
-    hex_tx = event.query.get("hex_tx")
+    hex_tx = event.body.get("hex_tx")
 
     if hex_tx is None:
         raise ApiError("invalid_parameters")

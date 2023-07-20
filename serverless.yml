@@ -576,14 +576,15 @@ functions:
     events:
       - http:
           path: node_api/push_tx
-          method: get
+          method: post
           cors: true
           caching:
             enabled: true
             ttlInSeconds: 5
             cacheKeyParameters:
-              - name: request.querystring.hex_tx
               - name: request.header.origin
+              - name: integration.request.header.hex_tx
+                mappedFrom: method.request.body.hex_tx
 
   node_api_gviz_dot_neighbors:
     handler: handlers/node_api.graphviz_dot_neighbors
