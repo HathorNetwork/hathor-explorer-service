@@ -497,6 +497,27 @@ functions:
               - name: request.querystring.id
               - name: request.header.origin
 
+  node_api_get_feature:
+    handler: handlers/node_api.get_feature
+    timeout: 6
+    maximumRetryAttempts: 0
+    package:
+      patterns:
+        - 'handlers/node_api.py'
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: node_api/feature
+          method: get
+          cors: true
+          caching:
+            enabled: true
+            ttlInSeconds: 10
+            cacheKeyParameters:
+              - name: request.querystring.block
+              - name: request.header.origin
+
   node_api_list_transactions:
     handler: handlers/node_api.list_transactions
     timeout: 6

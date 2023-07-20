@@ -245,6 +245,15 @@ class TestNodeApiCommon:
         assert result
         assert sorted(result) == sorted(obj)
 
+    def test_get_feature(self, node_api_gateway):
+        obj = {"foo": "bar"}
+        node_api_gateway.get_feature = MagicMock(return_value=obj)
+        node_api = NodeApi(node_api_gateway)
+        result = node_api.get_feature("mock-block")
+        node_api_gateway.get_feature.assert_called_once_with("mock-block")
+        assert result
+        assert sorted(result) == sorted(obj)
+
     def test_list_transactions(self, node_api_gateway):
         obj = {"foo": "bar"}
         node_api_gateway.list_transactions = MagicMock(return_value=obj)

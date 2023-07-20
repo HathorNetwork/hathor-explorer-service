@@ -201,6 +201,20 @@ class TestNodeApiGateway:
         assert result
         assert sorted(result) == sorted(obj)
 
+    @patch("gateways.node_api_gateway.FEATURE_ENDPOINT", "mock-endpoint")
+    def test_get_feature(self, hathor_client):
+        obj = {"foo": "bar"}
+        hathor_client.get = MagicMock(return_value=obj)
+        gateway = NodeApiGateway(hathor_core_client=hathor_client)
+        result = gateway.get_feature("mock-block")
+        hathor_client.get.assert_called_once_with(
+            "mock-endpoint",
+            params={"block": "mock-block"},
+            timeout=NODE_API_TIMEOUT_IN_SECONDS,
+        )
+        assert result
+        assert sorted(result) == sorted(obj)
+
     @patch("gateways.node_api_gateway.TRANSACTION_ENDPOINT", "mock-endpoint")
     def test_list_transactions(self, hathor_client):
         obj = {"foo": "bar"}
