@@ -93,6 +93,7 @@ class HathorCoreAsyncClient:
             self.log.error("hathor_core_error", path=path, error=repr(e))
             callback({"error": repr(e)})
 
+
 class HathorCoreClient:
     """Client to make requests
 
