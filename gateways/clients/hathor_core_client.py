@@ -157,7 +157,7 @@ class HathorCoreClient:
         url = parse.urljoin(f"https://{self.domain}", path)
 
         try:
-            response = requests.get(url, json=body, **kwargs)
+            response = requests.post(url, json=body, **kwargs)
             if response.status_code != 200:
                 self.log.warning(
                     "hathor_core_error",
@@ -212,7 +212,6 @@ class HathorCoreClient:
         :return: request response
         :rtype: Optional[dict]
         """
-        self.log.warning("hathor_post_request", path=path)
         text = self.post_text(path, body, **kwargs)
         if not text:
             return None
