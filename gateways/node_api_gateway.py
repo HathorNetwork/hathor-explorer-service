@@ -159,9 +159,9 @@ class NodeApiGateway:
 
     def push_tx(self, hex_tx: str) -> Optional[dict]:
         """Push a transaction from it's hex encoded struct data."""
-        return self.hathor_core_client.get(
+        return self.hathor_core_client.post(
             PUSH_TX_ENDPOINT,
-            params={"hex_tx": hex_tx},
+            body={"hex_tx": hex_tx},
             timeout=NODE_API_TIMEOUT_IN_SECONDS,
         )
 
