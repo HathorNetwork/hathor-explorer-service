@@ -276,12 +276,12 @@ class TestNodeApiGateway:
     @patch("gateways.node_api_gateway.PUSH_TX_ENDPOINT", "mock-endpoint")
     def test_push_tx(self, hathor_client):
         obj = {"foo": "bar"}
-        hathor_client.get = MagicMock(return_value=obj)
+        hathor_client.post = MagicMock(return_value=obj)
         gateway = NodeApiGateway(hathor_core_client=hathor_client)
         result = gateway.push_tx("hex-tx-data")
-        hathor_client.get.assert_called_once_with(
+        hathor_client.post.assert_called_once_with(
             "mock-endpoint",
-            params={"hex_tx": "hex-tx-data"},
+            body={"hex_tx": "hex-tx-data"},
             timeout=NODE_API_TIMEOUT_IN_SECONDS,
         )
         assert result
