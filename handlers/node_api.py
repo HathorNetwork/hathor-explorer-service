@@ -185,6 +185,25 @@ def get_transaction(
 
 
 @ApiGateway()
+def get_feature(
+    event: ApiGatewayEvent, _context: LambdaContext, node_api: Optional[NodeApi] = None
+) -> dict:
+    """Get feature activation details.
+
+    *IMPORTANT: Any changes on the parameters should be reflected on the `cacheKeyParameters` for this method.
+    """
+    node_api = node_api or NodeApi()
+    block = event.query.get("block")
+    response = node_api.get_feature(block)
+
+    return {
+        "statusCode": 200,
+        "body": json.dumps(response or UNKNOWN_ERROR_MSG),
+        "headers": {"Content-Type": "application/json"},
+    }
+
+
+@ApiGateway()
 def list_transactions(
     event: ApiGatewayEvent, _context: LambdaContext, node_api: Optional[NodeApi] = None
 ) -> dict:

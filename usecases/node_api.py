@@ -49,6 +49,9 @@ class NodeApi:
     def get_version(self) -> Optional[dict]:
         return self.node_api_gateway.get_version()
 
+    def get_feature(self, block: Optional[str]) -> Optional[dict]:
+        return self.node_api_gateway.get_feature(block)
+
     def get_dashboard_tx(self, block: int, tx: int) -> Optional[dict]:
         return self.node_api_gateway.get_dashboard_tx(block, tx)
 
