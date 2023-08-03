@@ -600,12 +600,7 @@ functions:
           method: post
           cors: true
           caching:
-            enabled: true
-            ttlInSeconds: 5
-            cacheKeyParameters:
-              - name: request.header.origin
-              - name: integration.request.header.hex_tx
-                mappedFrom: method.request.body.hex_tx
+            enabled: false
 
   node_api_gviz_dot_neighbors:
     handler: handlers/node_api.graphviz_dot_neighbors
