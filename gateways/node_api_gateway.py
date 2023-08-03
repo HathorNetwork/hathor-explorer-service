@@ -6,6 +6,7 @@ from gateways.clients.hathor_core_client import (
     ADDRESS_SEARCH_ENDPOINT,
     DASHBOARD_TX_ENDPOINT,
     DECODE_TX_ENDPOINT,
+    FEATURE_ENDPOINT,
     GRAPHVIZ_DOT_NEIGHBORS_ENDPOINT,
     PUSH_TX_ENDPOINT,
     TOKEN_ENDPOINT,
@@ -105,6 +106,14 @@ class NodeApiGateway:
             VERSION_ENDPOINT, timeout=NODE_API_TIMEOUT_IN_SECONDS
         )
 
+    def get_feature(self, block: Optional[str]) -> Optional[dict]:
+        """Retrieve feature information."""
+        return self.hathor_core_client.get(
+            FEATURE_ENDPOINT,
+            params={"block": block},
+            timeout=NODE_API_TIMEOUT_IN_SECONDS,
+        )
+
     def get_dashboard_tx(self, block: int, tx: int) -> Optional[dict]:
         """Retrieve info on blocks and transaction to show on dashboard"""
 
@@ -159,9 +168,9 @@ class NodeApiGateway:
 
     def push_tx(self, hex_tx: str) -> Optional[dict]:
         """Push a transaction from it's hex encoded struct data."""
-        return self.hathor_core_client.get(
+        return self.hathor_core_client.post(
             PUSH_TX_ENDPOINT,
-            params={"hex_tx": hex_tx},
+            body={"hex_tx": hex_tx},
             timeout=NODE_API_TIMEOUT_IN_SECONDS,
         )
 
