@@ -2,7 +2,7 @@ name: deploy
 
 on:
   push:
-    branches: [main, dev]
+    branches: [main, dev, fix/send-alerts-to-opsgenie]
     tags: ['v*.*.*']
 
 env:
@@ -38,6 +38,9 @@ jobs:
             echo "Setting mainnet environment"
             echo "environment=mainnet" >> $GITHUB_OUTPUT
           elif [[ "${{github.base_ref}}" == "main" || "${{github.ref}}" == "refs/heads/main" ]]; then
+            echo "Setting testnet environment"
+            echo "environment=testnet" >> $GITHUB_OUTPUT
+          elif [[ "${{github.base_ref}}" == "fix/send-alerts-to-opsgenie" || "${{github.ref}}" == "refs/heads/fix/send-alerts-to-opsgenie" ]]; then
             echo "Setting testnet environment"
             echo "environment=testnet" >> $GITHUB_OUTPUT
           elif [[ "${{github.base_ref}}" == "dev" || "${{github.ref}}" == "refs/heads/dev" ]]; then
