@@ -96,13 +96,28 @@ custom:
     topics: # SNS Topics to send alerts to
       major:
         alarm:
-          topic: arn:aws:sns:${self:provider.region}:${env:AWS_ACCOUNT_ID}:aws-chatbot-slack-alerts-major
+          topic: arn:aws:sns:${self:provider.region}:${env:AWS_ACCOUNT_ID}:opsgenie-cloudwatch-integration-production-major
+      medium:
+        alarm:
+          topic: arn:aws:sns:${self:provider.region}:${env:AWS_ACCOUNT_ID}:opsgenie-cloudwatch-integration-production-medium
       minor:
         alarm:
-          topic: arn:aws:sns:${self:provider.region}:${env:AWS_ACCOUNT_ID}:aws-chatbot-slack-alerts-minor
+          topic: arn:aws:sns:${self:provider.region}:${env:AWS_ACCOUNT_ID}:opsgenie-cloudwatch-integration-production-minor
     definitions: # Definition of alarms
       majorFunctionErrors:
-        description: "Too many errors in hathor-explorer-service. Runbook: https://github.com/HathorNetwork/ops-tools/blob/master/docs/runbooks/hathor-explorer-service/errors-in-lambdas.md"
+        description: "More than 30 errors in the Lambda in 5 minutes. Runbook: https://github.com/HathorNetwork/ops-tools/blob/master/docs/runbooks/hathor-explorer-service/errors-in-lambdas.md"
+        namespace: 'AWS/Lambda'
+        metric: Errors
+        threshold: 30
+        statistic: Sum
+        period: 60
+        evaluationPeriods: 5
+        comparisonOperator: GreaterThanOrEqualToThreshold
+        treatMissingData: notBreaching
+        alarmActions:
+          - major
+      mediumFunctionErrors:
+        description: "More than 10 errors in the Lambda in 5 minutes. Runbook: https://github.com/HathorNetwork/ops-tools/blob/master/docs/runbooks/hathor-explorer-service/errors-in-lambdas.md"
         namespace: 'AWS/Lambda'
         metric: Errors
         threshold: 10
@@ -112,9 +127,9 @@ custom:
         comparisonOperator: GreaterThanOrEqualToThreshold
         treatMissingData: notBreaching
         alarmActions:
-          - major
+          - medium
       minorFunctionErrors:
-        description: "Too many errors in hathor-explorer-service. Runbook: https://github.com/HathorNetwork/ops-tools/blob/master/docs/runbooks/hathor-explorer-service/errors-in-lambdas.md"
+        description: "More than 2 errors in the Lambda in 5 minutes. Runbook: https://github.com/HathorNetwork/ops-tools/blob/master/docs/runbooks/hathor-explorer-service/errors-in-lambdas.md"
         namespace: 'AWS/Lambda'
         metric: Errors
         threshold: 2
@@ -127,6 +142,7 @@ custom:
           - minor
     alarms: # Alarms that will be applied to all functions
       - majorFunctionErrors
+      - mediumFunctionErrors
       - minorFunctionErrors
 
 functions:
