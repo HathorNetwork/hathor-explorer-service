@@ -105,31 +105,31 @@ custom:
           topic: arn:aws:sns:${self:provider.region}:${env:AWS_ACCOUNT_ID}:opsgenie-cloudwatch-integration-production-minor
     definitions: # Definition of alarms
       majorFunctionErrors:
-        description: "More than 30 errors in the Lambda in 5 minutes. Runbook: https://github.com/HathorNetwork/ops-tools/blob/master/docs/runbooks/hathor-explorer-service/errors-in-lambdas.md"
-        namespace: 'AWS/Lambda'
-        metric: Errors
-        threshold: 30
-        statistic: Sum
-        period: 60
-        evaluationPeriods: 5
-        comparisonOperator: GreaterThanOrEqualToThreshold
-        treatMissingData: notBreaching
-        alarmActions:
-          - major
-      mediumFunctionErrors:
-        description: "More than 10 errors in the Lambda in 5 minutes. Runbook: https://github.com/HathorNetwork/ops-tools/blob/master/docs/runbooks/hathor-explorer-service/errors-in-lambdas.md"
+        description: "More than 10 errors in the Lambda for 3 consecutive minutes. Runbook: https://github.com/HathorNetwork/ops-tools/blob/master/docs/runbooks/hathor-explorer-service/errors-in-lambdas.md"
         namespace: 'AWS/Lambda'
         metric: Errors
         threshold: 10
         statistic: Sum
         period: 60
-        evaluationPeriods: 5
+        evaluationPeriods: 3
+        comparisonOperator: GreaterThanOrEqualToThreshold
+        treatMissingData: notBreaching
+        alarmActions:
+          - major
+      mediumFunctionErrors:
+        description: "More than 3 errors in the Lambda for 3 consecutive minutes. Runbook: https://github.com/HathorNetwork/ops-tools/blob/master/docs/runbooks/hathor-explorer-service/errors-in-lambdas.md"
+        namespace: 'AWS/Lambda'
+        metric: Errors
+        threshold: 3
+        statistic: Sum
+        period: 60
+        evaluationPeriods: 3
         comparisonOperator: GreaterThanOrEqualToThreshold
         treatMissingData: notBreaching
         alarmActions:
           - medium
       minorFunctionErrors:
-        description: "More than 2 errors in the Lambda in 5 minutes. Runbook: https://github.com/HathorNetwork/ops-tools/blob/master/docs/runbooks/hathor-explorer-service/errors-in-lambdas.md"
+        description: "More than 2 errors in the Lambda in 1 minute. Runbook: https://github.com/HathorNetwork/ops-tools/blob/master/docs/runbooks/hathor-explorer-service/errors-in-lambdas.md"
         namespace: 'AWS/Lambda'
         metric: Errors
         threshold: 2
