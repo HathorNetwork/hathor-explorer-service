@@ -3,19 +3,8 @@ from typing import Optional
 from elasticsearch import Elasticsearch
 from hathorlib import TxVersion
 
-from common.configuration import (
-    ELASTIC_SEARCH_TIMEOUT,
-    ELASTIC_TX_INDEX,
-)
+from common.configuration import ELASTIC_SEARCH_TIMEOUT, ELASTIC_TX_INDEX
 from gateways.clients.elastic_search_client import ElasticSearchClient
-from utils.elastic_search.elastic_search_utils import ElasticSearchUtils
-
-
-# REGULAR_BLOCK = 0
-# REGULAR_TRANSACTION = 1
-# TOKEN_CREATION_TRANSACTION = 2
-# MERGE_MINED_BLOCK = 3
-# NANO_CONTRACT = 4
 
 
 class NetworkStatisticsApiGateway:
@@ -32,14 +21,6 @@ class NetworkStatisticsApiGateway:
             "size": 0,
             "sort": [{"height": {"order": "desc"}}],
             "request_timeout": int(ELASTIC_SEARCH_TIMEOUT),
-            "query": {
-                "bool": {
-                    "should": [
-                        {"term": {"version": TxVersion.REGULAR_TRANSACTION}},
-                        {"term": {"version": TxVersion.TOKEN_CREATION_TRANSACTION}}
-                    ]
-                }
-            },
             "aggs": {
                 "total_transactions": {
                     "sum": {
@@ -55,16 +36,12 @@ class NetworkStatisticsApiGateway:
                         }
                     }
                 },
-                "highest_height": {
-                    "max": {
-                        "field": "height"
-                    }
-                }
-            }
+                "highest_height": {"max": {"field": "height"}},
+            },
         }
 
-        elastic_search_utils = ElasticSearchUtils(
-            elastic_index=ELASTIC_TX_INDEX)
-
         elastic_search_response = self.elastic_search_client.run(body)
-        return elastic_search_utils.treat_response(elastic_search_response)
+        aggr_result = elastic_search_response["aggregations"]
+        # {my_prop: {value: 1.0}} -> {my_prop: 1}
+        result = {k: int(kv.get("value")) for (k, kv) in aggr_result.items()}
+        return result
