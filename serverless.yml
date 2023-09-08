@@ -50,6 +50,7 @@ provider:
     WALLET_SERVICE_DB_NAME: ${env:WALLET_SERVICE_DB_NAME}
 
 plugins:
+  - serverless-better-credentials
   - serverless-s3-local
   - serverless-offline
   - serverless-python-requirements

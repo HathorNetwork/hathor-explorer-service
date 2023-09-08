@@ -60,7 +60,7 @@ test:
 stage=dev
 .PHONY: deploy-lambdas
 deploy-lambdas:
-	npx serverless deploy --stage $(stage) --region eu-central-1
+	AWS_SDK_LOAD_CONFIG=1 npx serverless deploy --stage $(stage) --region eu-central-1
 
 .PHONY: install
 install:
