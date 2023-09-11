@@ -731,14 +731,7 @@ functions:
       - http:
           path: network-statistics
           method: get
-          cors:
-            headers:
-              - Content-Type
-              - Cache-Control
-            methods:
-              - GET
-              - OPTION
-            allowCredentials: false  # don't use coockies or any other auth mechanism
+          cors: true
           caching:
             perKeyInvalidation:  # add invalidation policy
               requireAuthorization: true
