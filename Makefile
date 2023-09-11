@@ -62,6 +62,10 @@ stage=dev
 deploy-lambdas:
 	AWS_SDK_LOAD_CONFIG=1 npx serverless deploy --stage $(stage) --region eu-central-1
 
+.PHONY: deploy-lambdas-ci
+deploy-lambdas-ci:
+	npx serverless deploy --stage $(stage) --region eu-central-1
+
 .PHONY: install
 install:
 	npm install
