@@ -733,8 +733,8 @@ functions:
           method: get
           cors: true
           caching:
+            enabled: true
+            ttlInSeconds: 60
             perKeyInvalidation:  # add invalidation policy
               requireAuthorization: true
               handleUnauthorizedRequests: Fail # fail if the request don't have the permission to invalidate the cache
-            enabled: true
-            ttlInSeconds: 60
