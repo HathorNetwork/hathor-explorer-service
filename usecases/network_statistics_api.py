@@ -1,6 +1,12 @@
 from typing import Optional
 
+from elasticsearch import exceptions
+
+from common.errors import ApiError
+from common.logging import get_logger
 from gateways.network_statistics_api_gateway import NetworkStatisticsApiGateway
+
+logger = get_logger()
 
 
 class NetworkStatisticsApi:
@@ -13,4 +19,14 @@ class NetworkStatisticsApi:
         )
 
     def get_basic_statistics(self) -> dict:
-        return self.network_statistics_api_gateway.get_transaction_statistics()
+        try:
+            return self.network_statistics_api_gateway.get_transaction_statistics()
+        except exceptions.ApiError as err:
+            logger.error(
+                "ElasticSearch request error",
+                {"status": err.status_code, "msg": err.error},
+            )
+            raise ApiError("gateway_error")
+        except exceptions.TransportError:
+            logger.error("ElasticSearch transport error")
+            raise ApiError("internal_error")
