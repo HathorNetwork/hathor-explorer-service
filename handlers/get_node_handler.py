@@ -12,7 +12,6 @@ from utils.wrappers.aws.api_gateway import ApiGateway, ApiGatewayEvent
 def handle(
     event: ApiGatewayEvent, __: LambdaContext, get_node: Union[GetNode, None] = None
 ) -> dict:
-
     get_node = get_node or GetNode()
     response = get_node.get(event.path["hash"])
 

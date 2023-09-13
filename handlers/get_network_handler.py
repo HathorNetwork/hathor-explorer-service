@@ -12,7 +12,6 @@ from utils.wrappers.aws.api_gateway import ApiGateway, ApiGatewayEvent
 def handle(
     event: ApiGatewayEvent, __: LambdaContext, get_network: Optional[GetNetwork] = None
 ) -> dict:
-
     get_network = get_network or GetNetwork()
     response = get_network.get()
 

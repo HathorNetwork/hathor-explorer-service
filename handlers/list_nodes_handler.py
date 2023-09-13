@@ -13,7 +13,6 @@ def handle(
     __: LambdaContext,
     list_available_nodes: Union[ListAvailableNodes, None] = None,
 ) -> dict:
-
     list_available_nodes = list_available_nodes or ListAvailableNodes()
     response = list_available_nodes.list()
 
