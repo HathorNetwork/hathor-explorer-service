@@ -17,7 +17,7 @@ export const options = {
 
 export default function () {
   const hostUrl = __ENV.HOST_URL;
-  const defaulHostUrl = 'http://explorer-service:3002/dev';
+  const defaulHostUrl = 'http://localhost:3002/dev';
   const pathUrl = '/network-statistics'
   http.get((hostUrl || defaulHostUrl) + pathUrl);
   sleep(1);
