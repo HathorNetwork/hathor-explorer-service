@@ -23,7 +23,7 @@ class NetworkStatisticsApi:
             return self.network_statistics_api_gateway.get_transaction_statistics()
         except exceptions.ApiError as err:
             logger.error(
-                "ElasticSearch request error",
+                "ExplorerService failed to fetch transaction statistics from ElasticSearch",
                 {"status": err.status_code, "msg": err.error},
             )
             raise ApiError("gateway_error")
