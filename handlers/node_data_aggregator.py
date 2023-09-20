@@ -3,7 +3,6 @@ from usecases.save_node_data import SaveNodeData
 
 
 def handle(node_status: dict, _context: None = None) -> dict:
-
     save_node_data = SaveNodeData()
     aggregate_node_data = AggregateNodeData()
 

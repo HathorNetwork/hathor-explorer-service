@@ -14,7 +14,6 @@ def handle(
     _context: LambdaContext,
     get_token: Union[GetToken, None] = None,
 ) -> dict:
-
     get_token = get_token or GetToken()
     response = get_token.get(event.path["hash"])
 

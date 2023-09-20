@@ -59,11 +59,11 @@ jobs:
         uses: actions/setup-python@61a6322f88396a6271a6ee3565807d608ecaddd1
         with:
           python-version: 3.9
-      - name: Set up Node.js 14.x
+      - name: Set up Node.js 18.x
         # https://github.com/actions/setup-node/releases/tag/v3.7.0
         uses: actions/setup-node@e33196f7422957bea03ed53f6fbb155025ffc7b8
         with:
-          node-version: 14.x
+          node-version: 18.x
       - name: Cache node modules
         # https://github.com/actions/cache/releases/tag/v3.3.1
         uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8
@@ -87,7 +87,7 @@ jobs:
       - name: Deploy Lambdas Dev
         if: ${{ needs.init.outputs.environment == 'dev' }}
         run: |
-          npx make deploy-lambdas stage=dev
+          make deploy-lambdas-ci stage=dev
         env:
           API_PORT: 3001
           HATHOR_CORE_DOMAIN: node.explorer.testnet.hathor.network
@@ -105,7 +105,7 @@ jobs:
       - name: Deploy Lambdas Testnet
         if: ${{ needs.init.outputs.environment == 'testnet' }}
         run: |
-          npx make deploy-lambdas stage=testnet
+          make deploy-lambdas-ci stage=testnet
         env:
           API_PORT: 3001
           HATHOR_CORE_DOMAIN: node.explorer.testnet.hathor.network
@@ -123,7 +123,7 @@ jobs:
       - name: Deploy Lambdas Mainnet
         if: ${{ needs.init.outputs.environment == 'mainnet' }}
         run: |
-          npx make deploy-lambdas stage=mainnet
+          make deploy-lambdas-ci stage=mainnet
         env:
           API_PORT: 3001
           HATHOR_CORE_DOMAIN: node.explorer.hathor.network
