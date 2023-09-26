@@ -1,12 +1,13 @@
 {
   "name": "hathor-explorer-service",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "description": "Hathor Explorer Service Serverless deps",
   "dependencies": {
     "@apidevtools/swagger-cli": "^4.0.4",
     "serverless": "^2.72.4",
     "serverless-api-gateway-caching": "^1.7.2",
     "serverless-api-gateway-throttling": "^1.2.2",
+    "serverless-better-credentials": "^1.2.1",
     "serverless-plugin-aws-alerts": "^1.7.4"
   },
   "devDependencies": {

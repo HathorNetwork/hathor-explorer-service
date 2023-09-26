@@ -9,7 +9,6 @@ from domain.tx.token import Token
 
 @dataclass
 class HathorCoreTokenResponse:
-
     name: Optional[str]
     success: bool
     message: Optional[str]

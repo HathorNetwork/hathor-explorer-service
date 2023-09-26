@@ -16,7 +16,6 @@ from utils.wrappers.aws.invoke_handler import (
 def handle_get(
     event: ApiGatewayEvent, _context: LambdaContext, metadata: Optional[Metadata] = None
 ) -> dict:
-
     metadata = metadata or Metadata()
     if "id" not in event.query:
         raise ApiError("invalid_parameters")
@@ -37,7 +36,6 @@ def handle_get(
 def handle_create_or_update(
     event: InvokeEvent, _context: LambdaContext, metadata: Optional[Metadata] = None
 ) -> dict:
-
     metadata = metadata or Metadata()
 
     parsed_event = MetadataUpdateEvent.from_event(event)

@@ -14,7 +14,6 @@ def handle_address_balance(
     __: LambdaContext,
     wallet_service: Union[WalletService, None] = None,
 ) -> dict:
-
     wallet_service = wallet_service or WalletService()
 
     address: Optional[str] = event.query.get("address")
@@ -85,7 +84,6 @@ def handle_address_tokens(
     __: LambdaContext,
     wallet_service: Union[WalletService, None] = None,
 ) -> dict:
-
     wallet_service = wallet_service or WalletService()
 
     address: Optional[str] = event.query.get("address")

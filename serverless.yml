@@ -50,6 +50,7 @@ provider:
     WALLET_SERVICE_DB_NAME: ${env:WALLET_SERVICE_DB_NAME}
 
 plugins:
+  - serverless-better-credentials
   - serverless-s3-local
   - serverless-offline
   - serverless-python-requirements
@@ -716,3 +717,24 @@ functions:
               - name: request.querystring.limit
               - name: request.querystring.offset
               - name: request.header.origin
+
+  network_statistics_handler:
+    handler: handlers/network_statistics.get_basic_statistics
+    timeout: 5
+    maximumRetryAttempts: 0
+    package:
+      patterns:
+        - 'handlers/network_statistics.py'
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: network-statistics
+          method: get
+          cors: true
+          caching:
+            enabled: true
+            ttlInSeconds: 60
+            perKeyInvalidation:  # add invalidation policy
+              requireAuthorization: true
+              handleUnauthorizedRequests: Fail # fail if the request don't have the permission to invalidate the cache
