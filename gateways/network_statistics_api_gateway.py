@@ -36,6 +36,13 @@ class NetworkStatisticsApiGateway:
                         }
                     }
                 },
+                "total_blocks": {
+                    "sum": {
+                        "script": {
+                            "source": f"doc['version'].value == {TxVersion.REGULAR_BLOCK} || doc['version'].value == {TxVersion.MERGE_MINED_BLOCK} ? 1 : 0"
+                        }
+                    }
+                },
                 "highest_height": {"max": {"field": "height"}},
             },
         }
