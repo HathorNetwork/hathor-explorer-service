@@ -6,7 +6,7 @@ authors = ["Hathor Labs <contact@hathor.network>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.9"
 redis = "^3.5.3"
 boto3 = "^1.17.72"
 python-dotenv = "^0.17.1"
