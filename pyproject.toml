@@ -6,7 +6,7 @@ authors = ["Hathor Labs <contact@hathor.network>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.9"
 redis = "^3.5.3"
 boto3 = "^1.17.72"
 python-dotenv = "^0.17.1"
@@ -18,7 +18,7 @@ requests = "^2.25.1"
 structlog = "^21.1.0"
 elasticsearch = "^8.1.2"
 deepdiff = "^5.7.0"
-hathorlib = "^0.2.0"
+hathorlib = "^0.4.0"
 PyMySQL = "^1.0.2"
 SQLAlchemy = "^1.4.40"
 

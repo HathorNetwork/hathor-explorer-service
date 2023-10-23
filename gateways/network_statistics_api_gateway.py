@@ -25,7 +25,7 @@ class NetworkStatisticsApiGateway:
                 "total_transactions": {
                     "sum": {
                         "script": {
-                            "source": f"doc['version'].value == {TxVersion.REGULAR_TRANSACTION} || doc['version'].value == {TxVersion.TOKEN_CREATION_TRANSACTION} ? 1 : 0"
+                            "source": f"doc['version'].value == {TxVersion.REGULAR_TRANSACTION} || doc['version'].value == {TxVersion.TOKEN_CREATION_TRANSACTION} || doc['version'].value == {TxVersion.NANO_CONTRACT} ? 1 : 0"
                         }
                     }
                 },
