@@ -40,13 +40,10 @@ class NodeGateway:
         self.lambda_client = lambda_client or LambdaClient()
         self.log = logger.new()
 
-    async def get_node_status_async(self, callback: Callable[[dict], None]) -> None:
+    async def get_node_status_async(self) -> None:
         """Retrieve status from full-node
-
-        :param callback: method to be called passing response as param
-        :type callback: Callable[[dict], None]
         """
-        await self.hathor_core_async_client.get(STATUS_ENDPOINT, callback)
+        return await self.hathor_core_async_client.get(STATUS_ENDPOINT)
 
     def send_node_to_data_aggregator(self, payload: Node) -> int:
         """Invoke data-aggregator lambda passing node data to be aggregated
