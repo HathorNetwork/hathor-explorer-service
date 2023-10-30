@@ -738,3 +738,17 @@ functions:
             perKeyInvalidation:  # add invalidation policy
               requireAuthorization: true
               handleUnauthorizedRequests: Fail # fail if the request don't have the permission to invalidate the cache
+
+  healthcheck_handler:
+    handler: handlers.healthcheck.get_healthcheck
+    package:
+      patterns:
+        - 'handlers/healthcheck.py'
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: health
+          method: get
+          cors: true
+          # TODO: caching, api-key, timeout, rate-limit

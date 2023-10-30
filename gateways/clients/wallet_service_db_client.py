@@ -89,6 +89,8 @@ FROM token INNER JOIN address_balance
 ON token.id = address_balance.token_id
 WHERE address_balance.address = :address"""
 
+ping_query: str = "SELECT 1"
+
 
 def get_engine():
     """Returns the engine for connecting with the wallet service database.
@@ -199,3 +201,18 @@ class WalletServiceDBClient:
                 result.append(row._asdict())
 
         return total, result
+
+    def ping(self, timeout: int = 5) -> Tuple[bool, str]:
+        """Ping the database to check if it's alive."""
+        with self.engine.connect() as connection:
+            cursor = connection.execute(text(ping_query), timeout=timeout)
+            try:
+                result = cursor.one()
+            except NoResultFound:
+                raise RdsNotFoundError("not found")
+            except MultipleResultsFound:
+                raise RdsError("only one row expected")
+            finally:
+                cursor.close()
+
+        return (len(result) > 0 and result[0] == 1), result

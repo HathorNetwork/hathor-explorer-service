@@ -24,6 +24,12 @@ class ElasticSearchClient:
     def run(self, payload: dict) -> dict:
         return dict(self.client.search(**payload))
 
+    def health(self) -> dict:
+        """Get the health of the ElasticSearch cluster.
+        Reference: https://www.elastic.co/guide/en/elasticsearch/reference/8.1/cluster-health.html
+        """
+        return dict(self.client.cluster.health())
+
     def make_query(
         self, search_text: str, sort_by: str, order: str, search_after: List[str]
     ) -> dict:

@@ -82,6 +82,18 @@ class CacheClient:
             )
         ]
 
+    def ping(self) -> bool:
+        """
+        Pings the Redis server and returns True if it's healthy, False otherwise.
+
+        :return: True if the Redis server is healthy, False otherwise.
+        :rtype: bool
+        """
+        try:
+            return self.client.ping()
+        except Exception as e:
+            raise Exception(f"Unable to connect to Redis server: {e}")
+
     def _extract_key_from_context(self, key: str) -> str:
         """Returns the simple key from a raw key. This is the reverse operation of `_get_context_key`
 
