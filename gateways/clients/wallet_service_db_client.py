@@ -202,7 +202,7 @@ class WalletServiceDBClient:
 
         return total, result
 
-    def ping(self, timeout: int = 5) -> Tuple[bool, str]:
+    def ping(self, timeout: int = 5) -> Tuple[bool, dict]:
         """Ping the database to check if it's alive."""
         with self.engine.connect() as connection:
             cursor = connection.execute(text(ping_query), timeout=timeout)
@@ -211,4 +211,4 @@ class WalletServiceDBClient:
             finally:
                 cursor.close()
 
-        return (len(result) > 0 and result[0] == 1), result
+        return (len(result) > 0 and result[0] == 1), result._asdict()

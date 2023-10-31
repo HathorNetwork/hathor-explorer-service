@@ -49,7 +49,7 @@ class HealthcheckGateway:
 
         return self.elastic_search_client.health()
 
-    def ping_wallet_service_db(self) -> Tuple[bool, str]:
+    def ping_wallet_service_db(self) -> Tuple[bool, dict]:
         """Ping the database to check if it's alive"""
 
         return self.wallet_service_db_client.ping()

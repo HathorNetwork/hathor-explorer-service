@@ -10,9 +10,7 @@ class TestGetHealthcheck(unittest.TestCase):
 
         with patch(
             "usecases.healthcheck.HEALTHCHECK_WALLET_SERVICE_DB_ENABLED", True
-        ), patch(
-            "usecases.healthcheck.HEALTHCHECK_REDIS_ENABLED", True
-        ), patch(
+        ), patch("usecases.healthcheck.HEALTHCHECK_REDIS_ENABLED", True), patch(
             "usecases.healthcheck.HEALTHCHECK_ELASTICSEARCH_ENABLED", True
         ):
             self.get_healthcheck = GetHealthcheck(
