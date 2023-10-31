@@ -1,10 +1,14 @@
+import unittest
+from unittest.mock import MagicMock
+
 import fakeredis
+import pytest
 from pytest import fixture
 
 from gateways.clients.cache_client import CacheClient
 
 
-class TestCacheClient:
+class TestCacheClient(unittest.TestCase):
     @fixture
     def cache_client(self):
         client = CacheClient()
@@ -43,3 +47,15 @@ class TestCacheClient:
             expected_vader_chidren_keys
         )
         assert sorted(cache_client.keys("crash-sound")) == []
+
+    def test_ping(self, cache_client):
+        assert cache_client.ping()
+
+    def test_ping_exception(self):
+        client = CacheClient()
+        client.client = MagicMock()
+
+        client.client.ping.side_effect = Exception("Redis is down")
+
+        with pytest.raises(Exception) as e:
+            client.ping()

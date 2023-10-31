@@ -1,27 +1,38 @@
 import asyncio
-from typing import Optional
-from healthcheck import Healthcheck, HealthcheckDatastoreComponent, HealthcheckCallbackResponse, HealthcheckHTTPComponent
+from typing import Any, Dict, Optional, Tuple
+
+from healthcheck import (
+    Healthcheck,
+    HealthcheckCallbackResponse,
+    HealthcheckDatastoreComponent,
+    HealthcheckHTTPComponent,
+)
+
 from gateways.healthcheck_gateway import HealthcheckGateway
 
 
 class GetHealthcheck:
     def __init__(
-            self,
-            healthcheck: Healthcheck = None,
-            healthcheck_gateway: Optional[HealthcheckGateway] = None,
-        ):
+        self,
+        healthcheck: Healthcheck = None,
+        healthcheck_gateway: Optional[HealthcheckGateway] = None,
+    ):
         self.healthcheck = healthcheck or Healthcheck("Explorer Service")
         self.healthcheck_gateway = healthcheck_gateway or HealthcheckGateway()
 
         self.components = {
-            "fullnode": HealthcheckHTTPComponent(name="fullnode")
-                .add_healthcheck(self._get_fullnode_health),
-            "wallet_service_db": HealthcheckDatastoreComponent(name="wallet_service_db")
-                .add_healthcheck(self._get_wallet_service_db_health),
-            "redis": HealthcheckDatastoreComponent(name="redis")
-                .add_healthcheck(self._get_redis_health),
-            "elasticsearch": HealthcheckDatastoreComponent(name="elasticsearch")
-                .add_healthcheck(self._get_elasticsearch_health),
+            "fullnode": HealthcheckHTTPComponent(name="fullnode").add_healthcheck(
+                self._get_fullnode_health
+            ),
+            "wallet_service_db": HealthcheckDatastoreComponent(
+                name="wallet_service_db"
+            ).add_healthcheck(self._get_wallet_service_db_health),
+            "redis": HealthcheckDatastoreComponent(name="redis").add_healthcheck(
+                self._get_redis_health
+            ),
+            "elasticsearch": HealthcheckDatastoreComponent(
+                name="elasticsearch"
+            ).add_healthcheck(self._get_elasticsearch_health),
         }
 
         for component in self.components.values():
@@ -53,7 +64,9 @@ class GetHealthcheck:
 
         return HealthcheckCallbackResponse(
             status="pass" if is_healthy else "fail",
-            output="Wallet service DB is healthy" if is_healthy else f"Wallet service DB didn't respond as expected: {output}",
+            output="Wallet service DB is healthy"
+            if is_healthy
+            else f"Wallet service DB didn't respond as expected: {output}",
         )
 
     async def _get_redis_health(self):
@@ -72,7 +85,7 @@ class GetHealthcheck:
 
     async def _get_elasticsearch_health(self):
         try:
-            elasticsearch_info= self.healthcheck_gateway.get_elasticsearch_health()
+            elasticsearch_info = self.healthcheck_gateway.get_elasticsearch_health()
         except Exception as e:
             return HealthcheckCallbackResponse(
                 status="fail",
@@ -95,7 +108,7 @@ class GetHealthcheck:
             output=str(elasticsearch_info),
         )
 
-    def get_service_health(self):
-        status = asyncio.run(self.healthcheck.run())
+    def get_service_health(self) -> Tuple[Dict[str, Any], int]:
+        response = asyncio.run(self.healthcheck.run())
 
-        return status
+        return response.to_json(), response.get_http_status_code()

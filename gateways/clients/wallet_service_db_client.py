@@ -208,10 +208,6 @@ class WalletServiceDBClient:
             cursor = connection.execute(text(ping_query), timeout=timeout)
             try:
                 result = cursor.one()
-            except NoResultFound:
-                raise RdsNotFoundError("not found")
-            except MultipleResultsFound:
-                raise RdsError("only one row expected")
             finally:
                 cursor.close()
 

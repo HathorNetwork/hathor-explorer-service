@@ -1,9 +1,11 @@
 import json
 from typing import Optional
-from utils.wrappers.aws.api_gateway import ApiGateway, ApiGatewayEvent
+
 from aws_lambda_context import LambdaContext
 
 from usecases.healthcheck import GetHealthcheck
+from utils.wrappers.aws.api_gateway import ApiGateway, ApiGatewayEvent
+
 
 @ApiGateway()
 def get_healthcheck(
@@ -15,10 +17,10 @@ def get_healthcheck(
 
     healthcheck = healthcheck or GetHealthcheck()
 
-    response = healthcheck.get_service_health()
+    response, status_code = healthcheck.get_service_health()
 
     return {
-        "statusCode": response.get_http_status_code(),
-        "body": json.dumps(response.to_json()),
+        "statusCode": status_code,
+        "body": json.dumps(response),
         "headers": {"Content-Type": "application/json"},
     }

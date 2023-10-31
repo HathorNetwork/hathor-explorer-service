@@ -259,3 +259,17 @@ class TestWalletServiceDBClient:
         )
         assert connection.execute.call_args_list[1][0][0].text == address_has_htr_query
         assert connection.execute.call_args_list[2][0][0].text == address_tokens_query
+
+    def test_ping(self, engine, connection):
+        cursor = MagicMock()
+        cursor.one.return_value = (1,)
+        connection.execute.return_value = cursor
+
+        client = WalletServiceDBClient(engine)
+
+        assert client.ping() == (True, (1,))
+
+        # Should pass the expected args to execute
+        connection.execute.assert_called_once()
+        # Should use the correct query for this method
+        assert connection.execute.call_args[0][0].text == "SELECT 1"
