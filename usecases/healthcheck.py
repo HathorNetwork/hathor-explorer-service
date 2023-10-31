@@ -8,6 +8,12 @@ from healthcheck import (
     HealthcheckHTTPComponent,
 )
 
+from common.configuration import (
+    HEALTHCHECK_ELASTICSEARCH_ENABLED,
+    HEALTHCHECK_HATHOR_CORE_ENABLED,
+    HEALTHCHECK_REDIS_ENABLED,
+    HEALTHCHECK_WALLET_SERVICE_DB_ENABLED,
+)
 from gateways.healthcheck_gateway import HealthcheckGateway
 
 
@@ -20,20 +26,27 @@ class GetHealthcheck:
         self.healthcheck = healthcheck or Healthcheck("Explorer Service")
         self.healthcheck_gateway = healthcheck_gateway or HealthcheckGateway()
 
-        self.components = {
-            "fullnode": HealthcheckHTTPComponent(name="fullnode").add_healthcheck(
-                self._get_fullnode_health
-            ),
-            "wallet_service_db": HealthcheckDatastoreComponent(
+        self.components = {}
+
+        if HEALTHCHECK_HATHOR_CORE_ENABLED:
+            self.components["fullnode"] = HealthcheckHTTPComponent(
+                name="fullnode"
+            ).add_healthcheck(self._get_fullnode_health)
+
+        if HEALTHCHECK_WALLET_SERVICE_DB_ENABLED:
+            self.components["wallet_service_db"] = HealthcheckDatastoreComponent(
                 name="wallet_service_db"
-            ).add_healthcheck(self._get_wallet_service_db_health),
-            "redis": HealthcheckDatastoreComponent(name="redis").add_healthcheck(
-                self._get_redis_health
-            ),
-            "elasticsearch": HealthcheckDatastoreComponent(
+            ).add_healthcheck(self._get_wallet_service_db_health)
+
+        if HEALTHCHECK_REDIS_ENABLED:
+            self.components["redis"] = HealthcheckDatastoreComponent(
+                name="redis"
+            ).add_healthcheck(self._get_redis_health)
+
+        if HEALTHCHECK_ELASTICSEARCH_ENABLED:
+            self.components["elasticsearch"] = HealthcheckDatastoreComponent(
                 name="elasticsearch"
-            ).add_healthcheck(self._get_elasticsearch_health),
-        }
+            ).add_healthcheck(self._get_elasticsearch_health)
 
         for component in self.components.values():
             self.healthcheck.add_component(component)

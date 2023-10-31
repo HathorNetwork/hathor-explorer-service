@@ -1,5 +1,5 @@
 import unittest
-from unittest.mock import ANY, MagicMock
+from unittest.mock import ANY, MagicMock, patch
 
 from usecases.healthcheck import GetHealthcheck
 
@@ -7,9 +7,17 @@ from usecases.healthcheck import GetHealthcheck
 class TestGetHealthcheck(unittest.TestCase):
     def setUp(self):
         self.mock_healthcheck_gateway = MagicMock()
-        self.get_healthcheck = GetHealthcheck(
-            healthcheck_gateway=self.mock_healthcheck_gateway
-        )
+
+        with patch(
+            "usecases.healthcheck.HEALTHCHECK_WALLET_SERVICE_DB_ENABLED", True
+        ), patch(
+            "usecases.healthcheck.HEALTHCHECK_REDIS_ENABLED", True
+        ), patch(
+            "usecases.healthcheck.HEALTHCHECK_ELASTICSEARCH_ENABLED", True
+        ):
+            self.get_healthcheck = GetHealthcheck(
+                healthcheck_gateway=self.mock_healthcheck_gateway
+            )
 
     def test_all_components_healthy(self):
         async def mock_get_hathor_core_version():
@@ -200,8 +208,6 @@ class TestGetHealthcheck(unittest.TestCase):
         )
 
     def test_wallet_service_db_reports_unhealthy(self):
-        self.maxDiff = None
-
         async def mock_get_hathor_core_version():
             return {"version": "0.38.0"}
 
