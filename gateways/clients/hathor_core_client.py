@@ -40,7 +40,7 @@ class HathorCoreAsyncClient:
 
     async def get(
         self, path: str, params: Optional[dict] = None, timeout: Optional[float] = None
-    ) -> None:
+    ) -> dict[Any, Any]:
         """Make a get request async
 
         :param path: path to be requested
@@ -56,7 +56,9 @@ class HathorCoreAsyncClient:
             timeout = self.DEFAULT_TIMEOUT
 
         try:
-            async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=timeout)) as session:
+            async with aiohttp.ClientSession(
+                timeout=aiohttp.ClientTimeout(total=timeout)
+            ) as session:
                 async with session.get(url, params=params) as response:
                     if response.status > 299:
                         self.log.warning(
@@ -72,7 +74,7 @@ class HathorCoreAsyncClient:
 
     async def post(
         self, path: str, body: Optional[dict] = None, timeout: Optional[float] = None
-    ) -> None:
+    ) -> dict[Any, Any]:
         """Make a post request async
 
         :param path: path to be requested
@@ -88,7 +90,9 @@ class HathorCoreAsyncClient:
             timeout = self.DEFAULT_TIMEOUT
 
         try:
-            async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=timeout)) as session:
+            async with aiohttp.ClientSession(
+                timeout=aiohttp.ClientTimeout(total=timeout)
+            ) as session:
                 async with session.post(url, json=body) as response:
                     if response.status > 299:
                         self.log.warning(
