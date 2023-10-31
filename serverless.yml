@@ -16,6 +16,9 @@ provider:
   stackTags:
     Application: "hathor-explorer-service"
     Stage: "${self:custom.stage}"
+  apiGateway:
+    apiKeys:
+      - ${self:custom.stage}-healthcheck-api-key
   logs:
     restApi: # TODO: add data to make the serverless create this role by itself
       role: arn:aws:iam::${env:AWS_ACCOUNT_ID}:role/APIGatewayPushLogsToCloudWatch
@@ -740,7 +743,8 @@ functions:
               handleUnauthorizedRequests: Fail # fail if the request don't have the permission to invalidate the cache
 
   healthcheck_handler:
-    handler: handlers.healthcheck.get_healthcheck
+    handler: handlers/healthcheck.get_healthcheck
+    timeout: 15
     package:
       patterns:
         - 'handlers/healthcheck.py'
@@ -748,7 +752,10 @@ functions:
       - { Ref: PythonRequirementsLambdaLayer }
     events:
       - http:
+          private: true
           path: health
           method: get
           cors: true
-          # TODO: caching, api-key, timeout, rate-limit
+          throttling:
+            maxRequestsPerSecond: 1
+            maxConcurrentRequests: 1
