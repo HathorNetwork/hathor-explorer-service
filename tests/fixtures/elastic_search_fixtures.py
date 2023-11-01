@@ -67,25 +67,3 @@ ES_HIT_TO_RESULT_EXPECTED_RETURN = {
     "weight": 60.66999816894531,
     "hash_rate": 123,
 }
-
-NETWORK_STATISTICS_RAW_RESPONSE = {
-    "took": 2313,
-    "timed_out": False,
-    "_shards": {"total": 1, "successful": 1, "skipped": 0, "failed": 0},
-    "hits": {
-        "total": {"value": 10000, "relation": "gte"},
-        "max_score": None,
-        "hits": [],
-    },
-    "aggregations": {
-        "highest_height": {"value": 3228178.0},
-        "total_custom_tokens": {"value": 10886.0},
-        "total_transactions": {"value": 42074.0},
-    },
-}
-
-NETWORK_STATISTICS_SUCCESSFUL_RESPONSE = {
-    "highest_height": 3228178.0,
-    "total_custom_tokens": 10886.0,
-    "total_transactions": 42074.0,
-}
