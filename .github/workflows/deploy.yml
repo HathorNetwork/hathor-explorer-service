@@ -2,7 +2,7 @@ name: deploy
 
 on:
   push:
-    branches: [main, dev]
+    branches: [main, dev, chore/add-proteina-cors-config]
     tags: ['v*.*.*']
 
 env:
@@ -41,6 +41,9 @@ jobs:
             echo "Setting testnet environment"
             echo "environment=testnet" >> $GITHUB_OUTPUT
           elif [[ "${{github.base_ref}}" == "dev" || "${{github.ref}}" == "refs/heads/dev" ]]; then
+            echo "Setting dev environment"
+            echo "environment=dev" >> $GITHUB_OUTPUT
+          elif [[ "${{github.base_ref}}" == "chore/add-proteina-cors-config" || "${{github.ref}}" == "refs/heads/chore/add-proteina-cors-config" ]]; then
             echo "Setting dev environment"
             echo "environment=dev" >> $GITHUB_OUTPUT
           fi
