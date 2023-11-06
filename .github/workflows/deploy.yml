@@ -115,7 +115,7 @@ jobs:
           REDIS_PORT: 6379
           REDIS_DB: 0
           METADATA_BUCKET: hathor-explorer-metadata-testnet
-          CORS_ALLOWED_REGEX: https?://([a-z0-9]*\.){0,5}hathor\.network
+          CORS_ALLOWED_REGEX: https?:\/\/([a-z0-9]*\.){0,5}hathor\.network|https?:\/\/([a-z0-9\-]*\.?){0,5}hathor56\.wpcomstaging\.com
           NODE_CACHE_TTL: 30
           ELASTIC_INDEX: testnet-token
           ELASTIC_TX_INDEX: testnet-tx
@@ -133,7 +133,7 @@ jobs:
           REDIS_PORT: 6379
           REDIS_DB: 0
           METADATA_BUCKET: hathor-explorer-metadata-mainnet
-          CORS_ALLOWED_REGEX: https?://([a-z0-9]*\.){0,5}hathor\.network
+          CORS_ALLOWED_REGEX: https?:\/\/([a-z0-9]*\.){0,5}hathor\.network|https?:\/\/([a-z0-9\-]*\.?){0,5}hathor56\.wpcomstaging\.com
           NODE_CACHE_TTL: 30
           ELASTIC_INDEX: mainnet-token
           ELASTIC_TX_INDEX: mainnet-tx
