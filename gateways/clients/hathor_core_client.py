@@ -1,5 +1,5 @@
 import json
-from typing import Any, Callable, Optional
+from typing import Any, Optional
 from urllib import parse
 
 import aiohttp
@@ -27,6 +27,8 @@ FEATURE_ENDPOINT = "/v1a/feature"
 
 
 class HathorCoreAsyncClient:
+    DEFAULT_TIMEOUT = 60  # seconds
+
     def __init__(self, domain: Optional[str] = None) -> None:
         """Client to make async requests
 
@@ -37,21 +39,26 @@ class HathorCoreAsyncClient:
         self.log = logger.new(client="async")
 
     async def get(
-        self, path: str, callback: Callable[[dict], None], params: Optional[dict] = None
-    ) -> None:
+        self, path: str, params: Optional[dict] = None, timeout: Optional[float] = None
+    ) -> dict[Any, Any]:
         """Make a get request async
 
         :param path: path to be requested
         :type path: str
-        :param callback: callback to be called with the response as argument
-        :type callback: Callable[[dict], None]
         :param params: params to be sent
         :type params: Optional[dict]
+        :param timeout: timeout in seconds
+        :type timeout: Optional[float]
         """
         url = parse.urljoin(f"https://{self.domain}", path)
 
+        if not timeout:
+            timeout = self.DEFAULT_TIMEOUT
+
         try:
-            async with aiohttp.ClientSession() as session:
+            async with aiohttp.ClientSession(
+                timeout=aiohttp.ClientTimeout(total=timeout)
+            ) as session:
                 async with session.get(url, params=params) as response:
                     if response.status > 299:
                         self.log.warning(
@@ -60,27 +67,32 @@ class HathorCoreAsyncClient:
                             status=response.status,
                             body=await response.text(),
                         )
-                    callback(await response.json())
+                    return await response.json()
         except Exception as e:
             self.log.error("hathor_core_error", path=path, error=repr(e))
-            callback({"error": repr(e)})
+            return {"error": repr(e)}
 
     async def post(
-        self, path: str, callback: Callable[[dict], None], body: Optional[dict] = None
-    ) -> None:
+        self, path: str, body: Optional[dict] = None, timeout: Optional[float] = None
+    ) -> dict[Any, Any]:
         """Make a post request async
 
         :param path: path to be requested
         :type path: str
-        :param callback: callback to be called with the response as argument
-        :type callback: Callable[[dict], None]
         :param body: body to be sent encoded as json
         :type body: Optional[dict]
+        :param timeout: timeout in seconds
+        :type timeout: Optional[float]
         """
         url = parse.urljoin(f"https://{self.domain}", path)
 
+        if not timeout:
+            timeout = self.DEFAULT_TIMEOUT
+
         try:
-            async with aiohttp.ClientSession() as session:
+            async with aiohttp.ClientSession(
+                timeout=aiohttp.ClientTimeout(total=timeout)
+            ) as session:
                 async with session.post(url, json=body) as response:
                     if response.status > 299:
                         self.log.warning(
@@ -89,10 +101,10 @@ class HathorCoreAsyncClient:
                             status=response.status,
                             body=await response.text(),
                         )
-                    callback(await response.json())
+                    return await response.json()
         except Exception as e:
             self.log.error("hathor_core_error", path=path, error=repr(e))
-            callback({"error": repr(e)})
+            return {"error": repr(e)}
 
 
 class HathorCoreClient:

@@ -23,7 +23,8 @@ class CollectNodesStatuses:
         for node in HATHOR_NODES:
             client = HathorCoreAsyncClient(node)
             node_gateway = NodeGateway(hathor_core_async_client=client)
-            await node_gateway.get_node_status_async(self._send)
+            data = await node_gateway.get_node_status_async()
+            self._send(data)
 
     def _send(self, data: dict) -> None:
         if "error" in data:

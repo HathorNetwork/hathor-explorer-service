@@ -28,7 +28,7 @@ class TestCollectNodesStatuses:
         ]
 
         node_gateway.get_node_status_async = AsyncMock(
-            side_effect=lambda x: x(HATHOR_CORE_MAINNET_GET_STATUS)
+            side_effect=lambda: HATHOR_CORE_MAINNET_GET_STATUS
         )
         with patch.object(
             NodeGateway, "get_node_status_async", new=node_gateway.get_node_status_async
