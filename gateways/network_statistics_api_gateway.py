@@ -8,9 +8,9 @@ from gateways.clients.elastic_search_client import ElasticSearchClient
 
 
 class NetworkStatisticsApiGateway:
-    def __init__(self, elastic_search_client: Optional[Elasticsearch] = None) -> None:
-        self.elastic_search_client = ElasticSearchClient(
-            elastic_index=ELASTIC_TX_INDEX, client=elastic_search_client
+    def __init__(self, elastic_search_client: Optional[ElasticSearchClient] = None) -> None:
+        self.elastic_search_client = elastic_search_client or ElasticSearchClient(
+            elastic_index=ELASTIC_TX_INDEX
         )
 
     def get_transaction_statistics(self) -> dict:
