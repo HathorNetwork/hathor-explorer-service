@@ -1,4 +1,4 @@
-from typing import Any, Callable, Dict, List, Union
+from typing import Any, Dict, List, Union
 
 from common.configuration import DATA_AGGREGATOR_LAMBDA_NAME, NODE_CACHE_TTL
 from common.errors import ConfigError
