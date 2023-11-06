@@ -40,7 +40,7 @@ class NodeGateway:
         self.lambda_client = lambda_client or LambdaClient()
         self.log = logger.new()
 
-    async def get_node_status_async(self) -> dict[Any, Any]:
+    async def get_node_status_async(self) -> Dict[Any, Any]:
         """Retrieve status from full-node"""
         return await self.hathor_core_async_client.get(STATUS_ENDPOINT)
 
