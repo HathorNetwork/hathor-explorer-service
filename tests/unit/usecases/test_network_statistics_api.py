@@ -24,10 +24,17 @@ class TestNetworkStatisticsApi:
     def test_get_basic_statistics_gateway_error(self, logger, gateway):
         api = NetworkStatisticsApi(network_statistics_api_gateway=gateway)
         gateway.get_transaction_statistics.side_effect = exceptions.ApiError(
-            "gateway_error", MagicMock(), MagicMock()
+            "Some Elasticsearch API error", MagicMock(), MagicMock()
         )
-        with raises(ApiError):
+
+        failed = False
+        try:
             api.get_basic_statistics()
+        except ApiError as err:
+            assert str(err) == "gateway_error"
+            failed = True
+
+        assert failed
         gateway.get_transaction_statistics.assert_called_once()
         logger.error.assert_called_once()
 
@@ -35,9 +42,16 @@ class TestNetworkStatisticsApi:
     def test_get_basic_statistics_internal_error(self, logger, gateway):
         api = NetworkStatisticsApi(network_statistics_api_gateway=gateway)
         gateway.get_transaction_statistics.side_effect = exceptions.TransportError(
-            "internal_error"
+            "Some Elasticsearch transport error"
         )
-        with raises(ApiError):
+
+        failed = False
+        try:
             api.get_basic_statistics()
+        except ApiError as err:
+            assert str(err) == "internal_error"
+            failed = True
+
+        assert failed
         gateway.get_transaction_statistics.assert_called_once()
         logger.error.assert_called_once()
