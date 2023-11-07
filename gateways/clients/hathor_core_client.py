@@ -1,5 +1,5 @@
 import json
-from typing import Any, Optional
+from typing import Any, Dict, Optional
 from urllib import parse
 
 import aiohttp
@@ -40,7 +40,7 @@ class HathorCoreAsyncClient:
 
     async def get(
         self, path: str, params: Optional[dict] = None, timeout: Optional[float] = None
-    ) -> dict[Any, Any]:
+    ) -> Dict[Any, Any]:
         """Make a get request async
 
         :param path: path to be requested
@@ -74,7 +74,7 @@ class HathorCoreAsyncClient:
 
     async def post(
         self, path: str, body: Optional[dict] = None, timeout: Optional[float] = None
-    ) -> dict[Any, Any]:
+    ) -> Dict[Any, Any]:
         """Make a post request async
 
         :param path: path to be requested
