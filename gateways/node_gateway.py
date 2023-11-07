@@ -1,4 +1,4 @@
-from typing import Callable, Dict, List, Union
+from typing import Any, Dict, List, Union
 
 from common.configuration import DATA_AGGREGATOR_LAMBDA_NAME, NODE_CACHE_TTL
 from common.errors import ConfigError
@@ -40,13 +40,9 @@ class NodeGateway:
         self.lambda_client = lambda_client or LambdaClient()
         self.log = logger.new()
 
-    async def get_node_status_async(self, callback: Callable[[dict], None]) -> None:
-        """Retrieve status from full-node
-
-        :param callback: method to be called passing response as param
-        :type callback: Callable[[dict], None]
-        """
-        await self.hathor_core_async_client.get(STATUS_ENDPOINT, callback)
+    async def get_node_status_async(self) -> Dict[Any, Any]:
+        """Retrieve status from full-node"""
+        return await self.hathor_core_async_client.get(STATUS_ENDPOINT)
 
     def send_node_to_data_aggregator(self, payload: Node) -> int:
         """Invoke data-aggregator lambda passing node data to be aggregated
