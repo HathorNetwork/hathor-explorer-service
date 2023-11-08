@@ -7,7 +7,9 @@ from utils.elastic_search.elastic_search_utils import ElasticSearchUtils
 
 
 class ElasticSearchClient:
-    def __init__(self, elastic_index: str, client: Optional[Elasticsearch]) -> None:
+    def __init__(
+        self, elastic_index: str, client: Optional[Elasticsearch] = None
+    ) -> None:
         """Client to make async requests to ElasticSearch, using Cloud ID and Elastic Password"""
 
         if client:
