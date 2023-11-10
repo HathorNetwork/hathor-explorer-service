@@ -43,7 +43,8 @@ class InvokeHandler:
             except Exception as error:
                 logger.exception(error)
                 wrapped_error = dict(success=False)
-                wrapped_error.update(error.args)
+                if error.args:
+                    wrapped_error.update({"error": error.args[0]})
                 return wrapped_error
 
         return wrapper
