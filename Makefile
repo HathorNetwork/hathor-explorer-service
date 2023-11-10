@@ -58,6 +58,8 @@ test:
 	pytest $(pytest_flags) ./tests
 
 stage=dev
+# The "AWS_SDK_LOAD_CONFIG=1" is needed to load the AWS credentials from the ~/.aws/config file
+# This is part of the solution to make it work with `aws sso login`
 .PHONY: deploy-lambdas
 deploy-lambdas:
 	AWS_SDK_LOAD_CONFIG=1 npx serverless deploy --stage $(stage) --region eu-central-1

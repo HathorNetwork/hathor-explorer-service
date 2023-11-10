@@ -600,6 +600,21 @@ python-versions = "*"
 cli = ["click (>=5.0)"]
 
 [[package]]
+name = "python-healthchecklib"
+version = "0.1.0"
+description = "Opinionated healthcheck library"
+optional = false
+python-versions = "^3.8.1"
+files = []
+develop = false
+
+[package.source]
+type = "git"
+url = "https://github.com/hathornetwork/python-healthcheck-lib"
+reference = "HEAD"
+resolved_reference = "a01437ca68a16dc8b9d451676926431c08bfe51e"
+
+[[package]]
 name = "redis"
 version = "3.5.3"
 description = "Python client for Redis key-value store"
@@ -853,4 +868,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "08d39892d29a22c4d4f3ff9af877b4060495ad1047cec3a7e34fc69fc5c9f11f"
+content-hash = "2cc866c4bcaaed7bc2ba663515a4ff5342ed39bae86c44bb7c911044a30d952a"

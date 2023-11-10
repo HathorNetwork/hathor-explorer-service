@@ -21,7 +21,7 @@ deepdiff = "^5.7.0"
 hathorlib = "^0.2.0"
 PyMySQL = "^1.0.2"
 SQLAlchemy = "^1.4.40"
-python-healthchecklib = {path = "/app/python_healthchecklib-0.1.0-py3-none-any.whl"}
+python-healthchecklib = {git = "https://github.com/hathornetwork/python-healthcheck-lib"}
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.4"
