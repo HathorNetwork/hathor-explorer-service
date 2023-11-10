@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import ANY, MagicMock, patch
 
-from usecases.healthcheck import GetHealthcheck
+from usecases.get_healthcheck import GetHealthcheck
 
 
 class TestGetHealthcheck(unittest.TestCase):
@@ -9,9 +9,9 @@ class TestGetHealthcheck(unittest.TestCase):
         self.mock_healthcheck_gateway = MagicMock()
 
         with patch(
-            "usecases.healthcheck.HEALTHCHECK_WALLET_SERVICE_DB_ENABLED", True
-        ), patch("usecases.healthcheck.HEALTHCHECK_REDIS_ENABLED", True), patch(
-            "usecases.healthcheck.HEALTHCHECK_ELASTICSEARCH_ENABLED", True
+            "usecases.get_healthcheck.HEALTHCHECK_WALLET_SERVICE_DB_ENABLED", True
+        ), patch("usecases.get_healthcheck.HEALTHCHECK_REDIS_ENABLED", True), patch(
+            "usecases.get_healthcheck.HEALTHCHECK_ELASTICSEARCH_ENABLED", True
         ):
             self.get_healthcheck = GetHealthcheck(
                 healthcheck_gateway=self.mock_healthcheck_gateway
@@ -521,7 +521,6 @@ class TestGetHealthcheck(unittest.TestCase):
         )
 
     def test_elasticsearch_report_yellow(self):
-        self.maxDiff = None
         async def mock_get_hathor_core_version():
             return {"version": "0.38.0"}
 
@@ -582,6 +581,3 @@ class TestGetHealthcheck(unittest.TestCase):
                 },
             },
         )
-
-
-

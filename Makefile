@@ -24,7 +24,7 @@ clean-all: clean
 
 .PHONY: mypy
 mypy:
-	mypy $(mypy_flags) ${py_sources}
+	mypy $(mypy_flags) ${py_sources} tests/
 
 .PHONY: black-check
 black-check:

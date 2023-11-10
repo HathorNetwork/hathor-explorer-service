@@ -743,11 +743,11 @@ functions:
               handleUnauthorizedRequests: Fail # fail if the request don't have the permission to invalidate the cache
 
   healthcheck_handler:
-    handler: handlers/healthcheck.get_healthcheck
+    handler: handlers/get_healthcheck.get_healthcheck
     timeout: 15
     package:
       patterns:
-        - 'handlers/healthcheck.py'
+        - 'handlers/get_healthcheck.py'
     layers:
       - { Ref: PythonRequirementsLambdaLayer }
     events:

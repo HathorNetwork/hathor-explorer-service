@@ -20,10 +20,12 @@ from gateways.healthcheck_gateway import HealthcheckGateway
 class GetHealthcheck:
     def __init__(
         self,
-        healthcheck: Healthcheck = None,
+        healthcheck: Optional[Healthcheck] = None,
         healthcheck_gateway: Optional[HealthcheckGateway] = None,
     ):
-        self.healthcheck = healthcheck or Healthcheck("Explorer Service", warn_is_unhealthy=True)
+        self.healthcheck = healthcheck or Healthcheck(
+            "Explorer Service", warn_is_unhealthy=True
+        )
         self.healthcheck_gateway = healthcheck_gateway or HealthcheckGateway()
 
         self.components = {}

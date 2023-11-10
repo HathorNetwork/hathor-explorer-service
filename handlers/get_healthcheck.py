@@ -3,7 +3,7 @@ from typing import Optional
 
 from aws_lambda_context import LambdaContext
 
-from usecases.healthcheck import GetHealthcheck
+from usecases.get_healthcheck import GetHealthcheck
 from utils.wrappers.aws.api_gateway import ApiGateway, ApiGatewayEvent
 
 
