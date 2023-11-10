@@ -520,11 +520,68 @@ class TestGetHealthcheck(unittest.TestCase):
             },
         )
 
-    # @patch('your_module.HealthcheckGateway.get_hathor_core_version')
-    # async def test_get_fullnode_health_failure(self, mock_get_version):
-    #     mock_get_version.return_value = {"error": "Unable to connect"}
+    def test_elasticsearch_report_yellow(self):
+        self.maxDiff = None
+        async def mock_get_hathor_core_version():
+            return {"version": "0.38.0"}
 
-    #     result = await self.get_healthcheck._get_fullnode_health()
+        self.mock_healthcheck_gateway.get_hathor_core_version.side_effect = (
+            mock_get_hathor_core_version
+        )
+        self.mock_healthcheck_gateway.ping_wallet_service_db.return_value = (True, "1")
+        self.mock_healthcheck_gateway.ping_redis.return_value = True
+        self.mock_healthcheck_gateway.get_elasticsearch_health.return_value = {
+            "status": "yellow"
+        }
 
-    #     self.assertEqual(result, HealthcheckCallbackResponse(status="fail", output="Fullnode healthcheck errored: Unable to connect"))
-    #     mock_get_version.assert_called_once()
+        response, status_code = self.get_healthcheck.get_service_health()
+
+        self.assertEqual(status_code, 503)
+        self.assertEqual(
+            response,
+            {
+                "status": "warn",
+                "description": "Health status of Explorer Service",
+                "checks": {
+                    "fullnode": [
+                        {
+                            "status": "pass",
+                            "output": "Fullnode is healthy",
+                            "componentName": "fullnode",
+                            "componentType": "http",
+                            "time": ANY,
+                        }
+                    ],
+                    "wallet_service_db": [
+                        {
+                            "status": "pass",
+                            "output": "Wallet service DB is healthy",
+                            "componentName": "wallet_service_db",
+                            "componentType": "datastore",
+                            "time": ANY,
+                        }
+                    ],
+                    "redis": [
+                        {
+                            "status": "pass",
+                            "output": "Redis is healthy",
+                            "componentName": "redis",
+                            "componentType": "datastore",
+                            "time": ANY,
+                        }
+                    ],
+                    "elasticsearch": [
+                        {
+                            "status": "warn",
+                            "output": "Elasticsearch has warnings: {'status': 'yellow'}",
+                            "componentName": "elasticsearch",
+                            "componentType": "datastore",
+                            "time": ANY,
+                        }
+                    ],
+                },
+            },
+        )
+
+
+

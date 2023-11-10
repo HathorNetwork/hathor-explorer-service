@@ -261,13 +261,19 @@ class TestWalletServiceDBClient:
         assert connection.execute.call_args_list[2][0][0].text == address_tokens_query
 
     def test_ping(self, engine, connection):
+        class mockRow(list):
+            def _asdict(self):
+                return {}
+
         cursor = MagicMock()
-        cursor.one.return_value = (1,)
+        result = mockRow()
+        result.append(1)
+        cursor.one.return_value = result
         connection.execute.return_value = cursor
 
         client = WalletServiceDBClient(engine)
 
-        assert client.ping() == (True, (1,))
+        assert client.ping() == (True, {})
 
         # Should pass the expected args to execute
         connection.execute.assert_called_once()

@@ -1,4 +1,3 @@
-import unittest
 from unittest.mock import MagicMock
 
 import fakeredis
@@ -8,7 +7,7 @@ from pytest import fixture
 from gateways.clients.cache_client import CacheClient
 
 
-class TestCacheClient(unittest.TestCase):
+class TestCacheClient:
     @fixture
     def cache_client(self):
         client = CacheClient()

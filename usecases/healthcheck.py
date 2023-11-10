@@ -23,7 +23,7 @@ class GetHealthcheck:
         healthcheck: Healthcheck = None,
         healthcheck_gateway: Optional[HealthcheckGateway] = None,
     ):
-        self.healthcheck = healthcheck or Healthcheck("Explorer Service")
+        self.healthcheck = healthcheck or Healthcheck("Explorer Service", warn_is_unhealthy=True)
         self.healthcheck_gateway = healthcheck_gateway or HealthcheckGateway()
 
         self.components = {}
