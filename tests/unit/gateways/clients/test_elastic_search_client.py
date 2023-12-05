@@ -100,3 +100,12 @@ class TestElasticSearchClient:
         }
 
         assert result == expected_result
+
+    def test_health(self, es_client):
+        client = ElasticSearchClient(elastic_index=ELASTIC_INDEX, client=es_client)
+
+        es_client.cluster.health = MagicMock(
+            return_value={"cluster_name": "dev-cluster", "status": "green"}
+        )
+
+        assert client.health() == {"cluster_name": "dev-cluster", "status": "green"}

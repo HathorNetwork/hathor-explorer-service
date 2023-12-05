@@ -102,6 +102,10 @@ jobs:
           ELASTIC_INDEX: dev-token
           ELASTIC_TX_INDEX: dev-tx
           ELASTIC_TOKEN_BALANCES_INDEX: dev-token-balance
+          HEALTHCHECK_HATHOR_CORE_ENABLED: True
+          HEALTHCHECK_WALLET_SERVICE_DB_ENABLED: True
+          HEALTHCHECK_ELASTICSEARCH_ENABLED: True
+          HEALTHCHECK_REDIS_ENABLED: True
       - name: Deploy Lambdas Testnet
         if: ${{ needs.init.outputs.environment == 'testnet' }}
         run: |
@@ -120,6 +124,10 @@ jobs:
           ELASTIC_INDEX: testnet-token
           ELASTIC_TX_INDEX: testnet-tx
           ELASTIC_TOKEN_BALANCES_INDEX: testnet-token-balance
+          HEALTHCHECK_HATHOR_CORE_ENABLED: True
+          HEALTHCHECK_WALLET_SERVICE_DB_ENABLED: True
+          HEALTHCHECK_ELASTICSEARCH_ENABLED: True
+          HEALTHCHECK_REDIS_ENABLED: True
       - name: Deploy Lambdas Mainnet
         if: ${{ needs.init.outputs.environment == 'mainnet' }}
         run: |
@@ -138,6 +146,10 @@ jobs:
           ELASTIC_INDEX: mainnet-token
           ELASTIC_TX_INDEX: mainnet-tx
           ELASTIC_TOKEN_BALANCES_INDEX: mainnet-token-balance
+          HEALTHCHECK_HATHOR_CORE_ENABLED: True
+          HEALTHCHECK_WALLET_SERVICE_DB_ENABLED: True
+          HEALTHCHECK_ELASTICSEARCH_ENABLED: True
+          HEALTHCHECK_REDIS_ENABLED: True
       - name: Deploy Daemons Dev
         if: ${{ needs.init.outputs.environment == 'dev' }}
         run: |
