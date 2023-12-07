@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import List, Optional
 
 from gateways.clients.cache_client import ADDRESS_BLACKLIST_COLLECTION_NAME, CacheClient
 from gateways.clients.hathor_core_client import (
@@ -8,6 +8,9 @@ from gateways.clients.hathor_core_client import (
     DECODE_TX_ENDPOINT,
     FEATURE_ENDPOINT,
     GRAPHVIZ_DOT_NEIGHBORS_ENDPOINT,
+    NC_STATE_ENDPOINT,
+    NC_HISTORY_ENDPOINT,
+    NC_BLUEPRINT_INFORMATION_ENDPOINT,
     PUSH_TX_ENDPOINT,
     TOKEN_ENDPOINT,
     TOKEN_HISTORY_ENDPOINT,
@@ -213,4 +216,22 @@ class NodeApiGateway:
         """Retrieve token by id"""
         return self.hathor_core_client.get(
             TOKEN_ENDPOINT, params={"id": id}, timeout=NODE_API_TIMEOUT_IN_SECONDS
+        )
+
+    def get_nc_state(self, id: str, fields: List[str], balances: List[str], calls: List[str]) -> Optional[dict]:
+        """Get state of a nano contract."""
+        return self.hathor_core_client.get(
+            NC_STATE_ENDPOINT, params={"id": id, "fields[]": fields, "balances[]": balances, "calls[]": calls}
+        )
+
+    def get_nc_history(self, id: str) -> Optional[dict]:
+        """Get history of a nano contract."""
+        return self.hathor_core_client.get(
+            NC_HISTORY_ENDPOINT, params={"id": id}
+        )
+
+    def get_nc_blueprint_information(self, blueprint_id: str) -> Optional[dict]:
+        """Get blueprint information."""
+        return self.hathor_core_client.get(
+            NC_BLUEPRINT_INFORMATION_ENDPOINT, params={"blueprint_id": blueprint_id}
         )
