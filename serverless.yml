@@ -16,6 +16,9 @@ provider:
   stackTags:
     Application: "hathor-explorer-service"
     Stage: "${self:custom.stage}"
+  apiGateway:
+    apiKeys:
+      - ${self:custom.stage}-healthcheck-api-key
   logs:
     restApi: # TODO: add data to make the serverless create this role by itself
       role: arn:aws:iam::${env:AWS_ACCOUNT_ID}:role/APIGatewayPushLogsToCloudWatch
@@ -48,6 +51,10 @@ provider:
     WALLET_SERVICE_DB_PASSWORD: ${env:WALLET_SERVICE_DB_PASSWORD}
     WALLET_SERVICE_DB_HOST: ${env:WALLET_SERVICE_DB_HOST}
     WALLET_SERVICE_DB_NAME: ${env:WALLET_SERVICE_DB_NAME}
+    HEALTHCHECK_HATHOR_CORE_ENABLED: ${env:HEALTHCHECK_HATHOR_CORE_ENABLED}
+    HEALTHCHECK_WALLET_SERVICE_DB_ENABLED: ${env:HEALTHCHECK_WALLET_SERVICE_DB_ENABLED}
+    HEALTHCHECK_ELASTICSEARCH_ENABLED: ${env:HEALTHCHECK_ELASTICSEARCH_ENABLED}
+    HEALTHCHECK_REDIS_ENABLED: ${env:HEALTHCHECK_REDIS_ENABLED}
 
 plugins:
   - serverless-better-credentials
@@ -738,3 +745,21 @@ functions:
             perKeyInvalidation:  # add invalidation policy
               requireAuthorization: true
               handleUnauthorizedRequests: Fail # fail if the request don't have the permission to invalidate the cache
+
+  healthcheck_handler:
+    handler: handlers/get_healthcheck.get_healthcheck
+    timeout: 15
+    package:
+      patterns:
+        - 'handlers/get_healthcheck.py'
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          private: true
+          path: health
+          method: get
+          cors: true
+          throttling:
+            maxRequestsPerSecond: 1
+            maxConcurrentRequests: 1

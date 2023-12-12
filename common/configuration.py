@@ -90,8 +90,23 @@ WALLET_SERVICE_DB_PASSWORD = config("WALLET_SERVICE_DB_PASSWORD", default=None)
 WALLET_SERVICE_DB_HOST = config("WALLET_SERVICE_DB_HOST", default=None)
 WALLET_SERVICE_DB_NAME = config("WALLET_SERVICE_DB_NAME", default=None)
 
+# Daemon Healthcheck
 # This ping functionality will be used by the data collector daemon to send pings to a health monitor service
 HEALTHCHECK_PING_ENABLED = config("HEALTHCHECK_PING_ENABLED", default=False, cast=bool)
 HEALTHCHECK_PING_INTERVAL = config("HEALTHCHECK_PING_INTERVAL", default=30, cast=int)
 HEALTHCHECK_SERVICE_API_KEY = config("HEALTHCHECK_SERVICE_API_KEY", default="")
 HEALTHCHECK_DATA_COLLECTOR_URL = config("HEALTHCHECK_DATA_COLLECTOR_URL", default=None)
+
+# API Healthcheck
+HEALTHCHECK_HATHOR_CORE_ENABLED = config(
+    "HEALTHCHECK_HATHOR_CORE_ENABLED", default=True, cast=bool
+)
+HEALTHCHECK_WALLET_SERVICE_DB_ENABLED = config(
+    "HEALTHCHECK_WALLET_SERVICE_DB_ENABLED", default=False, cast=bool
+)
+HEALTHCHECK_ELASTICSEARCH_ENABLED = config(
+    "HEALTHCHECK_ELASTICSEARCH_ENABLED", default=False, cast=bool
+)
+HEALTHCHECK_REDIS_ENABLED = config(
+    "HEALTHCHECK_REDIS_ENABLED", default=False, cast=bool
+)
