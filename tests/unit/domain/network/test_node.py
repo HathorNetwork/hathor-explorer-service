@@ -37,29 +37,35 @@ class TestNode:
         assert mainnet
         assert (
             mainnet.id
-            == "847b9f9979514e33b8713c8d63f0c0cc0ccba9aff067d62a4679f20439595631"
+            == "f0e156e9bea669724ce5d37bbf67e997e0cf04d067a3d0400aad8f746387401e"
         )
         assert mainnet.state == NodeState("READY")
-        assert mainnet.entrypoints[0] == "tcp://34.218.233.215:40403"
+        assert mainnet.entrypoints[0] == "tcp://18.196.44.159:40403"
         assert (
             mainnet.connected_peers[0].id
-            == "49c9cdeddc8a5ee94c177628686aba07bca53c481819c921ff16cdd39614bc1c"
+            == "1ba45f948775d5276947fd6bcde1f512cd5761038a5f334ca2b2ac4cb75b17d6"
         )
-        assert mainnet.connected_peers[0].latest_timestamp == 1622151490
-        assert mainnet.connected_peers[0].entrypoints == ["tcp://3.66.218.70:40403"]
+        assert mainnet.connected_peers[0].latest_timestamp == 1704224442
+        assert mainnet.connected_peers[0].entrypoints == []
+        assert (
+            mainnet.connected_peers[2].id
+            == "e6dc285d498cf1f2c24185808334bf5ddb67d54f8fc67f90d7c927e7040cfbe3"
+        )
+        assert mainnet.connected_peers[2].peer_best_block.height == 4125507
+        assert mainnet.connected_peers[2].entrypoints == ["tcp://3.73.101.11:40403"]
 
         testnet = Node.from_status_dict(HATHOR_CORE_TESTNET_GET_STATUS)
 
         assert testnet
         assert (
             testnet.id
-            == "4277ccbd10c5b3aec608e5cc8888d612ff275d8645d1069cef24178c5619d17a"
+            == "4d72a3de11b709db29a4fcea5e0e9d7d646582c6bc43eb5fc31dc13e7f2c21b9"
         )
         assert testnet.state == NodeState("READY")
-        assert testnet.entrypoints[0] == "tcp://3.21.242.244:40403"
+        assert testnet.entrypoints[0] == "tcp://18.197.75.137:40403"
         assert (
             testnet.connected_peers[0].id
-            == "71df2e6c0927491eb439c68d45b3690d22e4c15beaa174e2487a117c46abd944"
+            == "ef1e6f7b80d51baedac0e8a4be2eb603d18f3b818b75d37b2753c999dc4a3bb0"
         )
-        assert testnet.connected_peers[0].latest_timestamp == 1622140105
-        assert testnet.connected_peers[0].entrypoints == []
+        assert testnet.connected_peers[0].peer_best_block.height == 3454218
+        assert testnet.connected_peers[0].entrypoints == ["tcp://3.67.174.108:40403"]

@@ -3,7 +3,7 @@ from factory.declarations import SubFactory
 from faker import Faker
 
 from domain.network.network import AggregatedNode, AggregatedPeer, Network
-from domain.network.node import NodeState
+from domain.network.node import BlockInfo, NodeState
 
 fake = Faker()
 
@@ -24,12 +24,41 @@ class AggregatedPeerFactory(Factory):
     last_message = lazy_attribute(
         lambda o: fake.pyint(min_value=10_000, max_value=100_000)
     )
-    latest_timestamp = lazy_attribute(
-        lambda o: fake.pyint(min_value=10_000, max_value=100_000)
+    protocol_version = lazy_attribute(
+        lambda o: fake.random_element(["sync-v1.1", "sync-v2"])
     )
-    sync_timestamp = lazy_attribute(
-        lambda o: fake.pyint(min_value=10_000, max_value=100_000)
-    )
+
+    @lazy_attribute
+    def latest_timestamp(self):
+        if self.protocol_version.startswith("sync-v1"):
+            return fake.pyint(min_value=10_000, max_value=100_000)
+        else:
+            return None
+
+    @lazy_attribute
+    def sync_timestamp(self):
+        if self.protocol_version.startswith("sync-v1"):
+            return fake.pyint(min_value=10_000, max_value=self.latest_timestamp)
+        else:
+            return None
+
+    @lazy_attribute
+    def peer_best_block(self):
+        if self.protocol_version.startswith("sync-v2"):
+            return BlockInfo(fake.pyint(1_000_000, 5_000_000), fake.sha256())
+        else:
+            return None
+
+    @lazy_attribute
+    def synced_block(self):
+        if self.protocol_version.startswith("sync-v2"):
+            print(self.peer_best_block.height)
+            return BlockInfo(
+                fake.pyint(1_000_000, self.peer_best_block.height), fake.sha256()
+            )
+        else:
+            return None
+
     warning_flags = lazy_attribute(
         lambda o: fake.random_elements(
             ["no_entrypoints", "no_peer_id_url"], unique=True
