@@ -1,9 +1,9 @@
 from dataclasses import asdict, dataclass
-from typing import List, Set
+from typing import List, Optional, Set
 
 from dacite import Config, from_dict
 
-from domain.network.node import Node, NodeState, Peer
+from domain.network.node import BlockInfo, Node, NodeState, Peer
 
 
 @dataclass
@@ -28,11 +28,20 @@ class AggregatedPeer:
     :param last_message: timestamp of last message
     :type last_message: int
 
-    :param latest_timestamp: latest timestamp
-    :type latest_timestamp: int
+    :param protocol_version: version of the protocol (typically sync-v1.1 or sync-v2)
+    :type protocol_version: str
 
-    :param sync_timestamp: timestamp of last sychronized block
-    :type sync_timestamp: int
+    :param latest_timestamp: latest timestamp (sync v1)
+    :type latest_timestamp: Optional[int]
+
+    :param sync_timestamp: timestamp of last sychronized block (sync v1)
+    :type sync_timestamp: Optional[int]
+
+    :param peer_best_block: best block reported by the remote connected peer (sync v2)
+    :type peer_best_block: Optional[BlockInfo]
+
+    :param synced_block: current synchronized block on this connection (sync v2)
+    :type synced_block: Optional[BlockInfo]
 
     :param warning_flags: list of warning flags, if any
     :type warning_flags: List[str]
@@ -51,8 +60,11 @@ class AggregatedPeer:
     address: str
     state: NodeState
     last_message: int
-    latest_timestamp: int
-    sync_timestamp: int
+    protocol_version: str
+    latest_timestamp: Optional[int]
+    sync_timestamp: Optional[int]
+    peer_best_block: Optional[BlockInfo]
+    synced_block: Optional[BlockInfo]
     warning_flags: List[str]
     entrypoints: List[str]
     connected_to: Set[str]
@@ -74,8 +86,11 @@ class AggregatedPeer:
             address=peer.address,
             state=peer.state,
             last_message=int(peer.last_message),
+            protocol_version=peer.protocol_version,
             latest_timestamp=peer.latest_timestamp,
             sync_timestamp=peer.sync_timestamp,
+            peer_best_block=peer.peer_best_block,
+            synced_block=peer.synced_block,
             warning_flags=peer.warning_flags,
             entrypoints=peer.entrypoints,
             connected_to=set(),

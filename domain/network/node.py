@@ -1,6 +1,6 @@
 from dataclasses import asdict, dataclass
 from enum import Enum
-from typing import List
+from typing import List, Optional
 
 
 class NodeState(str, Enum):
@@ -9,6 +9,40 @@ class NodeState(str, Enum):
 
     # Node is ready to establish new connections, sync, and exchange transactions.
     READY = "READY"
+
+
+@dataclass(frozen=True)
+class BlockInfo:
+    """Class to hold block info as returned by the status of a sync-v2 connection
+
+    Example relevant portion of the status:
+
+    ```
+    "node-block-sync": {
+      "is_enabled": true,
+      "peer_best_block": {
+        "height": 4125002,
+        "id": "000000000000000107483b7ac4c7eaf4d31069c05257047093532d6f148ba5a0"
+      },
+      "synced_block": {
+        "height": 4125002,
+        "id": "000000000000000107483b7ac4c7eaf4d31069c05257047093532d6f148ba5a0"
+      },
+      "synced": true,
+      "state": "syncing-mempool"
+    }
+    ```
+
+    BlockInfo models "peer_best_block" and "synced_block".
+    """
+
+    height: int
+    id: str
+
+    @classmethod
+    def from_status_dict(cls, status: dict) -> "BlockInfo":
+        """Create class instance from the inner dict `{"height": ..., "id": ...}`"""
+        return cls(status["height"], status["id"])
 
 
 @dataclass
@@ -52,8 +86,11 @@ class Peer:
     address: str
     state: NodeState
     last_message: float
-    latest_timestamp: int
-    sync_timestamp: int
+    protocol_version: str
+    latest_timestamp: Optional[int]
+    sync_timestamp: Optional[int]
+    peer_best_block: Optional[BlockInfo]
+    synced_block: Optional[BlockInfo]
     warning_flags: List[str]
     entrypoints: List[str]
 
@@ -152,6 +189,29 @@ class Node:
         connected_peers = []
 
         for peer in status["connections"]["connected_peers"]:
+            latest_timestamp: Optional[int] = None
+            sync_timestamp: Optional[int] = None
+            peer_best_block: Optional[BlockInfo] = None
+            synced_block: Optional[BlockInfo] = None
+            protocol_version = peer["protocol_version"]
+            if protocol_version in {"sync-v1", "sync-v1.1"}:
+                latest_timestamp = peer["plugins"]["node-sync-timestamp"][
+                    "latest_timestamp"
+                ]
+                sync_timestamp = peer["plugins"]["node-sync-timestamp"][
+                    "synced_timestamp"
+                ]
+            elif protocol_version == "sync-v2":
+                peer_best_block = BlockInfo.from_status_dict(
+                    peer["plugins"]["node-block-sync"]["peer_best_block"]
+                )
+                synced_block = BlockInfo.from_status_dict(
+                    peer["plugins"]["node-block-sync"]["synced_block"]
+                )
+            else:
+                # still try to support, but don't attempt to parse the fields above
+                # mark version as unsupported
+                protocol_version += " (unsupported)"
             connected_peers.append(
                 Peer(
                     id=peer["id"],
@@ -160,12 +220,11 @@ class Node:
                     address=peer["address"],
                     state=NodeState(peer["state"]),
                     last_message=peer["last_message"],
-                    latest_timestamp=peer["plugins"]["node-sync-timestamp"][
-                        "latest_timestamp"
-                    ],
-                    sync_timestamp=peer["plugins"]["node-sync-timestamp"][
-                        "synced_timestamp"
-                    ],
+                    protocol_version=protocol_version,
+                    latest_timestamp=latest_timestamp,
+                    sync_timestamp=sync_timestamp,
+                    peer_best_block=peer_best_block,
+                    synced_block=synced_block,
                     warning_flags=peer["warning_flags"],
                     entrypoints=peer_entrypoints[peer["id"]],
                 )
