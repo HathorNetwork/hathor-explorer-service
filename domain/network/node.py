@@ -195,19 +195,25 @@ class Node:
             synced_block: Optional[BlockInfo] = None
             protocol_version = peer["protocol_version"]
             if protocol_version in {"sync-v1", "sync-v1.1"}:
-                latest_timestamp = peer["plugins"]["node-sync-timestamp"][
-                    "latest_timestamp"
-                ]
-                sync_timestamp = peer["plugins"]["node-sync-timestamp"][
-                    "synced_timestamp"
-                ]
+                node_sync_timestamp_dict = peer["plugins"].get("node-sync-timestamp")
+                if node_sync_timestamp_dict is None:
+                    raise ValueError(
+                        "Expected 'node-block-timestamp' property when protocol is sync-v1"
+                    )
+                latest_timestamp = node_sync_timestamp_dict.get("latest_timestamp")
+                sync_timestamp = node_sync_timestamp_dict.get("synced_timestamp")
             elif protocol_version == "sync-v2":
-                peer_best_block = BlockInfo.from_status_dict(
-                    peer["plugins"]["node-block-sync"]["peer_best_block"]
-                )
-                synced_block = BlockInfo.from_status_dict(
-                    peer["plugins"]["node-block-sync"]["synced_block"]
-                )
+                node_block_sync_dict = peer["plugins"].get("node-block-sync")
+                if node_block_sync_dict is None:
+                    raise ValueError(
+                        "Expected 'node-block-sync' property when protocol is sync-v2"
+                    )
+                peer_best_block_dict = node_block_sync_dict.get("peer_best_block")
+                if peer_best_block_dict:
+                    peer_best_block = BlockInfo.from_status_dict(peer_best_block_dict)
+                synced_block_dict = node_block_sync_dict.get("synced_block")
+                if synced_block_dict:
+                    synced_block = BlockInfo.from_status_dict(synced_block_dict)
             else:
                 # still try to support, but don't attempt to parse the fields above
                 # mark version as unsupported
