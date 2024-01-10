@@ -8,7 +8,9 @@ from daemons.data_collector import DataCollector
 async def data_collector() -> None:
     data_collector = DataCollector()
     while True:
-        asyncio.create_task(data_collector.run())
+        # This could take longer to run than the sleep time, so we wait for it to finish
+        await data_collector.run()
+        # Wait for 1 second before running again
         await asyncio.sleep(1)
 
 
