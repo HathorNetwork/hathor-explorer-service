@@ -120,6 +120,9 @@ class Node:
     :param latest_timestamp: Timestamp of the latest block of the node
     :type latest_timestamp: int
 
+    :param best_block: best block on that peer's chain
+    :type best_block: BlockInfo
+
     :param entrypoints: List of node entrypoints
     :type entrypoints: List[str]
 
@@ -138,6 +141,7 @@ class Node:
     uptime: float
     first_timestamp: int
     latest_timestamp: int
+    best_block: BlockInfo
     entrypoints: List[str]
     known_peers: List[str]
     connected_peers: List[Peer]
@@ -245,6 +249,10 @@ class Node:
             first_timestamp=status["dag"]["first_timestamp"],
             latest_timestamp=status["dag"]["latest_timestamp"],
             entrypoints=status["server"]["entrypoints"],
+            best_block=BlockInfo(
+                height=status["dag"]["best_block"]["height"],
+                id=status["dag"]["best_block"]["hash"],
+            ),
             known_peers=[id for id in peer_entrypoints.keys()],
             connected_peers=connected_peers,
         )
