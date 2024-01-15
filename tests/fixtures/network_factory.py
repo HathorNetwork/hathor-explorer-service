@@ -83,6 +83,12 @@ class AggregatedNodeFactory(Factory):
     latest_timestamp = lazy_attribute(
         lambda o: fake.pyint(min_value=10_000, max_value=100_000)
     )
+    best_block = lazy_attribute(
+        lambda o: {
+            "height": fake.pyint(1_000_000, 5_000_000),
+            "id": fake.sha256(),
+        }
+    )
     entrypoints = lazy_attribute(
         lambda o: [
             f"tcp://{entrypoint()}" for i in range(fake.random_int(min=1, max=1))

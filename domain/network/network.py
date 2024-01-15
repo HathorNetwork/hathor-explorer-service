@@ -134,6 +134,9 @@ class AggregatedNode:
     :param latest_timestamp: latest timestamp
     :type latest_timestamp: int
 
+    :param best_block: best block on that peer's chain
+    :type best_block: BlockInfo
+
     :param entrypoints: list of entrypoints if any
     :type entrypoints: List[str]
 
@@ -147,6 +150,7 @@ class AggregatedNode:
     uptime: float
     state: NodeState
     latest_timestamp: int
+    best_block: BlockInfo
     entrypoints: List[str]
     connected_peers: List[str]
 
@@ -166,6 +170,7 @@ class AggregatedNode:
             uptime=node.uptime,
             state=node.state,
             latest_timestamp=node.latest_timestamp,
+            best_block=node.best_block,
             entrypoints=node.entrypoints,
             connected_peers=[peer.id for peer in node.connected_peers],
         )
