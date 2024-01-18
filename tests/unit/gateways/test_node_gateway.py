@@ -3,7 +3,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 from gateways.node_gateway import NodeGateway
-from tests.fixtures.network_factory import NetworkFactory
+from tests.fixtures.network_factory import AggregatedNodeFactory, NetworkFactory
 from tests.fixtures.node_factory import NodeFactory
 
 
@@ -113,6 +113,29 @@ class TestNodeGateway:
 
         assert result.peers[0].id == network.peers[0].id
         assert result.nodes[0].id == network.nodes[0].id
+
+    def test_get_network_no_best_block(self, cache_client):
+        """Test legacy node data stored in the cache."""
+
+        network = NetworkFactory(nodes=[AggregatedNodeFactory()])
+        network_dict = network.to_dict()
+
+        # remove best_block as property from each node
+        for each_node in network_dict.get("nodes"):
+            each_node.pop("best_block")
+
+        cache_client.get = MagicMock(return_value=network_dict)
+
+        gateway = NodeGateway(cache_client=cache_client)
+
+        result = gateway.get_network()
+
+        cache_client.get.assert_called_once_with("network", "v1")
+
+        assert result.peers[0].id == network.peers[0].id
+        assert result.nodes[0].id == network.nodes[0].id
+        assert hasattr(result.nodes[0], "best_block")
+        assert result.nodes[0].best_block is None
 
     def test_get_no_network(self, cache_client):
         cache_client.get = MagicMock(return_value=None)
