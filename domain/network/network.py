@@ -150,7 +150,7 @@ class AggregatedNode:
     uptime: float
     state: NodeState
     latest_timestamp: int
-    best_block: BlockInfo
+    best_block: Optional[BlockInfo]
     entrypoints: List[str]
     connected_peers: List[str]
 
