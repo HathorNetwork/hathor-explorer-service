@@ -21,7 +21,9 @@ def parse_body(event: dict) -> dict:
 
 class ApiGatewayEvent:
     def __init__(self, event: dict, context: LambdaContext) -> None:
-        self.multiValueQueryStringParameters = event.get("multiValueQueryStringParameters") or {}
+        self.multiValueQueryStringParameters = (
+            event.get("multiValueQueryStringParameters") or {}
+        )
         self.query = event.get("queryStringParameters") or {}
         self.path = event.get("pathParameters") or {}
         self.body = parse_body(event)

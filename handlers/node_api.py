@@ -320,9 +320,12 @@ def nc_state(
     """Get state of a nano contract."""
     node_api = node_api or NodeApi()
     id = event.query.get("id")
-    fields = event.multiValueQueryStringParameters.get("fields[]")
-    balances = event.multiValueQueryStringParameters.get("balances[]")
-    calls = event.multiValueQueryStringParameters.get("calls[]")
+    fields = event.multiValueQueryStringParameters.get("fields[]", [])
+    balances = event.multiValueQueryStringParameters.get("balances[]", [])
+    calls = event.multiValueQueryStringParameters.get("calls[]", [])
+
+    if id is None:
+        raise ApiError("invalid_parameters")
 
     response = node_api.get_nc_state(id, fields, balances, calls)
     return {
@@ -340,12 +343,16 @@ def nc_history(
     node_api = node_api or NodeApi()
     id = event.query.get("id")
 
+    if id is None:
+        raise ApiError("invalid_parameters")
+
     response = node_api.get_nc_history(id)
     return {
         "statusCode": 200,
         "body": json.dumps(response or {}),
         "headers": {"Content-Type": "application/json"},
     }
+
 
 @ApiGateway()
 def nc_blueprint_information(
@@ -354,6 +361,9 @@ def nc_blueprint_information(
     """Get blueprint information."""
     node_api = node_api or NodeApi()
     blueprint_id = event.query.get("blueprint_id")
+
+    if blueprint_id is None:
+        raise ApiError("invalid_parameters")
 
     response = node_api.get_nc_blueprint_information(blueprint_id)
     return {

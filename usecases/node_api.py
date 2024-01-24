@@ -97,7 +97,9 @@ class NodeApi:
     def get_token(self, id: str) -> Optional[dict]:
         return self.node_api_gateway.get_token(id)
 
-    def get_nc_state(self, id: str, fields: List[str], balances: List[str], calls: List[str]) -> Optional[dict]:
+    def get_nc_state(
+        self, id: str, fields: List[str], balances: List[str], calls: List[str]
+    ) -> Optional[dict]:
         return self.node_api_gateway.get_nc_state(id, fields, balances, calls)
 
     def get_nc_history(self, id: str) -> Optional[dict]:
