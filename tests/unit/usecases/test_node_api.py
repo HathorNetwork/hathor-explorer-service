@@ -312,6 +312,7 @@ class TestNodeApiCommon:
         assert result
         assert sorted(result) == sorted(obj)
 
+
 class TestNodeApiNanoContracts:
     @fixture
     def node_api_gateway(self):

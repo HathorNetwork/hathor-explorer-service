@@ -325,7 +325,7 @@ class TestNodeApiGateway:
             "id": "1234",
             "fields[]": ["field1", "field2"],
             "balances[]": ["balance1"],
-            "calls[]": ["call1()", "call2(arg1, arg2)"]
+            "calls[]": ["call1()", "call2(arg1, arg2)"],
         }
         hathor_client.get_text = MagicMock(return_value=obj)
         gateway = NodeApiGateway(hathor_core_client=hathor_client)
@@ -351,7 +351,9 @@ class TestNodeApiGateway:
         assert result
         assert result == obj
 
-    @patch("gateways.node_api_gateway.NC_BLUEPRINT_INFORMATION_ENDPOINT", "mock-endpoint")
+    @patch(
+        "gateways.node_api_gateway.NC_BLUEPRINT_INFORMATION_ENDPOINT", "mock-endpoint"
+    )
     def test_nc_blueprint_information(self, hathor_client):
         obj = json.dumps({"foo": "bar"})
         data = {
