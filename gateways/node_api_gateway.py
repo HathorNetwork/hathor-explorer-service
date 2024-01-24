@@ -230,14 +230,19 @@ class NodeApiGateway:
                 "balances[]": balances,
                 "calls[]": calls,
             },
+            timeout=NODE_API_TIMEOUT_IN_SECONDS,
         )
 
     def get_nc_history(self, id: str) -> Optional[dict]:
         """Get history of a nano contract."""
-        return self.hathor_core_client.get(NC_HISTORY_ENDPOINT, params={"id": id})
+        return self.hathor_core_client.get(
+            NC_HISTORY_ENDPOINT, params={"id": id}, timeout=NODE_API_TIMEOUT_IN_SECONDS
+        )
 
     def get_nc_blueprint_information(self, blueprint_id: str) -> Optional[dict]:
         """Get blueprint information."""
         return self.hathor_core_client.get(
-            NC_BLUEPRINT_INFORMATION_ENDPOINT, params={"blueprint_id": blueprint_id}
+            NC_BLUEPRINT_INFORMATION_ENDPOINT,
+            params={"blueprint_id": blueprint_id},
+            timeout=NODE_API_TIMEOUT_IN_SECONDS,
         )
