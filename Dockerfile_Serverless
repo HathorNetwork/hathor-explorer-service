@@ -1,0 +1,11 @@
+# This Dockerfile will be used by serverless-python-requirements plugin to install the dependencies
+# This is needed because some non-pure-python dependencies (like 'cryptography') need to be compiled
+# and with this image we make sure the compilation will be done in a Lambda-compatible environment
+#
+# See more info about this base image in https://gallery.ecr.aws/lambda/python and https://github.com/aws/aws-lambda-base-images
+FROM public.ecr.aws/lambda/python:3.9
+
+# We need to override the default entrypoint because serverless-python-requirements plugin will
+# run the full command they need. The default entrypoint generated an error when running the command
+# See https://stackoverflow.com/questions/65107143/lambda-container-images-complain-about-entrypoint-needing-handler-name-as-the-fi
+ENTRYPOINT []
