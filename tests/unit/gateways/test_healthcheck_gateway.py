@@ -18,15 +18,15 @@ class TestHealthcheckGateway(unittest.IsolatedAsyncioTestCase):
             wallet_service_db_client=self.wallet_service_db_client,
         )
 
-    async def test_get_hathor_core_version(self):
-        async def mock_get_hathor_core_version(endpoint, **kwargs):
-            return {"version": "0.39.0"}
+    async def test_get_hathor_core_health(self):
+        async def mock_get_hathor_core_health(endpoint, **kwargs):
+            return {"status": "pass"}
 
-        self.hathor_core_async_client.get.side_effect = mock_get_hathor_core_version
-        result = await self.healthcheck_gateway.get_hathor_core_version()
-        self.assertEqual(result, {"version": "0.39.0"})
+        self.hathor_core_async_client.get.side_effect = mock_get_hathor_core_health
+        result = await self.healthcheck_gateway.get_hathor_core_health()
+        self.assertEqual(result, {"status": "pass"})
         self.hathor_core_async_client.get.assert_called_once_with(
-            "/v1a/version", timeout=5
+            "/v1a/health", timeout=5
         )
 
     def test_ping_redis(self):
