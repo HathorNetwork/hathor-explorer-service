@@ -6,6 +6,7 @@ from healthcheck import (
     HealthcheckCallbackResponse,
     HealthcheckDatastoreComponent,
     HealthcheckHTTPComponent,
+    HealthcheckStatus,
 )
 
 from common.configuration import (
@@ -54,18 +55,33 @@ class GetHealthcheck:
             self.healthcheck.add_component(component)
 
     async def _get_fullnode_health(self):
-        # TODO: We need to use the hathor-core's /health endpoint when it's available
-        version_response = await self.healthcheck_gateway.get_hathor_core_version()
+        health_response = await self.healthcheck_gateway.get_hathor_core_health()
 
-        if "error" in version_response:
+        if "error" in health_response:
             return HealthcheckCallbackResponse(
-                status="fail",
-                output=f"Fullnode healthcheck errored: {version_response['error']}",
+                status=HealthcheckStatus.FAIL,
+                output=f"Fullnode healthcheck errored: {health_response['error']}",
+            )
+
+        status = health_response["status"]
+
+        # Here we're assuming that a 'warn' status will be considered as unhealthy
+        is_healthy = status == HealthcheckStatus.PASS
+        is_unhealthy = status in [HealthcheckStatus.FAIL, HealthcheckStatus.WARN]
+
+        if is_unhealthy:
+            output = f"Fullnode is not healthy: {str(health_response)}"
+        elif is_healthy:
+            output = "Fullnode is healthy"
+        else:
+            status = HealthcheckStatus.FAIL
+            output = (
+                f"Fullnode returned an unexpected health status: {str(health_response)}"
             )
 
         return HealthcheckCallbackResponse(
-            status="pass",
-            output="Fullnode is healthy",
+            status=status,
+            output=output,
         )
 
     async def _get_wallet_service_db_health(self):
@@ -73,12 +89,12 @@ class GetHealthcheck:
             is_healthy, output = self.healthcheck_gateway.ping_wallet_service_db()
         except Exception as e:
             return HealthcheckCallbackResponse(
-                status="fail",
+                status=HealthcheckStatus.FAIL,
                 output=f"Wallet service DB healthcheck errored: {repr(e)}",
             )
 
         return HealthcheckCallbackResponse(
-            status="pass" if is_healthy else "fail",
+            status=HealthcheckStatus.PASS if is_healthy else HealthcheckStatus.FAIL,
             output="Wallet service DB is healthy"
             if is_healthy
             else f"Wallet service DB didn't respond as expected: {output}",
@@ -89,12 +105,12 @@ class GetHealthcheck:
             is_healthy = self.healthcheck_gateway.ping_redis()
         except Exception as e:
             return HealthcheckCallbackResponse(
-                status="fail",
+                status=HealthcheckStatus.FAIL,
                 output=f"Redis healthcheck errored: {repr(e)}",
             )
 
         return HealthcheckCallbackResponse(
-            status="pass" if is_healthy else "fail",
+            status=HealthcheckStatus.PASS if is_healthy else HealthcheckStatus.FAIL,
             output="Redis is healthy" if is_healthy else "Redis reported as unhealthy",
         )
 
@@ -103,13 +119,13 @@ class GetHealthcheck:
             elasticsearch_info = self.healthcheck_gateway.get_elasticsearch_health()
         except Exception as e:
             return HealthcheckCallbackResponse(
-                status="fail",
+                status=HealthcheckStatus.FAIL,
                 output=f"Elasticsearch healthcheck errored: {repr(e)}",
             )
 
         if elasticsearch_info["status"] == "red":
             return HealthcheckCallbackResponse(
-                status="fail",
+                status=HealthcheckStatus.FAIL,
                 output=f"Elasticsearch is not healthy: {str(elasticsearch_info)}",
             )
         if elasticsearch_info["status"] == "yellow":
@@ -119,7 +135,7 @@ class GetHealthcheck:
             )
 
         return HealthcheckCallbackResponse(
-            status="pass",
+            status=HealthcheckStatus.PASS,
             output=str(elasticsearch_info),
         )
 

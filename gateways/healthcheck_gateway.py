@@ -3,7 +3,7 @@ from typing import Optional, Tuple
 from common.configuration import ELASTIC_INDEX
 from gateways.clients.cache_client import CacheClient
 from gateways.clients.elastic_search_client import ElasticSearchClient
-from gateways.clients.hathor_core_client import VERSION_ENDPOINT, HathorCoreAsyncClient
+from gateways.clients.hathor_core_client import HEALTH_ENDPOINT, HathorCoreAsyncClient
 from gateways.clients.wallet_service_db_client import WalletServiceDBClient
 
 # The default lambda timeout for the Healtcheck Lambda is set to
@@ -32,11 +32,11 @@ class HealthcheckGateway:
             wallet_service_db_client or WalletServiceDBClient()
         )
 
-    async def get_hathor_core_version(self) -> Optional[dict]:
-        """Retrieve hathor-core version information"""
+    async def get_hathor_core_health(self) -> Optional[dict]:
+        """Retrieve hathor-core health information"""
 
         return await self.hathor_core_async_client.get(
-            VERSION_ENDPOINT, timeout=HEALTHCHECK_CLIENT_TIMEOUT_IN_SECONDS
+            HEALTH_ENDPOINT, timeout=HEALTHCHECK_CLIENT_TIMEOUT_IN_SECONDS
         )
 
     def ping_redis(self) -> bool:
