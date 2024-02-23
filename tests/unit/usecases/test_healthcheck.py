@@ -18,11 +18,11 @@ class TestGetHealthcheck(unittest.TestCase):
             )
 
     def test_all_components_healthy(self):
-        async def mock_get_hathor_core_version():
-            return {"version": "0.38.0"}
+        async def mock_get_hathor_core_health():
+            return {"status": "pass"}
 
-        self.mock_healthcheck_gateway.get_hathor_core_version.side_effect = (
-            mock_get_hathor_core_version
+        self.mock_healthcheck_gateway.get_hathor_core_health.side_effect = (
+            mock_get_hathor_core_health
         )
         self.mock_healthcheck_gateway.ping_wallet_service_db.return_value = (True, "1")
         self.mock_healthcheck_gateway.ping_redis.return_value = True
@@ -80,11 +80,11 @@ class TestGetHealthcheck(unittest.TestCase):
         )
 
     def test_hathor_core_returns_error(self):
-        async def mock_get_hathor_core_version():
+        async def mock_get_hathor_core_health():
             return {"error": "Unable to connect"}
 
-        self.mock_healthcheck_gateway.get_hathor_core_version.side_effect = (
-            mock_get_hathor_core_version
+        self.mock_healthcheck_gateway.get_hathor_core_health.side_effect = (
+            mock_get_hathor_core_health
         )
         self.mock_healthcheck_gateway.ping_wallet_service_db.return_value = (True, "1")
         self.mock_healthcheck_gateway.ping_redis.return_value = True
@@ -142,11 +142,11 @@ class TestGetHealthcheck(unittest.TestCase):
         )
 
     def test_wallet_service_db_raises_exception(self):
-        async def mock_get_hathor_core_version():
-            return {"version": "0.38.0"}
+        async def mock_get_hathor_core_health():
+            return {"status": "pass"}
 
-        self.mock_healthcheck_gateway.get_hathor_core_version.side_effect = (
-            mock_get_hathor_core_version
+        self.mock_healthcheck_gateway.get_hathor_core_health.side_effect = (
+            mock_get_hathor_core_health
         )
         self.mock_healthcheck_gateway.ping_wallet_service_db.side_effect = Exception(
             "Unable to connect"
@@ -206,11 +206,11 @@ class TestGetHealthcheck(unittest.TestCase):
         )
 
     def test_wallet_service_db_reports_unhealthy(self):
-        async def mock_get_hathor_core_version():
-            return {"version": "0.38.0"}
+        async def mock_get_hathor_core_health():
+            return {"status": "pass"}
 
-        self.mock_healthcheck_gateway.get_hathor_core_version.side_effect = (
-            mock_get_hathor_core_version
+        self.mock_healthcheck_gateway.get_hathor_core_health.side_effect = (
+            mock_get_hathor_core_health
         )
         self.mock_healthcheck_gateway.ping_wallet_service_db.return_value = (
             False,
@@ -271,11 +271,11 @@ class TestGetHealthcheck(unittest.TestCase):
         )
 
     def test_redis_raises_exception(self):
-        async def mock_get_hathor_core_version():
-            return {"version": "0.38.0"}
+        async def mock_get_hathor_core_health():
+            return {"status": "pass"}
 
-        self.mock_healthcheck_gateway.get_hathor_core_version.side_effect = (
-            mock_get_hathor_core_version
+        self.mock_healthcheck_gateway.get_hathor_core_health.side_effect = (
+            mock_get_hathor_core_health
         )
         self.mock_healthcheck_gateway.ping_wallet_service_db.return_value = (True, "1")
         self.mock_healthcheck_gateway.ping_redis.side_effect = Exception(
@@ -335,11 +335,11 @@ class TestGetHealthcheck(unittest.TestCase):
         )
 
     def test_redis_reports_unhealthy(self):
-        async def mock_get_hathor_core_version():
-            return {"version": "0.38.0"}
+        async def mock_get_hathor_core_health():
+            return {"status": "pass"}
 
-        self.mock_healthcheck_gateway.get_hathor_core_version.side_effect = (
-            mock_get_hathor_core_version
+        self.mock_healthcheck_gateway.get_hathor_core_health.side_effect = (
+            mock_get_hathor_core_health
         )
         self.mock_healthcheck_gateway.ping_wallet_service_db.return_value = (True, "1")
         self.mock_healthcheck_gateway.ping_redis.return_value = False
@@ -397,11 +397,11 @@ class TestGetHealthcheck(unittest.TestCase):
         )
 
     def test_elasticsearch_raises_exception(self):
-        async def mock_get_hathor_core_version():
-            return {"version": "0.38.0"}
+        async def mock_get_hathor_core_health():
+            return {"status": "pass"}
 
-        self.mock_healthcheck_gateway.get_hathor_core_version.side_effect = (
-            mock_get_hathor_core_version
+        self.mock_healthcheck_gateway.get_hathor_core_health.side_effect = (
+            mock_get_hathor_core_health
         )
         self.mock_healthcheck_gateway.ping_wallet_service_db.return_value = (True, "1")
         self.mock_healthcheck_gateway.ping_redis.return_value = True
@@ -459,11 +459,11 @@ class TestGetHealthcheck(unittest.TestCase):
         )
 
     def test_elasticsearch_reports_unhealthy(self):
-        async def mock_get_hathor_core_version():
-            return {"version": "0.38.0"}
+        async def mock_get_hathor_core_health():
+            return {"status": "pass"}
 
-        self.mock_healthcheck_gateway.get_hathor_core_version.side_effect = (
-            mock_get_hathor_core_version
+        self.mock_healthcheck_gateway.get_hathor_core_health.side_effect = (
+            mock_get_hathor_core_health
         )
         self.mock_healthcheck_gateway.ping_wallet_service_db.return_value = (True, "1")
         self.mock_healthcheck_gateway.ping_redis.return_value = True
@@ -521,11 +521,11 @@ class TestGetHealthcheck(unittest.TestCase):
         )
 
     def test_elasticsearch_report_yellow(self):
-        async def mock_get_hathor_core_version():
-            return {"version": "0.38.0"}
+        async def mock_get_hathor_core_health():
+            return {"status": "pass"}
 
-        self.mock_healthcheck_gateway.get_hathor_core_version.side_effect = (
-            mock_get_hathor_core_version
+        self.mock_healthcheck_gateway.get_hathor_core_health.side_effect = (
+            mock_get_hathor_core_health
         )
         self.mock_healthcheck_gateway.ping_wallet_service_db.return_value = (True, "1")
         self.mock_healthcheck_gateway.ping_redis.return_value = True

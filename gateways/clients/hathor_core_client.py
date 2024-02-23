@@ -24,6 +24,7 @@ TRANSACTION_ENDPOINT = "/v1a/transaction"
 TX_ACC_WEIGHT_ENDPOINT = "/v1a/transaction_acc_weight"
 VERSION_ENDPOINT = "/v1a/version"
 FEATURE_ENDPOINT = "/v1a/feature"
+HEALTH_ENDPOINT = "/v1a/health"
 
 
 class HathorCoreAsyncClient:
