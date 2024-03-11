@@ -19,7 +19,7 @@ provider:
     Stage: "${self:custom.stage}"
   apiGateway:
     apiKeys:
-      - ${self:custom.stage}-healthcheck-api-key
+      - explorer-service-${self:custom.stage}-healthcheck-api-key
   logs:
     restApi: # TODO: add data to make the serverless create this role by itself
       role: arn:aws:iam::${env:AWS_ACCOUNT_ID}:role/APIGatewayPushLogsToCloudWatch
