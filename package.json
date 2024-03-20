@@ -1,19 +1,19 @@
 {
   "name": "hathor-explorer-service",
-  "version": "0.14.0",
+  "version": "0.15.0",
   "description": "Hathor Explorer Service Serverless deps",
   "dependencies": {
     "@apidevtools/swagger-cli": "^4.0.4",
-    "serverless": "^2.72.4",
-    "serverless-api-gateway-caching": "^1.7.2",
-    "serverless-api-gateway-throttling": "^1.2.2",
-    "serverless-better-credentials": "^1.2.1",
-    "serverless-plugin-aws-alerts": "^1.7.4"
+    "serverless": "^3.38.0",
+    "serverless-api-gateway-caching": "^1.10.3",
+    "serverless-api-gateway-throttling": "^2.0.3",
+    "serverless-better-credentials": "^2.0.0",
+    "serverless-plugin-aws-alerts": "^1.7.5"
   },
   "devDependencies": {
-    "serverless-offline": "^8.2.0",
-    "serverless-python-requirements": "^5.1.1",
-    "serverless-s3-local": "^0.6.17"
+    "serverless-offline": "^13.3.3",
+    "serverless-python-requirements": "^6.0.1",
+    "serverless-s3-local": "^0.8.1"
   },
   "scripts": {
     "start": "serverless offline --printOutput"
