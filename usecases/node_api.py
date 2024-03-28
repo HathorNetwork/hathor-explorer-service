@@ -103,7 +103,7 @@ class NodeApi:
         return self.node_api_gateway.get_nc_state(id, fields, balances, calls)
 
     def get_nc_history(
-        self, id: str, after: Optional[str], count: Optional[int]
+        self, id: str, after: Optional[str] = None, count: Optional[int] = None
     ) -> Optional[dict]:
         return self.node_api_gateway.get_nc_history(id, after, count)
 
