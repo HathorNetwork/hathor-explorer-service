@@ -667,15 +667,6 @@ functions:
           path: node_api/nc_state
           method: get
           cors: true
-          caching:
-            enabled: true
-            ttlInSeconds: 300
-            cacheKeyParameters:
-              - name: request.querystring.id
-              - name: request.querystring.fields
-              - name: request.querystring.balances
-              - name: request.querystring.calls
-              - name: request.header.origin
 
   node_api_nc_history:
     handler: handlers/node_api.nc_history
