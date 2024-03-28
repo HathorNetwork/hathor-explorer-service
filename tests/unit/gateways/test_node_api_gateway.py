@@ -317,3 +317,57 @@ class TestNodeApiGateway:
         )
         assert result
         assert result == obj
+
+    @patch("gateways.node_api_gateway.NC_STATE_ENDPOINT", "mock-endpoint")
+    def test_nc_state(self, hathor_client):
+        obj = {"foo": "bar"}
+        data = {
+            "id": "1234",
+            "fields[]": ["field1", "field2"],
+            "balances[]": ["balance1"],
+            "calls[]": ["call1()", "call2(arg1, arg2)"],
+        }
+        hathor_client.get = MagicMock(return_value=obj)
+        gateway = NodeApiGateway(hathor_core_client=hathor_client)
+        result = gateway.get_nc_state(
+            "1234", ["field1", "field2"], ["balance1"], ["call1()", "call2(arg1, arg2)"]
+        )
+        hathor_client.get.assert_called_once_with(
+            "mock-endpoint", params=data, timeout=NODE_API_TIMEOUT_IN_SECONDS
+        )
+        assert result
+        assert sorted(result) == sorted(obj)
+
+    @patch("gateways.node_api_gateway.NC_HISTORY_ENDPOINT", "mock-endpoint")
+    def test_nc_history(self, hathor_client):
+        obj = json.dumps({"foo": "bar"})
+        data = {
+            "id": "1234",
+        }
+        hathor_client.get = MagicMock(return_value=obj)
+        gateway = NodeApiGateway(hathor_core_client=hathor_client)
+        result = gateway.get_nc_history(**data)
+        hathor_client.get.assert_called_once_with(
+            "mock-endpoint",
+            params={**data, "after": None, "count": None},
+            timeout=NODE_API_TIMEOUT_IN_SECONDS,
+        )
+        assert result
+        assert result == obj
+
+    @patch(
+        "gateways.node_api_gateway.NC_BLUEPRINT_INFORMATION_ENDPOINT", "mock-endpoint"
+    )
+    def test_nc_blueprint_information(self, hathor_client):
+        obj = {"foo": "bar"}
+        data = {
+            "blueprint_id": "1234",
+        }
+        hathor_client.get = MagicMock(return_value=obj)
+        gateway = NodeApiGateway(hathor_core_client=hathor_client)
+        result = gateway.get_nc_blueprint_information(**data)
+        hathor_client.get.assert_called_once_with(
+            "mock-endpoint", params=data, timeout=NODE_API_TIMEOUT_IN_SECONDS
+        )
+        assert result
+        assert sorted(result) == sorted(obj)

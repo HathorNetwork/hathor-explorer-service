@@ -311,3 +311,50 @@ class TestNodeApiCommon:
         )
         assert result
         assert sorted(result) == sorted(obj)
+
+
+class TestNodeApiNanoContracts:
+    @fixture
+    def node_api_gateway(self):
+        return MagicMock()
+
+    def test_get_state(self, node_api_gateway):
+        obj = {"foo": "bar"}
+        node_api_gateway.get_nc_state = MagicMock(return_value=obj)
+        node_api = NodeApi(node_api_gateway)
+        result = node_api.get_nc_state(
+            "1234", ["field1", "field2"], ["balance1"], ["call1()", "call2(arg1, arg2)"]
+        )
+        node_api_gateway.get_nc_state.assert_called_once_with(
+            "1234", ["field1", "field2"], ["balance1"], ["call1()", "call2(arg1, arg2)"]
+        )
+        assert result
+        assert sorted(result) == sorted(obj)
+
+    def test_get_history(self, node_api_gateway):
+        obj = {"foo": "bar"}
+        node_api_gateway.get_nc_history = MagicMock(return_value=obj)
+        node_api = NodeApi(node_api_gateway)
+        result = node_api.get_nc_history("1234", "5678", 100)
+        node_api_gateway.get_nc_history.assert_called_once_with("1234", "5678", 100)
+        assert result
+        assert sorted(result) == sorted(obj)
+
+    def test_get_history_without_optional(self, node_api_gateway):
+        # Now only with required parameter
+        obj = {"foo": "bar"}
+        node_api_gateway.get_nc_history = MagicMock(return_value=obj)
+        node_api = NodeApi(node_api_gateway)
+        result = node_api.get_nc_history("1234")
+        node_api_gateway.get_nc_history.assert_called_once_with("1234", None, None)
+        assert result
+        assert sorted(result) == sorted(obj)
+
+    def test_get_blueprint_information(self, node_api_gateway):
+        obj = {"foo": "bar"}
+        node_api_gateway.get_nc_blueprint_information = MagicMock(return_value=obj)
+        node_api = NodeApi(node_api_gateway)
+        result = node_api.get_nc_blueprint_information("1234")
+        node_api_gateway.get_nc_blueprint_information.assert_called_once_with("1234")
+        assert result
+        assert sorted(result) == sorted(obj)
