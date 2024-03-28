@@ -335,6 +335,12 @@ class TestNodeApiNanoContracts:
         obj = {"foo": "bar"}
         node_api_gateway.get_nc_history = MagicMock(return_value=obj)
         node_api = NodeApi(node_api_gateway)
+        result = node_api.get_nc_history("1234", "5678", 100)
+        node_api_gateway.get_nc_history.assert_called_once_with("1234", "5678", 100)
+        assert result
+        assert sorted(result) == sorted(obj)
+
+        # Now only with required parameter
         result = node_api.get_nc_history("1234")
         node_api_gateway.get_nc_history.assert_called_once_with("1234")
         assert result

@@ -342,11 +342,13 @@ def nc_history(
     """Get history of a nano contract."""
     node_api = node_api or NodeApi()
     id = event.query.get("id")
+    after = event.query.get("after")
+    count = event.query.get("count")
 
     if id is None:
         raise ApiError("invalid_parameters")
 
-    response = node_api.get_nc_history(id)
+    response = node_api.get_nc_history(id, after, count)
     return {
         "statusCode": 200,
         "body": json.dumps(response or {}),
