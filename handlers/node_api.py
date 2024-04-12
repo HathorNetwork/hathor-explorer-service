@@ -331,7 +331,7 @@ def nc_state(
     response = node_api.get_nc_state(id, fields, balances, calls)
 
     if response is None or "error" in response:
-        message = response.get("error") if "error" in response else ""
+        message = response.get("error") if (response and "error" in response) else ""
         raise ApiError(message)
 
     return {
@@ -358,7 +358,7 @@ def nc_history(
     response = node_api.get_nc_history(id, after, count)
 
     if response is None or "error" in response:
-        message = response.get("error") if "error" in response else ""
+        message = response.get("error") if (response and "error" in response) else ""
         raise ApiError(message)
 
     return {
@@ -383,7 +383,7 @@ def nc_blueprint_information(
     response = node_api.get_nc_blueprint_information(blueprint_id)
 
     if response is None or "error" in response:
-        message = response.get("error") if "error" in response else ""
+        message = response.get("error") if (response and "error" in response) else ""
         raise ApiError(message)
 
     return {
