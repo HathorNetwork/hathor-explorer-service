@@ -654,6 +654,9 @@ functions:
               - name: request.querystring.max_level
               - name: request.header.origin
 
+  # This API doesn't have cache because our plugin doesn't support
+  # multivalue caching. An issue was created to discuss this.
+  # https://github.com/HathorNetwork/hathor-explorer-service/issues/318
   node_api_nc_state:
     handler: handlers/node_api.nc_state
     maximumRetryAttempts: 0
