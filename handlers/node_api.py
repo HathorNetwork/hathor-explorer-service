@@ -327,7 +327,13 @@ def nc_state(
     if id is None:
         raise ApiError("invalid_parameters")
 
+    # This might throw HathorCoreTimeout error
     response = node_api.get_nc_state(id, fields, balances, calls)
+
+    if response is None or "error" in response:
+        message = response.get("error") if "error" in response else ""
+        raise ApiError(message)
+
     return {
         "statusCode": 200,
         "body": json.dumps(response or {}),
@@ -348,7 +354,13 @@ def nc_history(
     if id is None:
         raise ApiError("invalid_parameters")
 
+    # This might throw HathorCoreTimeout error
     response = node_api.get_nc_history(id, after, count)
+
+    if response is None or "error" in response:
+        message = response.get("error") if "error" in response else ""
+        raise ApiError(message)
+
     return {
         "statusCode": 200,
         "body": json.dumps(response or {}),
@@ -367,7 +379,13 @@ def nc_blueprint_information(
     if blueprint_id is None:
         raise ApiError("invalid_parameters")
 
+    # This might throw HathorCoreTimeout error
     response = node_api.get_nc_blueprint_information(blueprint_id)
+
+    if response is None or "error" in response:
+        message = response.get("error") if "error" in response else ""
+        raise ApiError(message)
+
     return {
         "statusCode": 200,
         "body": json.dumps(response or {}),
