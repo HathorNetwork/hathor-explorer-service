@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import List, Optional
 
 from common.errors import HathorCoreTimeout
 from gateways.node_api_gateway import NodeApiGateway
@@ -96,3 +96,16 @@ class NodeApi:
 
     def get_token(self, id: str) -> Optional[dict]:
         return self.node_api_gateway.get_token(id)
+
+    def get_nc_state(
+        self, id: str, fields: List[str], balances: List[str], calls: List[str]
+    ) -> Optional[dict]:
+        return self.node_api_gateway.get_nc_state(id, fields, balances, calls)
+
+    def get_nc_history(
+        self, id: str, after: Optional[str] = None, count: Optional[int] = None
+    ) -> Optional[dict]:
+        return self.node_api_gateway.get_nc_history(id, after, count)
+
+    def get_nc_blueprint_information(self, blueprint_id: str) -> Optional[dict]:
+        return self.node_api_gateway.get_nc_blueprint_information(blueprint_id)

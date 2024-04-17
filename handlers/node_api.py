@@ -311,3 +311,83 @@ def graphviz_dot_neighbors(
         "body": response,
         "headers": {"Content-Type": "application/json"},
     }
+
+
+@ApiGateway()
+def nc_state(
+    event: ApiGatewayEvent, _context: LambdaContext, node_api: Optional[NodeApi] = None
+) -> dict:
+    """Get state of a nano contract."""
+    node_api = node_api or NodeApi()
+    id = event.query.get("id")
+    fields = event.multiValueQueryStringParameters.get("fields[]", [])
+    balances = event.multiValueQueryStringParameters.get("balances[]", [])
+    calls = event.multiValueQueryStringParameters.get("calls[]", [])
+
+    if id is None:
+        raise ApiError("invalid_parameters")
+
+    # This might throw HathorCoreTimeout error
+    response = node_api.get_nc_state(id, fields, balances, calls)
+
+    if response is None or "error" in response:
+        message = response.get("error") if (response and "error" in response) else ""
+        raise ApiError(message)
+
+    return {
+        "statusCode": 200,
+        "body": json.dumps(response or {}),
+        "headers": {"Content-Type": "application/json"},
+    }
+
+
+@ApiGateway()
+def nc_history(
+    event: ApiGatewayEvent, _context: LambdaContext, node_api: Optional[NodeApi] = None
+) -> dict:
+    """Get history of a nano contract."""
+    node_api = node_api or NodeApi()
+    id = event.query.get("id")
+    after = event.query.get("after")
+    count = event.query.get("count")
+
+    if id is None:
+        raise ApiError("invalid_parameters")
+
+    # This might throw HathorCoreTimeout error
+    response = node_api.get_nc_history(id, after, count)
+
+    if response is None or "error" in response:
+        message = response.get("error") if (response and "error" in response) else ""
+        raise ApiError(message)
+
+    return {
+        "statusCode": 200,
+        "body": json.dumps(response or {}),
+        "headers": {"Content-Type": "application/json"},
+    }
+
+
+@ApiGateway()
+def nc_blueprint_information(
+    event: ApiGatewayEvent, _context: LambdaContext, node_api: Optional[NodeApi] = None
+) -> dict:
+    """Get blueprint information."""
+    node_api = node_api or NodeApi()
+    blueprint_id = event.query.get("blueprint_id")
+
+    if blueprint_id is None:
+        raise ApiError("invalid_parameters")
+
+    # This might throw HathorCoreTimeout error
+    response = node_api.get_nc_blueprint_information(blueprint_id)
+
+    if response is None or "error" in response:
+        message = response.get("error") if (response and "error" in response) else ""
+        raise ApiError(message)
+
+    return {
+        "statusCode": 200,
+        "body": json.dumps(response or {}),
+        "headers": {"Content-Type": "application/json"},
+    }
