@@ -693,7 +693,7 @@ functions:
               - name: request.querystring.count
               - name: request.header.origin
 
-  node_api_nc_blueprint_information:
+  node_api_nc_blueprint_info:
     handler: handlers/node_api.nc_blueprint_information
     maximumRetryAttempts: 0
     package:
