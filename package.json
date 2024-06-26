@@ -16,7 +16,7 @@
     "serverless-s3-local": "^0.8.1"
   },
   "scripts": {
-    "start": "serverless offline --printOutput"
+    "start": "serverless offline"
   },
   "repository": {
     "type": "git",
