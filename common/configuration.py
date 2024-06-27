@@ -56,7 +56,7 @@ S3_ENDPOINT = config("S3_ENDPOINT", default=None)
 
 DATA_AGGREGATOR_LAMBDA_NAME = config("DATA_AGGREGATOR_LAMBDA_NAME", default=None)
 
-HATHOR_CORE_DOMAIN = config("HATHOR_CORE_DOMAIN", default=None)
+HATHOR_CORE_URL = config("HATHOR_CORE_URL", default=None)
 
 HATHOR_NODES = config("HATHOR_NODES", default="", cast=Csv())
 NODE_CACHE_TTL = config("NODE_CACHE_TTL", default=30)
