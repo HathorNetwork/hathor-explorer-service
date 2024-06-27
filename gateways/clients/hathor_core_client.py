@@ -33,7 +33,7 @@ HEALTH_ENDPOINT = "/v1a/health"
 class HathorCoreAsyncClient:
     DEFAULT_TIMEOUT = 60  # seconds
 
-    def __init__(self, url: Optional[str] = None, prefix: str = "https://") -> None:
+    def __init__(self, url: Optional[str] = None) -> None:
         """Client to make async requests
 
         :param url: url where the requests will be made, defaults to config `hathor_core_url`
@@ -41,7 +41,6 @@ class HathorCoreAsyncClient:
         """
         self.url = url or HATHOR_CORE_URL
         self.log = logger.new(client="async")
-        self.prefix = prefix
 
     async def get(
         self, path: str, params: Optional[dict] = None, timeout: Optional[float] = None
@@ -119,10 +118,9 @@ class HathorCoreClient:
     :type url: str, optional
     """
 
-    def __init__(self, url: Optional[str] = None, use_ssl: bool = True) -> None:
+    def __init__(self, url: Optional[str] = None) -> None:
         self.url = url or HATHOR_CORE_URL
         self.log = logger.new(client="sync")
-        self.protocol = "https" if use_ssl else "http"
 
     def get_text(
         self, path: str, params: Optional[dict] = None, **kwargs: Any
