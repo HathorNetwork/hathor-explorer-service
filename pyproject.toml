@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "hathor-explorer-service"
-version = "0.16.1"
+version = "0.17.0"
 description = ""
 authors = ["Hathor Labs <contact@hathor.network>"]
 license = "MIT"
