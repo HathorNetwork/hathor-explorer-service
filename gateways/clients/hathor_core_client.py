@@ -5,7 +5,7 @@ from urllib import parse
 import aiohttp
 import requests
 
-from common.configuration import HATHOR_CORE_DOMAIN
+from common.configuration import HATHOR_CORE_URL
 from common.errors import HathorCoreTimeout
 from common.logging import get_logger
 
@@ -33,13 +33,13 @@ HEALTH_ENDPOINT = "/v1a/health"
 class HathorCoreAsyncClient:
     DEFAULT_TIMEOUT = 60  # seconds
 
-    def __init__(self, domain: Optional[str] = None) -> None:
+    def __init__(self, url: Optional[str] = None) -> None:
         """Client to make async requests
 
-        :param domain: domain where the requests will be made, defaults to config `hathor_core_domain`
-        :type domain: str, optional
+        :param url: url where the requests will be made, defaults to config `hathor_core_url`
+        :type url: str, optional
         """
-        self.domain = domain or HATHOR_CORE_DOMAIN
+        self.url = url or HATHOR_CORE_URL
         self.log = logger.new(client="async")
 
     async def get(
@@ -54,7 +54,7 @@ class HathorCoreAsyncClient:
         :param timeout: timeout in seconds
         :type timeout: Optional[float]
         """
-        url = parse.urljoin(f"https://{self.domain}", path)
+        url = parse.urljoin(self.url, path)
 
         if not timeout:
             timeout = self.DEFAULT_TIMEOUT
@@ -88,7 +88,7 @@ class HathorCoreAsyncClient:
         :param timeout: timeout in seconds
         :type timeout: Optional[float]
         """
-        url = parse.urljoin(f"https://{self.domain}", path)
+        url = parse.urljoin(self.url, path)
 
         if not timeout:
             timeout = self.DEFAULT_TIMEOUT
@@ -114,12 +114,12 @@ class HathorCoreAsyncClient:
 class HathorCoreClient:
     """Client to make requests
 
-    :param domain: domain where the requests will be made, defaults to config `hathor_core_domain`
-    :type domain: str, optional
+    :param url: url where the requests will be made, defaults to config `hathor_core_url`
+    :type url: str, optional
     """
 
-    def __init__(self, domain: Optional[str] = None) -> None:
-        self.domain = domain or HATHOR_CORE_DOMAIN
+    def __init__(self, url: Optional[str] = None) -> None:
+        self.url = url or HATHOR_CORE_URL
         self.log = logger.new(client="sync")
 
     def get_text(
@@ -136,7 +136,7 @@ class HathorCoreClient:
         :return: request response
         :rtype: Optional[str]
         """
-        url = parse.urljoin(f"https://{self.domain}", path)
+        url = parse.urljoin(self.url, path)
 
         try:
             response = requests.get(url, params=params, **kwargs)
@@ -172,7 +172,7 @@ class HathorCoreClient:
         :return: request response
         :rtype: Optional[str]
         """
-        url = parse.urljoin(f"https://{self.domain}", path)
+        url = parse.urljoin(self.url, path)
 
         try:
             response = requests.post(url, json=body, **kwargs)
