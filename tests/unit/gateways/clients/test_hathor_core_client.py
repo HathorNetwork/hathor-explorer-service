@@ -14,7 +14,7 @@ class TestHathorCoreClient:
         expected = json.dumps({"success": True})
         mocked_get.return_value.text = expected
 
-        client = HathorCoreClient("mydomain.com")
+        client = HathorCoreClient("https://mydomain.com")
 
         result = client.get_text("/some/path", {"page": 2})
 
@@ -29,12 +29,12 @@ class TestHathorCoreClient:
         mocked_get.return_value.status_code = 200
         mocked_get.return_value.text = json.dumps({"success": True})
 
-        client = HathorCoreClient("mydomain.com")
+        client = HathorCoreClient("http://mydomain.com")
 
         result = client.get("/some/path", {"page": 2})
 
         mocked_get.assert_called_once_with(
-            "https://mydomain.com/some/path", params={"page": 2}
+            "http://mydomain.com/some/path", params={"page": 2}
         )
         assert result
         assert result["success"] is True
@@ -43,7 +43,7 @@ class TestHathorCoreClient:
     def test_get_no_200(self, mocked_get):
         mocked_get.return_value.status_code = 404
 
-        client = HathorCoreClient("mydomain.com")
+        client = HathorCoreClient("https://mydomain.com")
 
         result = client.get("/some/path", {"id": 42})
 
@@ -56,7 +56,7 @@ class TestHathorCoreClient:
     def test_get_raises(self, mocked_get):
         mocked_get.side_effect = Exception("Boom!")
 
-        client = HathorCoreClient("mydomain.com")
+        client = HathorCoreClient("https://mydomain.com")
 
         with raises(Exception, match=r"Boom!"):
             result = client.get("/some/path", {"page": -12})
@@ -72,7 +72,7 @@ class TestHathorCoreClient:
     def test_get_timeout(self, mocked_get):
         mocked_get.side_effect = requests.ReadTimeout("reason")
 
-        client = HathorCoreClient("mydomain.com")
+        client = HathorCoreClient("https://mydomain.com")
 
         with raises(Exception, match=r"timeout"):
             client.get("/some/path", {"page": 69})

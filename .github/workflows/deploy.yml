@@ -90,8 +90,8 @@ jobs:
           make deploy-lambdas-ci stage=dev
         env:
           API_PORT: 3001
-          HATHOR_CORE_DOMAIN: node.explorer.testnet.hathor.network
-          HATHOR_NODES: node1.testnet.hathor.network,node.explorer.testnet.hathor.network
+          HATHOR_CORE_URL: https://node.explorer.testnet.hathor.network
+          HATHOR_NODES: https://node1.testnet.hathor.network,https://node.explorer.testnet.hathor.network
           REDIS_KEY_PREFIX: hathor-explorer-service-dev
           REDIS_HOST: ${{ secrets.REDIS_HOST }}
           REDIS_PORT: 6379
@@ -112,8 +112,8 @@ jobs:
           make deploy-lambdas-ci stage=testnet
         env:
           API_PORT: 3001
-          HATHOR_CORE_DOMAIN: node.explorer.testnet.hathor.network
-          HATHOR_NODES: node1.testnet.hathor.network,node.explorer.testnet.hathor.network
+          HATHOR_CORE_URL: https://node.explorer.testnet.hathor.network
+          HATHOR_NODES: https://node1.testnet.hathor.network,https://node.explorer.testnet.hathor.network
           REDIS_KEY_PREFIX: hathor-explorer-service-testnet
           REDIS_HOST: ${{ secrets.REDIS_HOST }}
           REDIS_PORT: 6379
@@ -134,8 +134,8 @@ jobs:
           make deploy-lambdas-ci stage=mainnet
         env:
           API_PORT: 3001
-          HATHOR_CORE_DOMAIN: node.explorer.hathor.network
-          HATHOR_NODES: node.explorer.hathor.network,node1.mainnet.hathor.network,node2.mainnet.hathor.network
+          HATHOR_CORE_URL: https://node.explorer.hathor.network
+          HATHOR_NODES: https://node.explorer.hathor.network,https://node1.mainnet.hathor.network,https://node2.mainnet.hathor.network
           REDIS_KEY_PREFIX: hathor-explorer-service-mainnet
           REDIS_HOST: ${{ secrets.REDIS_HOST }}
           REDIS_PORT: 6379
