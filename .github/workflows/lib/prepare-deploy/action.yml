@@ -15,8 +15,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-      # https://github.com/actions/checkout/releases/tag/v3.5.3
-    - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9
     - name: Configure AWS Credentials
       # https://github.com/aws-actions/configure-aws-credentials/releases/tag/v4.0.2
       uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502
