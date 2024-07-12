@@ -16,10 +16,12 @@ runs:
         python-version: ${{ inputs.python_version }}
 
     - name: Install Python Dependencies
+      shell: bash
       run: |
         pip -q --no-input install poetry
         poetry install
 
     - name: Linters
+      shell: bash
       run: |
         poetry run make check
