@@ -24,10 +24,13 @@ runs:
     - name: Step name
       uses: aws-actions/aws-secretsmanager-get-secrets@v2
       with:
+        # The comma before the secret id is to avoid the addition of a prefix to the env vars.
+        # See: https://docs.aws.amazon.com/secretsmanager/latest/userguide/retrieving-secrets_github.html#retrieving-secrets_github_alias
         secret-ids: |
-          ${{ inputs.aws_secret_arn }}
+          ,${{ inputs.aws_secret_arn }}
         parse-json-secrets: true
     - name: Check env
+      shell: bash
       run: |
         env
     # This step recovers the artifact that is generated in the `deploy.yml` workflow
