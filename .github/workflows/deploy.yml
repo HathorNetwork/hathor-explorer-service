@@ -118,6 +118,7 @@ jobs:
         run: |
           env
       - name: Install Python Dependencies
+        run: |
           pip -q --no-input install poetry
           poetry install
       - name: Linters
@@ -171,6 +172,7 @@ jobs:
         with:
           python-version: 3.9
       - name: Install Python Dependencies
+        run: |
           pip -q --no-input install poetry
           poetry install
       - name: Linters
@@ -223,6 +225,7 @@ jobs:
         with:
           python-version: 3.9
       - name: Install Python Dependencies
+        run: |
           pip -q --no-input install poetry
           poetry install
       - name: Linters
