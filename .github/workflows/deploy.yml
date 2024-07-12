@@ -89,7 +89,7 @@ jobs:
           retention-days: 1
   deploy-dev:
     runs-on: ubuntu-latest
-    needs: init, dependencies
+    needs: [init, dependencies]
 
     if: ${{ needs.init.outputs.environment == 'dev' }}
 
@@ -102,12 +102,6 @@ jobs:
         with:
           aws-region: eu-central-1
           role-to-assume: arn:aws:iam::769498303037:role/ExplorerServiceGitHubActionsRole
-      - name: Set up Python
-        # https://github.com/actions/setup-python/releases/tag/v4.7.0
-        uses: actions/setup-python@61a6322f88396a6271a6ee3565807d608ecaddd1
-        with:
-          python-version: 3.9
-        # This step will parse the JSON secret from AWS Secrets Manager into environment variables
       - name: Step name
         uses: aws-actions/aws-secretsmanager-get-secrets@v2
         with:
@@ -117,13 +111,10 @@ jobs:
       - name: Check env
         run: |
           env
-      - name: Install Python Dependencies
-        run: |
-          pip -q --no-input install poetry
-          poetry install
-      - name: Linters
-        run: |
-          poetry run make check
+      - name: Set up Python and Dependencies
+        uses: ./.github/workflows/lib/setup-python
+        with:
+          python_version: 3.9
       - name: Deploy Lambdas Dev
         run: |
           make deploy-lambdas-ci stage=dev
@@ -153,7 +144,7 @@ jobs:
           rm /home/runner/.docker/config.json
   deploy-testnet:
     runs-on: ubuntu-latest
-    needs: init, dependencies
+    needs: [init, dependencies]
 
     if: ${{ needs.init.outputs.environment == 'testnet' }}
 
@@ -166,18 +157,10 @@ jobs:
         with:
           aws-region: eu-central-1
           role-to-assume: arn:aws:iam::769498303037:role/ExplorerServiceGitHubActionsRole
-      - name: Set up Python
-        # https://github.com/actions/setup-python/releases/tag/v4.7.0
-        uses: actions/setup-python@61a6322f88396a6271a6ee3565807d608ecaddd1
+      - name: Set up Python and Dependencies
+        uses: ./.github/workflows/lib/setup-python
         with:
-          python-version: 3.9
-      - name: Install Python Dependencies
-        run: |
-          pip -q --no-input install poetry
-          poetry install
-      - name: Linters
-        run: |
-          poetry run make check
+          python_version: 3.9
       - name: Deploy Lambdas Testnet
         run: |
           make deploy-lambdas-ci stage=testnet
@@ -207,7 +190,8 @@ jobs:
           rm /home/runner/.docker/config.json
   deploy-mainnet:
     runs-on: ubuntu-latest
-    needs: init, dependencies
+    needs: [init, dependencies]
+
     if: ${{ needs.init.outputs.environment == 'mainnet' }}
 
     steps:
@@ -219,18 +203,10 @@ jobs:
         with:
           aws-region: eu-central-1
           role-to-assume: arn:aws:iam::769498303037:role/ExplorerServiceGitHubActionsRole
-      - name: Set up Python
-        # https://github.com/actions/setup-python/releases/tag/v4.7.0
-        uses: actions/setup-python@61a6322f88396a6271a6ee3565807d608ecaddd1
+      - name: Set up Python and Dependencies
+        uses: ./.github/workflows/lib/setup-python
         with:
-          python-version: 3.9
-      - name: Install Python Dependencies
-        run: |
-          pip -q --no-input install poetry
-          poetry install
-      - name: Linters
-        run: |
-          poetry run make check
+          python_version: 3.9
       - name: Deploy Lambdas Mainnet
         run: |
           make deploy-lambdas-ci stage=mainnet

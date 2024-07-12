@@ -16,18 +16,10 @@ jobs:
       - name: Checkout to branch
         # https://github.com/actions/checkout/releases/tag/v3.5.3
         uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9
-      - name: Set up Python
-        # https://github.com/actions/setup-python/releases/tag/v4.7.0
-        uses: actions/setup-python@61a6322f88396a6271a6ee3565807d608ecaddd1
+      - name: Set up Python and Dependencies
+        uses: ./.github/workflows/lib/setup-python
         with:
-          python-version: ${{ matrix.python-version }}
-      - name: Install Dependencies
-        run: |
-          pip -q --no-input install poetry
-          poetry install
-      - name: Linters
-        run: |
-          poetry run make check
+          python_version: ${{ matrix.python-version }}
       - name: Run Tests
         run: |
           poetry run make test
