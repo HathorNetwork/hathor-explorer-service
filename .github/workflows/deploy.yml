@@ -7,8 +7,6 @@ on:
 
 env:
   AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
-  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   AWS_DEFAULT_REGION: 'eu-central-1'
   AWS_VPC_DEFAULT_SG_ID: ${{ secrets.AWS_VPC_DEFAULT_SG_ID }}
   AWS_SUBNET_ID_1: ${{ secrets.AWS_SUBNET_ID_1 }}
@@ -23,6 +21,10 @@ env:
   WALLET_SERVICE_DB_PASSWORD: ${{ secrets.WALLET_SERVICE_DB_PASSWORD }}
   WALLET_SERVICE_DB_HOST: ${{ secrets.WALLET_SERVICE_DB_HOST }}
   WALLET_SERVICE_DB_NAME: ${{ secrets.WALLET_SERVICE_DB_NAME }}
+
+permissions:
+  id-token: write
+  contents: read
 
 jobs:
   init:
@@ -45,20 +47,12 @@ jobs:
             echo "environment=dev" >> $GITHUB_OUTPUT
           fi
 
-  deploy:
+  dependencies:
     runs-on: ubuntu-latest
-    needs: init
-
-    environment: ${{ needs.init.outputs.environment }}
 
     steps:
         # https://github.com/actions/checkout/releases/tag/v3.5.3
       - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9
-      - name: Set up Python
-        # https://github.com/actions/setup-python/releases/tag/v4.7.0
-        uses: actions/setup-python@61a6322f88396a6271a6ee3565807d608ecaddd1
-        with:
-          python-version: 3.9
       - name: Set up Node.js 18.x
         # https://github.com/actions/setup-node/releases/tag/v3.7.0
         uses: actions/setup-node@e33196f7422957bea03ed53f6fbb155025ffc7b8
@@ -77,15 +71,56 @@ jobs:
             ${{ runner.os }}-build-${{ env.cache-name }}-
             ${{ runner.os }}-build-
             ${{ runner.os }}-
-      - name: Install Dependencies
+      - name: Install Npm Dependencies
         run: |
+          npm ci
+      - name: Pack node modules
+        run: |
+          tar -cvf node_modules.tar ./node_modules
+      - name: Upload node modules
+        uses: actions/upload-artifact@v2
+        with:
+          name: node_modules
+          path: node_modules.tar
+          if-no-files-found: error
+          retention-days: 1
+  deploy-dev:
+    runs-on: ubuntu-latest
+    needs: init, dependencies
+
+    if: ${{ needs.init.outputs.environment == 'dev' }}
+
+    steps:
+        # https://github.com/actions/checkout/releases/tag/v3.5.3
+      - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9
+      - name: Configure AWS Credentials
+        # https://github.com/aws-actions/configure-aws-credentials/releases/tag/v4.0.2
+        uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502
+        with:
+          aws-region: eu-central-1
+          role-to-assume: arn:aws:iam::769498303037:role/ExplorerServiceGitHubActionsRole
+      - name: Set up Python
+        # https://github.com/actions/setup-python/releases/tag/v4.7.0
+        uses: actions/setup-python@61a6322f88396a6271a6ee3565807d608ecaddd1
+        with:
+          python-version: 3.9
+        # This step will parse the JSON secret from AWS Secrets Manager into environment variables
+      - name: Step name
+        uses: aws-actions/aws-secretsmanager-get-secrets@v2
+        with:
+          secret-ids: |
+            arn:aws:secretsmanager:eu-central-1:769498303037:secret:ExplorerService/dev-0ikehC
+          parse-json-secrets: true
+      - name: Check env
+        run: |
+          env
+      - name: Install Python Dependencies
           pip -q --no-input install poetry
-          make install
+          poetry install
       - name: Linters
         run: |
           poetry run make check
       - name: Deploy Lambdas Dev
-        if: ${{ needs.init.outputs.environment == 'dev' }}
         run: |
           make deploy-lambdas-ci stage=dev
         env:
@@ -106,8 +141,39 @@ jobs:
           HEALTHCHECK_WALLET_SERVICE_DB_ENABLED: True
           HEALTHCHECK_ELASTICSEARCH_ENABLED: True
           HEALTHCHECK_REDIS_ENABLED: True
+      - name: Deploy Daemons Dev
+        run: |
+          timestamp=`date +%s`; \
+          export DOCKER_IMAGE_TAG=dev-${{ github.sha }}-$timestamp
+          make deploy-daemons
+          rm /home/runner/.docker/config.json
+  deploy-testnet:
+    runs-on: ubuntu-latest
+    needs: init, dependencies
+
+    if: ${{ needs.init.outputs.environment == 'testnet' }}
+
+    steps:
+        # https://github.com/actions/checkout/releases/tag/v3.5.3
+      - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9
+      - name: Configure AWS Credentials
+        # https://github.com/aws-actions/configure-aws-credentials/releases/tag/v4.0.2
+        uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502
+        with:
+          aws-region: eu-central-1
+          role-to-assume: arn:aws:iam::769498303037:role/ExplorerServiceGitHubActionsRole
+      - name: Set up Python
+        # https://github.com/actions/setup-python/releases/tag/v4.7.0
+        uses: actions/setup-python@61a6322f88396a6271a6ee3565807d608ecaddd1
+        with:
+          python-version: 3.9
+      - name: Install Python Dependencies
+          pip -q --no-input install poetry
+          poetry install
+      - name: Linters
+        run: |
+          poetry run make check
       - name: Deploy Lambdas Testnet
-        if: ${{ needs.init.outputs.environment == 'testnet' }}
         run: |
           make deploy-lambdas-ci stage=testnet
         env:
@@ -128,8 +194,38 @@ jobs:
           HEALTHCHECK_WALLET_SERVICE_DB_ENABLED: True
           HEALTHCHECK_ELASTICSEARCH_ENABLED: True
           HEALTHCHECK_REDIS_ENABLED: True
+      - name: Deploy Daemons Testnet
+        run: |
+          timestamp=`date +%s`; \
+          export DOCKER_IMAGE_TAG=testnet-${{ github.sha }}-$timestamp
+          make deploy-daemons
+          rm /home/runner/.docker/config.json
+  deploy-mainnet:
+    runs-on: ubuntu-latest
+    needs: init, dependencies
+    if: ${{ needs.init.outputs.environment == 'mainnet' }}
+
+    steps:
+        # https://github.com/actions/checkout/releases/tag/v3.5.3
+      - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9
+      - name: Configure AWS Credentials
+        # https://github.com/aws-actions/configure-aws-credentials/releases/tag/v4.0.2
+        uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502
+        with:
+          aws-region: eu-central-1
+          role-to-assume: arn:aws:iam::769498303037:role/ExplorerServiceGitHubActionsRole
+      - name: Set up Python
+        # https://github.com/actions/setup-python/releases/tag/v4.7.0
+        uses: actions/setup-python@61a6322f88396a6271a6ee3565807d608ecaddd1
+        with:
+          python-version: 3.9
+      - name: Install Python Dependencies
+          pip -q --no-input install poetry
+          poetry install
+      - name: Linters
+        run: |
+          poetry run make check
       - name: Deploy Lambdas Mainnet
-        if: ${{ needs.init.outputs.environment == 'mainnet' }}
         run: |
           make deploy-lambdas-ci stage=mainnet
         env:
@@ -150,23 +246,8 @@ jobs:
           HEALTHCHECK_WALLET_SERVICE_DB_ENABLED: True
           HEALTHCHECK_ELASTICSEARCH_ENABLED: True
           HEALTHCHECK_REDIS_ENABLED: True
-      - name: Deploy Daemons Dev
-        if: ${{ needs.init.outputs.environment == 'dev' }}
-        run: |
-          timestamp=`date +%s`; \
-          export DOCKER_IMAGE_TAG=dev-${{ github.sha }}-$timestamp
-          make deploy-daemons
-      - name: Deploy Daemons Testnet
-        if: ${{ needs.init.outputs.environment == 'testnet' }}
-        run: |
-          timestamp=`date +%s`; \
-          export DOCKER_IMAGE_TAG=testnet-${{ github.sha }}-$timestamp
-          make deploy-daemons
       - name: Deploy Daemons Mainnet
-        if: ${{ needs.init.outputs.environment == 'mainnet' }}
         run: |
           export DOCKER_IMAGE_TAG=${GITHUB_REF#refs/*/}
           make deploy-daemons
-      - name: Clean
-        run: |
           rm /home/runner/.docker/config.json
