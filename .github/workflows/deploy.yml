@@ -94,27 +94,12 @@ jobs:
     if: ${{ needs.init.outputs.environment == 'dev' }}
 
     steps:
-        # https://github.com/actions/checkout/releases/tag/v3.5.3
-      - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9
-      - name: Configure AWS Credentials
-        # https://github.com/aws-actions/configure-aws-credentials/releases/tag/v4.0.2
-        uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502
+      - name: Prepare deploy
+        uses: ./.github/workflows/lib/prepare-deploy
         with:
-          aws-region: eu-central-1
-          role-to-assume: arn:aws:iam::769498303037:role/ExplorerServiceGitHubActionsRole
-      - name: Step name
-        uses: aws-actions/aws-secretsmanager-get-secrets@v2
-        with:
-          secret-ids: |
-            arn:aws:secretsmanager:eu-central-1:769498303037:secret:ExplorerService/dev-0ikehC
-          parse-json-secrets: true
-      - name: Check env
-        run: |
-          env
-      - name: Set up Python and Dependencies
-        uses: ./.github/workflows/lib/setup-python
-        with:
-          python_version: 3.9
+          aws_region: eu-central-1
+          aws_iam_role: arn:aws:iam::769498303037:role/ExplorerServiceGitHubActionsRole
+          aws_secret_arn: arn:aws:secretsmanager:eu-central-1:769498303037:secret:ExplorerService/dev-0ikehC
       - name: Deploy Lambdas Dev
         run: |
           make deploy-lambdas-ci stage=dev
@@ -149,18 +134,13 @@ jobs:
     if: ${{ needs.init.outputs.environment == 'testnet' }}
 
     steps:
-        # https://github.com/actions/checkout/releases/tag/v3.5.3
-      - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9
-      - name: Configure AWS Credentials
-        # https://github.com/aws-actions/configure-aws-credentials/releases/tag/v4.0.2
-        uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502
+      - name: Prepare deploy
+        uses: ./.github/workflows/lib/prepare-deploy
         with:
-          aws-region: eu-central-1
-          role-to-assume: arn:aws:iam::769498303037:role/ExplorerServiceGitHubActionsRole
-      - name: Set up Python and Dependencies
-        uses: ./.github/workflows/lib/setup-python
-        with:
-          python_version: 3.9
+          aws_region: eu-central-1
+          aws_iam_role: arn:aws:iam::769498303037:role/ExplorerServiceGitHubActionsRole
+          # TODO
+          # aws_secret_arn: arn:aws:secretsmanager:eu-central-1:769498303037:secret:ExplorerService/dev-0ikehC
       - name: Deploy Lambdas Testnet
         run: |
           make deploy-lambdas-ci stage=testnet
@@ -195,18 +175,13 @@ jobs:
     if: ${{ needs.init.outputs.environment == 'mainnet' }}
 
     steps:
-        # https://github.com/actions/checkout/releases/tag/v3.5.3
-      - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9
-      - name: Configure AWS Credentials
-        # https://github.com/aws-actions/configure-aws-credentials/releases/tag/v4.0.2
-        uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502
+      - name: Prepare deploy
+        uses: ./.github/workflows/lib/prepare-deploy
         with:
-          aws-region: eu-central-1
-          role-to-assume: arn:aws:iam::769498303037:role/ExplorerServiceGitHubActionsRole
-      - name: Set up Python and Dependencies
-        uses: ./.github/workflows/lib/setup-python
-        with:
-          python_version: 3.9
+          aws_region: eu-central-1
+          aws_iam_role: arn:aws:iam::769498303037:role/ExplorerServiceGitHubActionsRole
+          # TODO
+          # aws_secret_arn: arn:aws:secretsmanager:eu-central-1:769498303037:secret:ExplorerService/dev-0ikehC
       - name: Deploy Lambdas Mainnet
         run: |
           make deploy-lambdas-ci stage=mainnet
