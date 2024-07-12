@@ -39,6 +39,10 @@ runs:
       uses: actions/download-artifact@9bc31d5ccc31df68ecc42ccf4149144866c47d8a
       with:
         name: node_modules
+    - name: Unpack node modules
+      shell: bash
+      run: |
+        tar -xf node_modules.tar
     - name: Set up Python and Dependencies
       uses: ./.github/workflows/lib/setup-python
       with:
