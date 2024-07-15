@@ -82,7 +82,7 @@ jobs:
         # https://github.com/actions/checkout/releases/tag/v3.5.3
       - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9
       - name: Prepare deploy
-        uses: ./.github/workflows/lib/prepare-deploy
+        uses: ./.github/actions/prepare-deploy
         with:
           aws_region: eu-central-1
           aws_iam_role: arn:aws:iam::769498303037:role/ExplorerServiceGitHubActionsRole
@@ -124,7 +124,7 @@ jobs:
         # https://github.com/actions/checkout/releases/tag/v3.5.3
       - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9
       - name: Prepare deploy
-        uses: ./.github/workflows/lib/prepare-deploy
+        uses: ./.github/actions/prepare-deploy
         with:
           aws_region: eu-central-1
           aws_iam_role: arn:aws:iam::769498303037:role/ExplorerServiceGitHubActionsRole
@@ -166,7 +166,7 @@ jobs:
         # https://github.com/actions/checkout/releases/tag/v3.5.3
       - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9
       - name: Prepare deploy
-        uses: ./.github/workflows/lib/prepare-deploy
+        uses: ./.github/actions/prepare-deploy
         with:
           aws_region: eu-central-1
           aws_iam_role: arn:aws:iam::769498303037:role/ExplorerServiceGitHubActionsRole
