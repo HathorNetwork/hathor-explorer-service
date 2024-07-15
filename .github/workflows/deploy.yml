@@ -2,7 +2,7 @@ name: deploy
 
 on:
   push:
-    branches: [main, dev, ci/iam-roles-and-aws-secrets]
+    branches: [main, dev]
     tags: ['v*.*.*']
 
 env:
@@ -30,9 +30,6 @@ jobs:
           elif [[ "${{github.base_ref}}" == "main" || "${{github.ref}}" == "refs/heads/main" ]]; then
             echo "Setting testnet environment"
             echo "environment=testnet" >> $GITHUB_OUTPUT
-          elif [[ "${{github.base_ref}}" == "ci/iam-roles-and-aws-secrets" || "${{github.ref}}" == "refs/heads/ci/iam-roles-and-aws-secrets" ]]; then
-            echo "Setting dev environment"
-            echo "environment=dev" >> $GITHUB_OUTPUT
           elif [[ "${{github.base_ref}}" == "dev" || "${{github.ref}}" == "refs/heads/dev" ]]; then
             echo "Setting dev environment"
             echo "environment=dev" >> $GITHUB_OUTPUT
@@ -94,11 +91,11 @@ jobs:
         run: |
           make deploy-lambdas-ci stage=dev
         env:
+          # XXX: Some env vars come from the secret https://eu-central-1.console.aws.amazon.com/secretsmanager/secret?name=ExplorerService%2Fdev&region=eu-central-1
           API_PORT: 3001
           HATHOR_CORE_URL: https://node.explorer.testnet.hathor.network
           HATHOR_NODES: https://node1.testnet.hathor.network,https://node.explorer.testnet.hathor.network
           REDIS_KEY_PREFIX: hathor-explorer-service-dev
-          REDIS_HOST: ${{ secrets.REDIS_HOST }}
           REDIS_PORT: 6379
           REDIS_DB: 0
           METADATA_BUCKET: hathor-explorer-metadata-dev
@@ -131,17 +128,16 @@ jobs:
         with:
           aws_region: eu-central-1
           aws_iam_role: arn:aws:iam::769498303037:role/ExplorerServiceGitHubActionsRole
-          # TODO
-          # aws_secret_arn: arn:aws:secretsmanager:eu-central-1:769498303037:secret:ExplorerService/dev-0ikehC
+          aws_secret_arn: arn:aws:secretsmanager:eu-central-1:769498303037:secret:ExplorerService/testnet-lcBuyc
       - name: Deploy Lambdas Testnet
         run: |
           make deploy-lambdas-ci stage=testnet
         env:
+          # XXX: Some env vars come from the secret https://eu-central-1.console.aws.amazon.com/secretsmanager/secret?name=ExplorerService%2Ftestnet&region=eu-central-1
           API_PORT: 3001
           HATHOR_CORE_URL: https://node.explorer.testnet.hathor.network
           HATHOR_NODES: https://node1.testnet.hathor.network,https://node.explorer.testnet.hathor.network
           REDIS_KEY_PREFIX: hathor-explorer-service-testnet
-          REDIS_HOST: ${{ secrets.REDIS_HOST }}
           REDIS_PORT: 6379
           REDIS_DB: 0
           METADATA_BUCKET: hathor-explorer-metadata-testnet
@@ -174,17 +170,16 @@ jobs:
         with:
           aws_region: eu-central-1
           aws_iam_role: arn:aws:iam::769498303037:role/ExplorerServiceGitHubActionsRole
-          # TODO
-          # aws_secret_arn: arn:aws:secretsmanager:eu-central-1:769498303037:secret:ExplorerService/dev-0ikehC
+          aws_secret_arn: arn:aws:secretsmanager:eu-central-1:769498303037:secret:ExplorerService/mainnet-DYYHfn
       - name: Deploy Lambdas Mainnet
         run: |
           make deploy-lambdas-ci stage=mainnet
         env:
+          # XXX: Some env vars come from the secret https://eu-central-1.console.aws.amazon.com/secretsmanager/secret?name=ExplorerService%2Fmainnet&region=eu-central-1
           API_PORT: 3001
           HATHOR_CORE_URL: https://node.explorer.hathor.network
           HATHOR_NODES: https://node.explorer.hathor.network,https://node1.mainnet.hathor.network,https://node2.mainnet.hathor.network
           REDIS_KEY_PREFIX: hathor-explorer-service-mainnet
-          REDIS_HOST: ${{ secrets.REDIS_HOST }}
           REDIS_PORT: 6379
           REDIS_DB: 0
           METADATA_BUCKET: hathor-explorer-metadata-mainnet
