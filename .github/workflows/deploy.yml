@@ -121,6 +121,7 @@ jobs:
       healthcheck_wallet_service_db_enabled: true
       healthcheck_elasticsearch_enabled: true
       healthcheck_redis_enabled: true
+
   deploy-mainnet:
     needs: [init, dependencies]
 
