@@ -1,0 +1,161 @@
+# .github/workflows/deploy.yml
+name: Deploy
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  ELASTIC_SEARCH_TIMEOUT: 25
+  ELASTIC_RESULTS_PER_PAGE: 10
+  NODE_CACHE_TTL: 30
+
+on:
+  workflow_call:
+    inputs:
+      aws_region:
+        description: 'AWS Region'
+        required: true
+        type: string
+      aws_iam_role:
+        description: 'AWS IAM Role'
+        required: true
+        type: string
+      aws_secret_arn:
+        description: 'AWS Secret ARN'
+        required: true
+        type: string
+      serverless_stage:
+        description: 'Serverless Stage'
+        required: true
+        type: string
+      docker_image_tag:
+        description: 'Docker Image Tag'
+        required: false
+        default: ''
+        type: string
+      api_port:
+        description: 'API Port'
+        required: true
+        type: string
+      hathor_core_url:
+        description: 'Hathor Core URL'
+        required: true
+        type: string
+      hathor_nodes:
+        description: 'Hathor Nodes'
+        required: true
+        type: string
+      redis_key_prefix:
+        description: 'Redis Key Prefix'
+        required: true
+        type: string
+      redis_port:
+        description: 'Redis Port'
+        required: true
+        type: string
+      redis_db:
+        description: 'Redis DB'
+        required: true
+        type: string
+      metadata_bucket:
+        description: 'Metadata Bucket'
+        required: true
+        type: string
+      cors_allowed_regex:
+        description: 'CORS Allowed Regex'
+        required: true
+        type: string
+      elastic_index:
+        description: 'Elastic Index'
+        required: true
+        type: string
+      elastic_tx_index:
+        description: 'Elastic TX Index'
+        required: true
+        type: string
+      elastic_token_balances_index:
+        description: 'Elastic Token Balances Index'
+        required: true
+        type: string
+      healthcheck_hathor_core_enabled:
+        description: 'Healthcheck Hathor Core Enabled'
+        required: true
+        type: boolean
+      healthcheck_wallet_service_db_enabled:
+        description: 'Healthcheck Wallet Service DB Enabled'
+        required: true
+        type: boolean
+      healthcheck_elasticsearch_enabled:
+        description: 'Healthcheck Elasticsearch Enabled'
+        required: true
+        type: boolean
+      healthcheck_redis_enabled:
+        description: 'Healthcheck Redis Enabled'
+        required: true
+        type: boolean
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        # https://github.com/aws-actions/configure-aws-credentials/releases/tag/v4.0.2
+        uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502
+        with:
+          aws-region: ${{ inputs.aws_region }}
+          role-to-assume: ${{ inputs.aws_iam_role }}
+      - name: Get Secrets from AWS
+        # https://github.com/aws-actions/aws-secretsmanager-get-secrets/releases/tag/v2.0.6
+        uses: aws-actions/aws-secretsmanager-get-secrets@4e95aaf6ba8028772f5384971d4fedccfaab8621
+        with:
+          # The comma before the secret id is to avoid the addition of a prefix to the env vars.
+          # See: https://docs.aws.amazon.com/secretsmanager/latest/userguide/retrieving-secrets_github.html#retrieving-secrets_github_alias
+          secret-ids: |
+            ,${{ inputs.aws_secret_arn }}
+          parse-json-secrets: true
+      # This step recovers the artifact that is generated in the `deploy.yml` workflow
+      - name: Download node modules
+        # https://github.com/actions/download-artifact/releases/tag/v3.0.2
+        uses: actions/download-artifact@9bc31d5ccc31df68ecc42ccf4149144866c47d8a
+        with:
+          name: node_modules
+      - name: Unpack node modules
+        shell: bash
+        run: |
+          tar -xf node_modules.tar
+      - name: Set up Python and Dependencies
+        uses: ./.github/actions/setup-python
+        with:
+          python_version: 3.9
+      - name: Deploy Lambdas
+        run: |
+          make deploy-lambdas-ci stage=${{ inputs.serverless_stage }}
+        env:
+          AWS_DEFAULT_REGION: ${{ inputs.aws_region }}
+          API_PORT: ${{ inputs.api_port }}
+          HATHOR_CORE_URL: ${{ inputs.hathor_core_url }}
+          HATHOR_NODES: ${{ inputs.hathor_nodes }}
+          REDIS_KEY_PREFIX: ${{ inputs.redis_key_prefix }}
+          REDIS_PORT: ${{ inputs.redis_port }}
+          REDIS_DB: ${{ inputs.redis_db }}
+          METADATA_BUCKET: ${{ inputs.metadata_bucket }}
+          CORS_ALLOWED_REGEX: ${{ inputs.cors_allowed_regex }}
+          ELASTIC_INDEX: ${{ inputs.elastic_index }}
+          ELASTIC_TX_INDEX: ${{ inputs.elastic_tx_index }}
+          ELASTIC_TOKEN_BALANCES_INDEX: ${{ inputs.elastic_token_balances_index }}
+          HEALTHCHECK_HATHOR_CORE_ENABLED: ${{ inputs.healthcheck_hathor_core_enabled }}
+          HEALTHCHECK_WALLET_SERVICE_DB_ENABLED: ${{ inputs.healthcheck_wallet_service_db_enabled }}
+          HEALTHCHECK_ELASTICSEARCH_ENABLED: ${{ inputs.healthcheck_elasticsearch_enabled }}
+          HEALTHCHECK_REDIS_ENABLED: ${{ inputs.healthcheck_redis_enabled }}
+
+      - name: Deploy Daemons
+        # Deploy only if the inputs.docker_image_tag is not empty
+        if: ${{ inputs.docker_image_tag != '' }}
+        run: |
+          export DOCKER_IMAGE_TAG=${{ inputs.docker_image_tag }}
+          make deploy-daemons
+          rm /home/runner/.docker/config.json
