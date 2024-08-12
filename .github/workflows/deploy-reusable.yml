@@ -109,7 +109,8 @@ jobs:
           aws-region: ${{ inputs.aws_region }}
           role-to-assume: ${{ inputs.aws_iam_role }}
       - name: Get Secrets from AWS
-        uses: aws-actions/aws-secretsmanager-get-secrets@v2
+        # https://github.com/aws-actions/aws-secretsmanager-get-secrets/releases/tag/v2.0.6
+        uses: aws-actions/aws-secretsmanager-get-secrets@4e95aaf6ba8028772f5384971d4fedccfaab8621
         with:
           # The comma before the secret id is to avoid the addition of a prefix to the env vars.
           # See: https://docs.aws.amazon.com/secretsmanager/latest/userguide/retrieving-secrets_github.html#retrieving-secrets_github_alias
