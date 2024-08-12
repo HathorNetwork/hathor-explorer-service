@@ -93,6 +93,7 @@ jobs:
       healthcheck_wallet_service_db_enabled: true
       healthcheck_elasticsearch_enabled: true
       healthcheck_redis_enabled: true
+
   deploy-testnet:
     needs: [init, dependencies]
 
@@ -121,6 +122,91 @@ jobs:
       healthcheck_wallet_service_db_enabled: true
       healthcheck_elasticsearch_enabled: true
       healthcheck_redis_enabled: true
+
+  deploy-nano-testnet:
+    needs: [init, dependencies]
+
+    if: ${{ needs.init.outputs.environment == 'testnet' }}
+
+    uses: ./.github/workflows/deploy-reusable.yml
+    with:
+      aws_region: eu-central-1
+      aws_iam_role: arn:aws:iam::471112952246:role/ExplorerServiceGitHubActionsRole
+      aws_secret_arn: arn:aws:secretsmanager:eu-central-1:471112952246:secret:ExplorerService/nano-testnet-MWxHpF
+      serverless_stage: nano
+      # XXX: Some env vars come from the secret https://eu-central-1.console.aws.amazon.com/secretsmanager/secret?name=ExplorerService%2Fnano-testnet&region=eu-central-1
+      api_port: 3001
+      hathor_core_url: https://node1.nano-testnet.hathor.network
+      hathor_nodes: https://node1.nano-testnet.hathor.network
+      redis_key_prefix: hathor-explorer-service-nano-testnet
+      redis_port: 6379
+      redis_db: 1
+      metadata_bucket: hathor-explorer-metadata-nano-testnet
+      cors_allowed_regex: https?:\/\/([a-z0-9]*\.){0,5}hathor\.network
+      elastic_index: nano-testnet-token
+      elastic_tx_index: nano-testnet-tx
+      elastic_token_balances_index: nano-testnet-token-balance
+      healthcheck_hathor_core_enabled: true
+      healthcheck_wallet_service_db_enabled: true
+      healthcheck_elasticsearch_enabled: true
+      healthcheck_redis_enabled: true
+
+  deploy-ekvilibro-testnet:
+    needs: [init, dependencies]
+
+    if: ${{ needs.init.outputs.environment == 'testnet' }}
+
+    uses: ./.github/workflows/deploy-reusable.yml
+    with:
+      aws_region: eu-central-1
+      aws_iam_role: arn:aws:iam::730335348496:role/ExplorerServiceGitHubActionsRole
+      aws_secret_arn: arn:aws:secretsmanager:eu-central-1:730335348496:secret:ExplorerService/ekvilibro-testnet-DaDPgT
+      serverless_stage: ekvilibro
+      # XXX: Some env vars come from the secret https://eu-central-1.console.aws.amazon.com/secretsmanager/secret?name=ExplorerService%2Fekvilibro-testnet&region=eu-central-1
+      api_port: 3001
+      hathor_core_url: https://node-side-dag.ekvilibro-testnet.hathor.network
+      hathor_nodes: https://node-side-dag.ekvilibro-testnet.hathor.network
+      redis_key_prefix: hathor-explorer-service-ekvilibro-testnet
+      redis_port: 6379
+      redis_db: 0
+      metadata_bucket: hathor-explorer-metadata-ekvilibro-testnet
+      cors_allowed_regex: https?:\/\/([a-z0-9]*\.){0,5}hathor\.network
+      elastic_index: ekvilibro-testnet-token
+      elastic_tx_index: ekvilibro-testnet-tx
+      elastic_token_balances_index: ekvilibro-testnet-token-balance
+      healthcheck_hathor_core_enabled: true
+      healthcheck_wallet_service_db_enabled: true
+      healthcheck_elasticsearch_enabled: true
+      healthcheck_redis_enabled: true
+
+  deploy-ekvilibro-mainnet:
+    needs: [init, dependencies]
+
+    if: ${{ needs.init.outputs.environment == 'mainnet' }}
+
+    uses: ./.github/workflows/deploy-reusable.yml
+    with:
+      aws_region: eu-central-1
+      aws_iam_role: arn:aws:iam::730335348496:role/ExplorerServiceGitHubActionsRole
+      aws_secret_arn: arn:aws:secretsmanager:eu-central-1:730335348496:secret:ExplorerService/ekvilibro-mainnet-yvc3s2
+      serverless_stage: ekvi-main
+      # XXX: Some env vars come from the secret https://eu-central-1.console.aws.amazon.com/secretsmanager/secret?name=ExplorerService%2Fekvilibro-mainnet&region=eu-central-1
+      api_port: 3001
+      hathor_core_url: https://node-side-dag.ekvilibro-mainnet.hathor.network
+      hathor_nodes: https://node-side-dag.ekvilibro-mainnet.hathor.network
+      redis_key_prefix: hathor-explorer-service-ekvilibro-mainnet
+      redis_port: 6379
+      redis_db: 0
+      metadata_bucket: hathor-explorer-metadata-ekvilibro-mainnet
+      cors_allowed_regex: https?:\/\/([a-z0-9]*\.){0,5}hathor\.network
+      elastic_index: ekvilibro-mainnet-token
+      elastic_tx_index: ekvilibro-mainnet-tx
+      elastic_token_balances_index: ekvilibro-mainnet-token-balance
+      healthcheck_hathor_core_enabled: true
+      healthcheck_wallet_service_db_enabled: true
+      healthcheck_elasticsearch_enabled: true
+      healthcheck_redis_enabled: true
+
   deploy-mainnet:
     needs: [init, dependencies]
 
