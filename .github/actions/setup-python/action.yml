@@ -1,0 +1,27 @@
+name: "Install Python and Dependencies"
+description: "Install Python and Dependencies"
+
+inputs:
+  python_version:
+    description: "Python version"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Python
+      # https://github.com/actions/setup-python/releases/tag/v4.7.0
+      uses: actions/setup-python@61a6322f88396a6271a6ee3565807d608ecaddd1
+      with:
+        python-version: ${{ inputs.python_version }}
+
+    - name: Install Python Dependencies
+      shell: bash
+      run: |
+        pip -q --no-input install poetry
+        poetry install
+
+    - name: Linters
+      shell: bash
+      run: |
+        poetry run make check
