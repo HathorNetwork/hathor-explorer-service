@@ -690,6 +690,7 @@ functions:
             cacheKeyParameters:
               - name: request.querystring.id
               - name: request.querystring.after
+              - name: request.querystring.before
               - name: request.querystring.count
               - name: request.header.origin
 

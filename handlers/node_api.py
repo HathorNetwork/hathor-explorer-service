@@ -349,13 +349,14 @@ def nc_history(
     node_api = node_api or NodeApi()
     id = event.query.get("id")
     after = event.query.get("after")
+    before = event.query.get("before")
     count = event.query.get("count")
 
     if id is None:
         raise ApiError("invalid_parameters")
 
     # This might throw HathorCoreTimeout error
-    response = node_api.get_nc_history(id, after, count)
+    response = node_api.get_nc_history(id, after, before, count)
 
     if response is None or "error" in response:
         message = response.get("error") if (response and "error" in response) else ""

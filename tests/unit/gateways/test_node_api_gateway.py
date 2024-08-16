@@ -349,7 +349,7 @@ class TestNodeApiGateway:
         result = gateway.get_nc_history(**data)
         hathor_client.get.assert_called_once_with(
             "mock-endpoint",
-            params={**data, "after": None, "count": None},
+            params={**data, "after": None, "count": None, "before": None},
             timeout=NODE_API_TIMEOUT_IN_SECONDS,
         )
         assert result
