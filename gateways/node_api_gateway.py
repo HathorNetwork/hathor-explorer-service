@@ -234,7 +234,11 @@ class NodeApiGateway:
         )
 
     def get_nc_history(
-            self, id: str, after: Optional[str] = None, before: Optional[str] = None, count: Optional[int] = None
+        self,
+        id: str,
+        after: Optional[str] = None,
+        before: Optional[str] = None,
+        count: Optional[int] = None,
     ) -> Optional[dict]:
         """Get history of a nano contract."""
         return self.hathor_core_client.get(

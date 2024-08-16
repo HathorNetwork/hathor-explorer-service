@@ -336,7 +336,9 @@ class TestNodeApiNanoContracts:
         node_api_gateway.get_nc_history = MagicMock(return_value=obj)
         node_api = NodeApi(node_api_gateway)
         result = node_api.get_nc_history("1234", "5678", None, 100)
-        node_api_gateway.get_nc_history.assert_called_once_with("1234", "5678", None, 100)
+        node_api_gateway.get_nc_history.assert_called_once_with(
+            "1234", "5678", None, 100
+        )
         assert result
         assert sorted(result) == sorted(obj)
 
@@ -345,7 +347,9 @@ class TestNodeApiNanoContracts:
         node_api_gateway.get_nc_history = MagicMock(return_value=obj)
         node_api = NodeApi(node_api_gateway)
         result = node_api.get_nc_history("1234", None, "5678", 100)
-        node_api_gateway.get_nc_history.assert_called_once_with("1234", None, "5678", 100)
+        node_api_gateway.get_nc_history.assert_called_once_with(
+            "1234", None, "5678", 100
+        )
         assert result
         assert sorted(result) == sorted(obj)
 
@@ -355,7 +359,9 @@ class TestNodeApiNanoContracts:
         node_api_gateway.get_nc_history = MagicMock(return_value=obj)
         node_api = NodeApi(node_api_gateway)
         result = node_api.get_nc_history("1234")
-        node_api_gateway.get_nc_history.assert_called_once_with("1234", None, None, None)
+        node_api_gateway.get_nc_history.assert_called_once_with(
+            "1234", None, None, None
+        )
         assert result
         assert sorted(result) == sorted(obj)
 
