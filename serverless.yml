@@ -714,6 +714,26 @@ functions:
               - name: request.querystring.blueprint_id
               - name: request.header.origin
 
+  node_api_nc_blueprint_code:
+    handler: handlers/node_api.nc_blueprint_source_code
+    maximumRetryAttempts: 0
+    package:
+      patterns:
+        - 'handlers/node_api.py'
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: node_api/nc_blueprint_source_code
+          method: get
+          cors: true
+          caching:
+            enabled: true
+            ttlInSeconds: 300
+            cacheKeyParameters:
+              - name: request.querystring.blueprint_id
+              - name: request.header.origin
+
   walletServiceAddressBalance:
     handler: handlers/wallet_service.handle_address_balance
     timeout: 15

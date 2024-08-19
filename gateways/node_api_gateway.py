@@ -9,6 +9,7 @@ from gateways.clients.hathor_core_client import (
     FEATURE_ENDPOINT,
     GRAPHVIZ_DOT_NEIGHBORS_ENDPOINT,
     NC_BLUEPRINT_INFORMATION_ENDPOINT,
+    NC_BLUEPRINT_SOURCE_CODE_ENDPOINT,
     NC_HISTORY_ENDPOINT,
     NC_STATE_ENDPOINT,
     PUSH_TX_ENDPOINT,
@@ -251,6 +252,14 @@ class NodeApiGateway:
         """Get blueprint information."""
         return self.hathor_core_client.get(
             NC_BLUEPRINT_INFORMATION_ENDPOINT,
+            params={"blueprint_id": blueprint_id},
+            timeout=NODE_API_TIMEOUT_IN_SECONDS,
+        )
+
+    def get_nc_blueprint_source_code(self, blueprint_id: str) -> Optional[dict]:
+        """Get blueprint source code."""
+        return self.hathor_core_client.get(
+            NC_BLUEPRINT_SOURCE_CODE_ENDPOINT,
             params={"blueprint_id": blueprint_id},
             timeout=NODE_API_TIMEOUT_IN_SECONDS,
         )

@@ -113,3 +113,6 @@ class NodeApi:
 
     def get_nc_blueprint_information(self, blueprint_id: str) -> Optional[dict]:
         return self.node_api_gateway.get_nc_blueprint_information(blueprint_id)
+
+    def get_nc_blueprint_source_code(self, blueprint_id: str) -> Optional[dict]:
+        return self.node_api_gateway.get_nc_blueprint_source_code(blueprint_id)
