@@ -103,9 +103,13 @@ class NodeApi:
         return self.node_api_gateway.get_nc_state(id, fields, balances, calls)
 
     def get_nc_history(
-        self, id: str, after: Optional[str] = None, count: Optional[int] = None
+        self,
+        id: str,
+        after: Optional[str] = None,
+        before: Optional[str] = None,
+        count: Optional[int] = None,
     ) -> Optional[dict]:
-        return self.node_api_gateway.get_nc_history(id, after, count)
+        return self.node_api_gateway.get_nc_history(id, after, before, count)
 
     def get_nc_blueprint_information(self, blueprint_id: str) -> Optional[dict]:
         return self.node_api_gateway.get_nc_blueprint_information(blueprint_id)
