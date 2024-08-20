@@ -409,7 +409,12 @@ def nc_blueprint_source_code(
     response = node_api.get_nc_blueprint_source_code(blueprint_id)
 
     if response is None or "error" in response:
-        message = response.get("error") if (response and "error" in response) else ""
+        default_message = "Unknown error when retrieving blueprint source code"
+        message = (
+            response.get("error")
+            if (response and "error" in response)
+            else default_message
+        )
         raise ApiError(message)
 
     return {
