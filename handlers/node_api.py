@@ -392,3 +392,33 @@ def nc_blueprint_information(
         "body": json.dumps(response or {}),
         "headers": {"Content-Type": "application/json"},
     }
+
+
+@ApiGateway()
+def nc_blueprint_source_code(
+    event: ApiGatewayEvent, _context: LambdaContext, node_api: Optional[NodeApi] = None
+) -> dict:
+    """Get blueprint source code."""
+    node_api = node_api or NodeApi()
+    blueprint_id = event.query.get("blueprint_id")
+
+    if blueprint_id is None:
+        raise ApiError("invalid_parameters")
+
+    # This might throw HathorCoreTimeout error
+    response = node_api.get_nc_blueprint_source_code(blueprint_id)
+
+    if response is None or "error" in response:
+        default_message = "Unknown error when retrieving blueprint source code"
+        message = (
+            response.get("error")
+            if (response and "error" in response)
+            else default_message
+        )
+        raise ApiError(message)
+
+    return {
+        "statusCode": 200,
+        "body": json.dumps(response or {}),
+        "headers": {"Content-Type": "application/json"},
+    }
