@@ -36,7 +36,12 @@ class HealthcheckGateway:
         """Retrieve hathor-core health information"""
 
         return await self.hathor_core_async_client.get(
-            HEALTH_ENDPOINT, timeout=HEALTHCHECK_CLIENT_TIMEOUT_IN_SECONDS
+            # XXX: We set the expected content_type to None because hathor-core was returning 'text/html' instead of 'application/json'
+            # This will be fixed in the next release of hathor-core (v0.63.0)
+            # None is better here to avoid having to sync the releases of hathor-core and explorer-service
+            HEALTH_ENDPOINT,
+            timeout=HEALTHCHECK_CLIENT_TIMEOUT_IN_SECONDS,
+            content_type=None,
         )
 
     def ping_redis(self) -> bool:

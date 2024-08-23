@@ -26,7 +26,7 @@ class TestHealthcheckGateway(unittest.IsolatedAsyncioTestCase):
         result = await self.healthcheck_gateway.get_hathor_core_health()
         self.assertEqual(result, {"status": "pass"})
         self.hathor_core_async_client.get.assert_called_once_with(
-            "/v1a/health", timeout=5
+            "/v1a/health", timeout=5, content_type=None
         )
 
     def test_ping_redis(self):

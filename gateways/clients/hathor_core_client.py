@@ -44,7 +44,11 @@ class HathorCoreAsyncClient:
         self.log = logger.new(client="async")
 
     async def get(
-        self, path: str, params: Optional[dict] = None, timeout: Optional[float] = None
+        self,
+        path: str,
+        params: Optional[dict] = None,
+        timeout: Optional[float] = None,
+        content_type: Optional[str] = "application/json",
     ) -> Dict[Any, Any]:
         """Make a get request async
 
@@ -72,7 +76,7 @@ class HathorCoreAsyncClient:
                             status=response.status,
                             body=await response.text(),
                         )
-                    return await response.json()
+                    return await response.json(content_type=content_type)
         except Exception as e:
             self.log.error("hathor_core_error", path=path, error=repr(e))
             return {"error": repr(e)}
