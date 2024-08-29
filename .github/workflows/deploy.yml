@@ -114,7 +114,7 @@ jobs:
       redis_port: 6379
       redis_db: 0
       metadata_bucket: hathor-explorer-metadata-testnet
-      cors_allowed_regex: https?:\/\/([a-z0-9]*\.){0,5}hathor\.network
+      cors_allowed_regex: https?:\/\/([a-z0-9\-]*\.){0,5}hathor\.network
       elastic_index: testnet-token
       elastic_tx_index: testnet-tx
       elastic_token_balances_index: testnet-token-balance
@@ -142,7 +142,7 @@ jobs:
       redis_port: 6379
       redis_db: 1
       metadata_bucket: hathor-explorer-metadata-nano-testnet
-      cors_allowed_regex: https?:\/\/([a-z0-9]*\.){0,5}hathor\.network
+      cors_allowed_regex: https?:\/\/([a-z0-9\-]*\.){0,5}hathor\.network
       elastic_index: nano-testnet-token
       elastic_tx_index: nano-testnet-tx
       elastic_token_balances_index: nano-testnet-token-balance
@@ -170,7 +170,7 @@ jobs:
       redis_port: 6379
       redis_db: 0
       metadata_bucket: hathor-explorer-metadata-ekvilibro-testnet
-      cors_allowed_regex: https?:\/\/([a-z0-9]*\.){0,5}hathor\.network
+      cors_allowed_regex: https?:\/\/([a-z0-9\-]*\.){0,5}hathor\.network
       elastic_index: ekvilibro-testnet-token
       elastic_tx_index: ekvilibro-testnet-tx
       elastic_token_balances_index: ekvilibro-testnet-token-balance
@@ -198,7 +198,7 @@ jobs:
       redis_port: 6379
       redis_db: 0
       metadata_bucket: hathor-explorer-metadata-ekvilibro-mainnet
-      cors_allowed_regex: https?:\/\/([a-z0-9]*\.){0,5}hathor\.network
+      cors_allowed_regex: https?:\/\/([a-z0-9\-]*\.){0,5}hathor\.network
       elastic_index: ekvilibro-mainnet-token
       elastic_tx_index: ekvilibro-mainnet-tx
       elastic_token_balances_index: ekvilibro-mainnet-token-balance
@@ -227,7 +227,7 @@ jobs:
       redis_port: 6379
       redis_db: 0
       metadata_bucket: hathor-explorer-metadata-mainnet
-      cors_allowed_regex: https?:\/\/([a-z0-9]*\.){0,5}hathor\.network
+      cors_allowed_regex: https?:\/\/([a-z0-9\-]*\.){0,5}hathor\.network
       elastic_index: mainnet-token
       elastic_tx_index: mainnet-tx
       elastic_token_balances_index: mainnet-token-balance
