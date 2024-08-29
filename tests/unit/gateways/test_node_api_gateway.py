@@ -349,7 +349,7 @@ class TestNodeApiGateway:
         result = gateway.get_nc_history(**data)
         hathor_client.get.assert_called_once_with(
             "mock-endpoint",
-            params={**data, "after": None, "count": None},
+            params={**data, "after": None, "count": None, "before": None},
             timeout=NODE_API_TIMEOUT_IN_SECONDS,
         )
         assert result
@@ -366,6 +366,23 @@ class TestNodeApiGateway:
         hathor_client.get = MagicMock(return_value=obj)
         gateway = NodeApiGateway(hathor_core_client=hathor_client)
         result = gateway.get_nc_blueprint_information(**data)
+        hathor_client.get.assert_called_once_with(
+            "mock-endpoint", params=data, timeout=NODE_API_TIMEOUT_IN_SECONDS
+        )
+        assert result
+        assert sorted(result) == sorted(obj)
+
+    @patch(
+        "gateways.node_api_gateway.NC_BLUEPRINT_SOURCE_CODE_ENDPOINT", "mock-endpoint"
+    )
+    def test_nc_blueprint_source_code(self, hathor_client):
+        obj = {"foo": "bar"}
+        data = {
+            "blueprint_id": "1234",
+        }
+        hathor_client.get = MagicMock(return_value=obj)
+        gateway = NodeApiGateway(hathor_core_client=hathor_client)
+        result = gateway.get_nc_blueprint_source_code(**data)
         hathor_client.get.assert_called_once_with(
             "mock-endpoint", params=data, timeout=NODE_API_TIMEOUT_IN_SECONDS
         )

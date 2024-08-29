@@ -331,12 +331,25 @@ class TestNodeApiNanoContracts:
         assert result
         assert sorted(result) == sorted(obj)
 
-    def test_get_history(self, node_api_gateway):
+    def test_get_history_after(self, node_api_gateway):
         obj = {"foo": "bar"}
         node_api_gateway.get_nc_history = MagicMock(return_value=obj)
         node_api = NodeApi(node_api_gateway)
-        result = node_api.get_nc_history("1234", "5678", 100)
-        node_api_gateway.get_nc_history.assert_called_once_with("1234", "5678", 100)
+        result = node_api.get_nc_history("1234", "5678", None, 100)
+        node_api_gateway.get_nc_history.assert_called_once_with(
+            "1234", "5678", None, 100
+        )
+        assert result
+        assert sorted(result) == sorted(obj)
+
+    def test_get_history_before(self, node_api_gateway):
+        obj = {"foo": "bar"}
+        node_api_gateway.get_nc_history = MagicMock(return_value=obj)
+        node_api = NodeApi(node_api_gateway)
+        result = node_api.get_nc_history("1234", None, "5678", 100)
+        node_api_gateway.get_nc_history.assert_called_once_with(
+            "1234", None, "5678", 100
+        )
         assert result
         assert sorted(result) == sorted(obj)
 
@@ -346,7 +359,9 @@ class TestNodeApiNanoContracts:
         node_api_gateway.get_nc_history = MagicMock(return_value=obj)
         node_api = NodeApi(node_api_gateway)
         result = node_api.get_nc_history("1234")
-        node_api_gateway.get_nc_history.assert_called_once_with("1234", None, None)
+        node_api_gateway.get_nc_history.assert_called_once_with(
+            "1234", None, None, None
+        )
         assert result
         assert sorted(result) == sorted(obj)
 
@@ -356,5 +371,14 @@ class TestNodeApiNanoContracts:
         node_api = NodeApi(node_api_gateway)
         result = node_api.get_nc_blueprint_information("1234")
         node_api_gateway.get_nc_blueprint_information.assert_called_once_with("1234")
+        assert result
+        assert sorted(result) == sorted(obj)
+
+    def test_get_blueprint_source_code(self, node_api_gateway):
+        obj = {"foo": "bar"}
+        node_api_gateway.get_nc_blueprint_source_code = MagicMock(return_value=obj)
+        node_api = NodeApi(node_api_gateway)
+        result = node_api.get_nc_blueprint_source_code("1234")
+        node_api_gateway.get_nc_blueprint_source_code.assert_called_once_with("1234")
         assert result
         assert sorted(result) == sorted(obj)

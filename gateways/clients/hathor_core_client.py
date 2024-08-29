@@ -19,7 +19,8 @@ PUSH_TX_ENDPOINT = "/v1a/push_tx"
 GRAPHVIZ_DOT_NEIGHBORS_ENDPOINT = "/v1a/graphviz/neighbours.dot/"
 NC_STATE_ENDPOINT = "/v1a/nano_contract/state"
 NC_HISTORY_ENDPOINT = "/v1a/nano_contract/history"
-NC_BLUEPRINT_INFORMATION_ENDPOINT = "/v1a/nano_contract/blueprint"
+NC_BLUEPRINT_INFORMATION_ENDPOINT = "/v1a/nano_contract/blueprint/info"
+NC_BLUEPRINT_SOURCE_CODE_ENDPOINT = "/v1a/nano_contract/blueprint/source"
 STATUS_ENDPOINT = "/v1a/status"
 TOKEN_ENDPOINT = "/v1a/thin_wallet/token"
 TOKEN_HISTORY_ENDPOINT = "/v1a/thin_wallet/token_history"
@@ -43,7 +44,11 @@ class HathorCoreAsyncClient:
         self.log = logger.new(client="async")
 
     async def get(
-        self, path: str, params: Optional[dict] = None, timeout: Optional[float] = None
+        self,
+        path: str,
+        params: Optional[dict] = None,
+        timeout: Optional[float] = None,
+        content_type: Optional[str] = "application/json",
     ) -> Dict[Any, Any]:
         """Make a get request async
 
@@ -71,7 +76,7 @@ class HathorCoreAsyncClient:
                             status=response.status,
                             body=await response.text(),
                         )
-                    return await response.json()
+                    return await response.json(content_type=content_type)
         except Exception as e:
             self.log.error("hathor_core_error", path=path, error=repr(e))
             return {"error": repr(e)}
