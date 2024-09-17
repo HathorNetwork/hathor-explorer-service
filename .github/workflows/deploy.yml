@@ -126,8 +126,6 @@ jobs:
   deploy-nano-testnet:
     needs: [init, dependencies]
 
-    if: ${{ needs.init.outputs.environment == 'testnet' }}
-
     uses: ./.github/workflows/deploy-reusable.yml
     with:
       aws_region: eu-central-1
@@ -136,7 +134,7 @@ jobs:
       serverless_stage: nano
       # XXX: Some env vars come from the secret https://eu-central-1.console.aws.amazon.com/secretsmanager/secret?name=ExplorerService%2Fnano-testnet&region=eu-central-1
       api_port: 3001
-      hathor_core_url: https://node1.nano-testnet.hathor.network
+      hathor_core_url: https://hathorplay.nano-testnet.hathor.network
       hathor_nodes: https://node1.nano-testnet.hathor.network
       redis_key_prefix: hathor-explorer-service-nano-testnet
       redis_port: 6379
