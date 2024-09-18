@@ -2,7 +2,7 @@ name: deploy
 
 on:
   push:
-    branches: [main, dev, chore/hathorplay-nano-full-node]
+    branches: [main, dev]
     tags: ['v*.*.*']
 
 jobs:
@@ -126,6 +126,8 @@ jobs:
 
   deploy-nano-testnet:
     needs: [init, dependencies]
+
+    if: ${{ needs.init.outputs.environment == 'testnet' }}
 
     uses: ./.github/workflows/deploy-reusable.yml
     with:
