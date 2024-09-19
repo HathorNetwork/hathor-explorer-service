@@ -119,8 +119,8 @@ jobs:
           parse-json-secrets: true
       # This step recovers the artifact that is generated in the `deploy.yml` workflow
       - name: Download node modules
-        # https://github.com/actions/download-artifact/releases/tag/v3.0.2
-        uses: actions/download-artifact@9bc31d5ccc31df68ecc42ccf4149144866c47d8a
+        # https://github.com/actions/download-artifact/releases/tag/v4.1.8
+        uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16
         with:
           name: node_modules
       - name: Unpack node modules
