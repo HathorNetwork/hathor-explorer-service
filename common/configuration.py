@@ -110,3 +110,6 @@ HEALTHCHECK_ELASTICSEARCH_ENABLED = config(
 HEALTHCHECK_REDIS_ENABLED = config(
     "HEALTHCHECK_REDIS_ENABLED", default=False, cast=bool
 )
+
+# API configuration
+MAX_TX_CHILDREN = config("MAX_TX_CHILDREN", default=100)

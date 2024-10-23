@@ -3,6 +3,7 @@ from typing import Optional
 
 from aws_lambda_context import LambdaContext
 
+from common.configuration import MAX_TX_CHILDREN
 from common.errors import ApiError
 from usecases.node_api import NodeApi
 from utils.wrappers.aws.api_gateway import ApiGateway, ApiGatewayEvent
@@ -176,6 +177,12 @@ def get_transaction(
     if id is None:
         raise ApiError("invalid_parameters")
     response = node_api.get_transaction(id)
+    # It does not make sense to show in the explorer thousands of children.
+    # The full node will continue returning the correct data but in the explorer
+    # service we will truncate it and return only the latest MAX_TX_CHILDREN to show in the UI
+    # (it might even be more than we should, maybe we should paginate in the future)
+    if response is not None and "meta" in response and "children" in response["meta"]:
+        response["meta"]["children"] = response["meta"]["children"][-MAX_TX_CHILDREN:]
 
     return {
         "statusCode": 200,
