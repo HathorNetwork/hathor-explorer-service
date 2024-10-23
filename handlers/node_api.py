@@ -180,8 +180,8 @@ def get_transaction(
     # The full node will continue returning the correct data but in the explorer
     # service we will truncate it and return only the latest 100 to show in the UI
     # (it might even be more than we should, maybe we should paginate in the future)
-    if 'meta' in response and 'children' in response['meta']:
-        response['meta']['children'] = response['meta']['children'][-100:]
+    if response is not None and "meta" in response and "children" in response["meta"]:
+        response["meta"]["children"] = response["meta"]["children"][-100:]
 
     return {
         "statusCode": 200,
