@@ -11,7 +11,7 @@
     "serverless-plugin-aws-alerts": "^1.7.5"
   },
   "devDependencies": {
-    "serverless-offline": "^13.3.3",
+    "serverless-offline": "^13.8.2",
     "serverless-python-requirements": "^6.0.1",
     "serverless-s3-local": "^0.8.1"
   },
