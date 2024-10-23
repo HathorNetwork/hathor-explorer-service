@@ -176,6 +176,12 @@ def get_transaction(
     if id is None:
         raise ApiError("invalid_parameters")
     response = node_api.get_transaction(id)
+    # It does not make sense to show in the explorer thousands of children.
+    # The full node will continue returning the correct data but in the explorer
+    # service we will truncate it and return only the latest 100 to show in the UI
+    # (it might even be more than we should, maybe we should paginate in the future)
+    if 'meta' in response and 'children' in response['meta']:
+        response['meta']['children'] = response['meta']['children'][-100:]
 
     return {
         "statusCode": 200,
