@@ -59,7 +59,8 @@ jobs:
         run: |
           tar -cvf node_modules.tar ./node_modules
       - name: Upload node modules
-        uses: actions/upload-artifact@v2
+        # https://github.com/actions/upload-artifact/releases/tag/v4.3.4
+        uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b
         with:
           name: node_modules
           path: node_modules.tar
@@ -83,7 +84,7 @@ jobs:
       hathor_nodes: https://node1.testnet.hathor.network,https://node.explorer.testnet.hathor.network
       redis_key_prefix: hathor-explorer-service-dev
       redis_port: 6379
-      redis_db: 0
+      redis_db: 1
       metadata_bucket: hathor-explorer-metadata-dev
       cors_allowed_regex: .*
       elastic_index: dev-token
@@ -136,7 +137,7 @@ jobs:
       serverless_stage: nano
       # XXX: Some env vars come from the secret https://eu-central-1.console.aws.amazon.com/secretsmanager/secret?name=ExplorerService%2Fnano-testnet&region=eu-central-1
       api_port: 3001
-      hathor_core_url: https://node1.nano-testnet.hathor.network
+      hathor_core_url: https://hathorplay.nano-testnet.hathor.network
       hathor_nodes: https://node1.nano-testnet.hathor.network
       redis_key_prefix: hathor-explorer-service-nano-testnet
       redis_port: 6379
