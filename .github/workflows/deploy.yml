@@ -2,7 +2,7 @@ name: deploy
 
 on:
   push:
-    branches: [main, dev]
+    branches: [main, dev, chore/nano-testnet-dev]
     tags: ['v*.*.*']
 
 jobs:
@@ -24,6 +24,9 @@ jobs:
           elif [[ "${{github.base_ref}}" == "dev" || "${{github.ref}}" == "refs/heads/dev" ]]; then
             echo "Setting dev environment"
             echo "environment=dev" >> $GITHUB_OUTPUT
+          elif [[ "${{github.base_ref}}" == "chore/nano-testnet-dev" || "${{github.ref}}" == "refs/heads/chore/nano-testnet-dev" ]]; then
+            echo "Setting nano-testnet-dev environment"
+            echo "environment=nano-testnet-dev" >> $GITHUB_OUTPUT
           fi
 
           echo "timestamp=`date +%s`" >> $GITHUB_OUTPUT
@@ -119,6 +122,35 @@ jobs:
       elastic_index: testnet-token
       elastic_tx_index: testnet-tx
       elastic_token_balances_index: testnet-token-balance
+      healthcheck_hathor_core_enabled: true
+      healthcheck_wallet_service_db_enabled: true
+      healthcheck_elasticsearch_enabled: true
+      healthcheck_redis_enabled: true
+
+  # XXX: We've deployed this as a perfect copy of the nano-testnet environment, just to change the CORS regex
+  deploy-nano-testnet-dev:
+    needs: [init, dependencies]
+
+    if: ${{ needs.init.outputs.environment == 'nano-testnet-dev' }}
+
+    uses: ./.github/workflows/deploy-reusable.yml
+    with:
+      aws_region: eu-central-1
+      aws_iam_role: arn:aws:iam::471112952246:role/ExplorerServiceGitHubActionsRole
+      aws_secret_arn: arn:aws:secretsmanager:eu-central-1:471112952246:secret:ExplorerService/nano-testnet-MWxHpF
+      serverless_stage: nano-dev
+      # XXX: Some env vars come from the secret https://eu-central-1.console.aws.amazon.com/secretsmanager/secret?name=ExplorerService%2Fnano-testnet&region=eu-central-1
+      api_port: 3001
+      hathor_core_url: https://hathorplay.nano-testnet.hathor.network
+      hathor_nodes: https://node1.nano-testnet.hathor.network
+      redis_key_prefix: hathor-explorer-service-nano-testnet
+      redis_port: 6379
+      redis_db: 1
+      metadata_bucket: hathor-explorer-metadata-nano-testnet
+      cors_allowed_regex: .*
+      elastic_index: nano-testnet-token
+      elastic_tx_index: nano-testnet-tx
+      elastic_token_balances_index: nano-testnet-token-balance
       healthcheck_hathor_core_enabled: true
       healthcheck_wallet_service_db_enabled: true
       healthcheck_elasticsearch_enabled: true
