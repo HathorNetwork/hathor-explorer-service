@@ -417,11 +417,11 @@ class TestNodeApiGateway:
             "count": 10,
             "find_blueprint_id": "5678",
             "find_blueprint_name": None,
-            "sort": "asc",
+            "order": "asc",
         }
         hathor_client.get = MagicMock(return_value=obj)
         gateway = NodeApiGateway(hathor_core_client=hathor_client)
-        result = gateway.get_nc_onchain_blueprints(**data)
+        result = gateway.get_nc_on_chain_blueprints(**data)
         hathor_client.get.assert_called_once_with(
             "mock-endpoint", params=data, timeout=NODE_API_TIMEOUT_IN_SECONDS
         )
