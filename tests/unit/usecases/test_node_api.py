@@ -385,7 +385,7 @@ class TestNodeApiNanoContracts:
 
     def test_get_builtin_blueprints(self, node_api_gateway):
         obj = {"foo": "bar"}
-        node_api_gateway. get_nc_builtin_blueprints= MagicMock(return_value=obj)
+        node_api_gateway.get_nc_builtin_blueprints = MagicMock(return_value=obj)
         node_api = NodeApi(node_api_gateway)
         data = {
             "after": "1234",
@@ -401,7 +401,7 @@ class TestNodeApiNanoContracts:
 
     def test_get_on_chain_blueprints(self, node_api_gateway):
         obj = {"foo": "bar"}
-        node_api_gateway. get_nc_on_chain_blueprints= MagicMock(return_value=obj)
+        node_api_gateway.get_nc_on_chain_blueprints = MagicMock(return_value=obj)
         node_api = NodeApi(node_api_gateway)
         data = {
             "after": "1234",

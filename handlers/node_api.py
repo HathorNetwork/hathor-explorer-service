@@ -444,7 +444,9 @@ def nc_builtin_blueprints(
     find_blueprint_name = event.query.get("find_blueprint_name")
 
     # This might throw HathorCoreTimeout error
-    response = node_api.get_nc_builtin_blueprints(after, before, count, find_blueprint_id, find_blueprint_name)
+    response = node_api.get_nc_builtin_blueprints(
+        after, before, count, find_blueprint_id, find_blueprint_name
+    )
 
     if response is None or "error" in response:
         message = response.get("error") if (response and "error" in response) else ""
@@ -471,7 +473,9 @@ def nc_on_chain_blueprints(
     order = event.query.get("order")
 
     # This might throw HathorCoreTimeout error
-    response = node_api.get_nc_on_chain_blueprints(after, before, count, find_blueprint_id, find_blueprint_name, order)
+    response = node_api.get_nc_on_chain_blueprints(
+        after, before, count, find_blueprint_id, find_blueprint_name, order
+    )
 
     if response is None or "error" in response:
         message = response.get("error") if (response and "error" in response) else ""

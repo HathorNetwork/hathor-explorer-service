@@ -277,7 +277,13 @@ class NodeApiGateway:
         """Get the list of built in blueprints."""
         return self.hathor_core_client.get(
             NC_BUILTIN_BLUEPRINTS_ENDPOINT,
-            params={"after": after, "count": count, "before": before, "find_blueprint_id": find_blueprint_id, "find_blueprint_name": find_blueprint_name},
+            params={
+                "after": after,
+                "count": count,
+                "before": before,
+                "find_blueprint_id": find_blueprint_id,
+                "find_blueprint_name": find_blueprint_name,
+            },
             timeout=NODE_API_TIMEOUT_IN_SECONDS,
         )
 
@@ -293,6 +299,13 @@ class NodeApiGateway:
         """Get the list of on chain blueprints."""
         return self.hathor_core_client.get(
             NC_ON_CHAIN_BLUEPRINTS_ENDPOINT,
-            params={"after": after, "count": count, "before": before, "find_blueprint_id": find_blueprint_id, "find_blueprint_name": find_blueprint_name, "order": order},
+            params={
+                "after": after,
+                "count": count,
+                "before": before,
+                "find_blueprint_id": find_blueprint_id,
+                "find_blueprint_name": find_blueprint_name,
+                "order": order,
+            },
             timeout=NODE_API_TIMEOUT_IN_SECONDS,
         )

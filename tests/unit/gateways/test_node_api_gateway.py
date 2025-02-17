@@ -389,9 +389,7 @@ class TestNodeApiGateway:
         assert result
         assert sorted(result) == sorted(obj)
 
-    @patch(
-        "gateways.node_api_gateway.NC_BUILTIN_BLUEPRINTS_ENDPOINT", "mock-endpoint"
-    )
+    @patch("gateways.node_api_gateway.NC_BUILTIN_BLUEPRINTS_ENDPOINT", "mock-endpoint")
     def test_nc_builtin_blueprints(self, hathor_client):
         obj = {"foo": "bar"}
         data = {
@@ -410,9 +408,7 @@ class TestNodeApiGateway:
         assert result
         assert sorted(result) == sorted(obj)
 
-    @patch(
-        "gateways.node_api_gateway.NC_ON_CHAIN_BLUEPRINTS_ENDPOINT", "mock-endpoint"
-    )
+    @patch("gateways.node_api_gateway.NC_ON_CHAIN_BLUEPRINTS_ENDPOINT", "mock-endpoint")
     def test_nc_on_chain_blueprints(self, hathor_client):
         obj = {"foo": "bar"}
         data = {
