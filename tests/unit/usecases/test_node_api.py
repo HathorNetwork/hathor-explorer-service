@@ -395,7 +395,9 @@ class TestNodeApiNanoContracts:
             "find_blueprint_name": None,
         }
         result = node_api.get_nc_builtin_blueprints(**data)
-        node_api_gateway.get_nc_builtin_blueprints.assert_called_once_with(*data.values())
+        node_api_gateway.get_nc_builtin_blueprints.assert_called_once_with(
+            *data.values()
+        )
         assert result
         assert sorted(result) == sorted(obj)
 
@@ -412,6 +414,8 @@ class TestNodeApiNanoContracts:
             "order": "asc",
         }
         result = node_api.get_nc_on_chain_blueprints(**data)
-        node_api_gateway.get_nc_on_chain_blueprints.assert_called_once_with(*data.values())
+        node_api_gateway.get_nc_on_chain_blueprints.assert_called_once_with(
+            *data.values()
+        )
         assert result
         assert sorted(result) == sorted(obj)
