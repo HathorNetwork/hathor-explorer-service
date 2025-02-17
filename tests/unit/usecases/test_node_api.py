@@ -382,3 +382,36 @@ class TestNodeApiNanoContracts:
         node_api_gateway.get_nc_blueprint_source_code.assert_called_once_with("1234")
         assert result
         assert sorted(result) == sorted(obj)
+
+    def test_get_builtin_blueprints(self, node_api_gateway):
+        obj = {"foo": "bar"}
+        node_api_gateway. get_nc_builtin_blueprints= MagicMock(return_value=obj)
+        node_api = NodeApi(node_api_gateway)
+        data = {
+            "after": "1234",
+            "before": None,
+            "count": 10,
+            "find_blueprint_id": "5678",
+            "find_blueprint_name": None,
+        }
+        result = node_api.get_nc_builtin_blueprints(**data)
+        node_api_gateway.get_nc_builtin_blueprints.assert_called_once_with(**data)
+        assert result
+        assert sorted(result) == sorted(obj)
+
+    def test_get_on_chain_blueprints(self, node_api_gateway):
+        obj = {"foo": "bar"}
+        node_api_gateway. get_nc_on_chain_blueprints= MagicMock(return_value=obj)
+        node_api = NodeApi(node_api_gateway)
+        data = {
+            "after": "1234",
+            "before": None,
+            "count": 10,
+            "find_blueprint_id": "5678",
+            "find_blueprint_name": None,
+            "sort": "asc",
+        }
+        result = node_api.get_nc_on_chain_blueprints(**data)
+        node_api_gateway.get_nc_on_chain_blueprints.assert_called_once_with(**data)
+        assert result
+        assert sorted(result) == sorted(obj)
