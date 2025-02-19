@@ -388,3 +388,42 @@ class TestNodeApiGateway:
         )
         assert result
         assert sorted(result) == sorted(obj)
+
+    @patch("gateways.node_api_gateway.NC_BUILTIN_BLUEPRINTS_ENDPOINT", "mock-endpoint")
+    def test_nc_builtin_blueprints(self, hathor_client):
+        obj = {"foo": "bar"}
+        data = {
+            "after": "1234",
+            "before": None,
+            "count": 10,
+            "find_blueprint_id": "5678",
+            "find_blueprint_name": None,
+        }
+        hathor_client.get = MagicMock(return_value=obj)
+        gateway = NodeApiGateway(hathor_core_client=hathor_client)
+        result = gateway.get_nc_builtin_blueprints(**data)
+        hathor_client.get.assert_called_once_with(
+            "mock-endpoint", params=data, timeout=NODE_API_TIMEOUT_IN_SECONDS
+        )
+        assert result
+        assert sorted(result) == sorted(obj)
+
+    @patch("gateways.node_api_gateway.NC_ON_CHAIN_BLUEPRINTS_ENDPOINT", "mock-endpoint")
+    def test_nc_on_chain_blueprints(self, hathor_client):
+        obj = {"foo": "bar"}
+        data = {
+            "after": "1234",
+            "before": None,
+            "count": 10,
+            "find_blueprint_id": "5678",
+            "find_blueprint_name": None,
+            "order": "asc",
+        }
+        hathor_client.get = MagicMock(return_value=obj)
+        gateway = NodeApiGateway(hathor_core_client=hathor_client)
+        result = gateway.get_nc_on_chain_blueprints(**data)
+        hathor_client.get.assert_called_once_with(
+            "mock-endpoint", params=data, timeout=NODE_API_TIMEOUT_IN_SECONDS
+        )
+        assert result
+        assert sorted(result) == sorted(obj)
