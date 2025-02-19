@@ -512,7 +512,13 @@ def nc_creation_list(
 
     # This might throw HathorCoreTimeout error
     response = node_api.get_nc_creation_list(
-        after, before, count, find_nano_contract_id, find_blueprint_id, find_blueprint_name, order
+        after,
+        before,
+        count,
+        find_nano_contract_id,
+        find_blueprint_id,
+        find_blueprint_name,
+        order,
     )
 
     if response is None or "error" in response:

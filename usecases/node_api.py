@@ -153,5 +153,11 @@ class NodeApi:
         order: Optional[str] = None,
     ) -> Optional[dict]:
         return self.node_api_gateway.get_nc_creation_list(
-            after, before, count, find_nano_contract_id, find_blueprint_id, find_blueprint_name, order
+            after,
+            before,
+            count,
+            find_nano_contract_id,
+            find_blueprint_id,
+            find_blueprint_name,
+            order,
         )

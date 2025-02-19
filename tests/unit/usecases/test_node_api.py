@@ -434,8 +434,6 @@ class TestNodeApiNanoContracts:
             "order": "asc",
         }
         result = node_api.get_nc_creation_list(**data)
-        node_api_gateway.get_nc_creation_list.assert_called_once_with(
-            *data.values()
-        )
+        node_api_gateway.get_nc_creation_list.assert_called_once_with(*data.values())
         assert result
         assert sorted(result) == sorted(obj)
