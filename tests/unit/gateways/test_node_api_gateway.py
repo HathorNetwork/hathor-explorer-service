@@ -427,3 +427,24 @@ class TestNodeApiGateway:
         )
         assert result
         assert sorted(result) == sorted(obj)
+
+    @patch("gateways.node_api_gateway.NC_CREATION_LIST_ENDPOINT", "mock-endpoint")
+    def test_nc_creation_list(self, hathor_client):
+        obj = {"foo": "bar"}
+        data = {
+            "after": "1234",
+            "before": None,
+            "count": 10,
+            "find_nano_contract_id": "11223344",
+            "find_blueprint_id": "5678",
+            "find_blueprint_name": None,
+            "order": "asc",
+        }
+        hathor_client.get = MagicMock(return_value=obj)
+        gateway = NodeApiGateway(hathor_core_client=hathor_client)
+        result = gateway.get_nc_creation_list(**data)
+        hathor_client.get.assert_called_once_with(
+            "mock-endpoint", params=data, timeout=NODE_API_TIMEOUT_IN_SECONDS
+        )
+        assert result
+        assert sorted(result) == sorted(obj)

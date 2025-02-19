@@ -13,6 +13,7 @@ from gateways.clients.hathor_core_client import (
     NC_BUILTIN_BLUEPRINTS_ENDPOINT,
     NC_HISTORY_ENDPOINT,
     NC_ON_CHAIN_BLUEPRINTS_ENDPOINT,
+    NC_CREATION_LIST_ENDPOINT,
     NC_STATE_ENDPOINT,
     PUSH_TX_ENDPOINT,
     TOKEN_ENDPOINT,
@@ -303,6 +304,31 @@ class NodeApiGateway:
                 "after": after,
                 "count": count,
                 "before": before,
+                "find_blueprint_id": find_blueprint_id,
+                "find_blueprint_name": find_blueprint_name,
+                "order": order,
+            },
+            timeout=NODE_API_TIMEOUT_IN_SECONDS,
+        )
+
+    def get_nc_creation_list(
+        self,
+        after: Optional[str] = None,
+        before: Optional[str] = None,
+        count: Optional[int] = None,
+        find_nano_contract_id: Optional[str] = None,
+        find_blueprint_id: Optional[str] = None,
+        find_blueprint_name: Optional[str] = None,
+        order: Optional[str] = None,
+    ) -> Optional[dict]:
+        """Get the list nano contract creations."""
+        return self.hathor_core_client.get(
+            NC_CREATION_LIST_ENDPOINT,
+            params={
+                "after": after,
+                "count": count,
+                "before": before,
+                "find_nano_contract_id": find_nano_contract_id,
                 "find_blueprint_id": find_blueprint_id,
                 "find_blueprint_name": find_blueprint_name,
                 "order": order,

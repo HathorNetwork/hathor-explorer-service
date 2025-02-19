@@ -494,3 +494,37 @@ def nc_on_chain_blueprints(
         "body": json.dumps(response or {}),
         "headers": {"Content-Type": "application/json"},
     }
+
+
+@ApiGateway()
+def nc_creation_list(
+    event: ApiGatewayEvent, _context: LambdaContext, node_api: Optional[NodeApi] = None
+) -> dict:
+    """Get the list of nc creations."""
+    node_api = node_api or NodeApi()
+    after = event.query.get("after")
+    before = event.query.get("before")
+    count = event.query.get("count")
+    find_nano_contract_id = event.query.get("find_nano_contract_id")
+    find_blueprint_id = event.query.get("find_blueprint_id")
+    find_blueprint_name = event.query.get("find_blueprint_name")
+    order = event.query.get("order")
+
+    # This might throw HathorCoreTimeout error
+    response = node_api.get_nc_creation_list(
+        after, before, count, find_nano_contract_id, find_blueprint_id, find_blueprint_name, order
+    )
+
+    if response is None or "error" in response:
+        message = (
+            response.get("error")
+            if (response and "error" in response)
+            else "Unknown error"
+        )
+        raise ApiError(message)
+
+    return {
+        "statusCode": 200,
+        "body": json.dumps(response or {}),
+        "headers": {"Content-Type": "application/json"},
+    }

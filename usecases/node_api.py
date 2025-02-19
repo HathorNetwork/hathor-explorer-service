@@ -141,3 +141,17 @@ class NodeApi:
         return self.node_api_gateway.get_nc_on_chain_blueprints(
             after, before, count, find_blueprint_id, find_blueprint_name, order
         )
+
+    def get_nc_creation_list(
+        self,
+        after: Optional[str] = None,
+        before: Optional[str] = None,
+        count: Optional[int] = None,
+        find_nano_contract_id: Optional[str] = None,
+        find_blueprint_id: Optional[str] = None,
+        find_blueprint_name: Optional[str] = None,
+        order: Optional[str] = None,
+    ) -> Optional[dict]:
+        return self.node_api_gateway.get_nc_creation_list(
+            after, before, count, find_nano_contract_id, find_blueprint_id, find_blueprint_name, order
+        )
