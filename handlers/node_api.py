@@ -449,7 +449,11 @@ def nc_builtin_blueprints(
     )
 
     if response is None or "error" in response:
-        message = response.get("error") if (response and "error" in response) else "Unknown error"
+        message = (
+            response.get("error")
+            if (response and "error" in response)
+            else "Unknown error"
+        )
         raise ApiError(message)
 
     return {
@@ -478,7 +482,11 @@ def nc_on_chain_blueprints(
     )
 
     if response is None or "error" in response:
-        message = response.get("error") if (response and "error" in response) else "Unknown error"
+        message = (
+            response.get("error")
+            if (response and "error" in response)
+            else "Unknown error"
+        )
         raise ApiError(message)
 
     return {
