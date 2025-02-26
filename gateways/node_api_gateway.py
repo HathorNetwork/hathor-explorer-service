@@ -272,8 +272,7 @@ class NodeApiGateway:
         after: Optional[str] = None,
         before: Optional[str] = None,
         count: Optional[int] = None,
-        find_blueprint_id: Optional[str] = None,
-        find_blueprint_name: Optional[str] = None,
+        search: Optional[str] = None,
     ) -> Optional[dict]:
         """Get the list of built in blueprints."""
         return self.hathor_core_client.get(
@@ -282,8 +281,7 @@ class NodeApiGateway:
                 "after": after,
                 "count": count,
                 "before": before,
-                "find_blueprint_id": find_blueprint_id,
-                "find_blueprint_name": find_blueprint_name,
+                "search": search,
             },
             timeout=NODE_API_TIMEOUT_IN_SECONDS,
         )
@@ -293,8 +291,7 @@ class NodeApiGateway:
         after: Optional[str] = None,
         before: Optional[str] = None,
         count: Optional[int] = None,
-        find_blueprint_id: Optional[str] = None,
-        find_blueprint_name: Optional[str] = None,
+        search: Optional[str] = None,
         order: Optional[str] = None,
     ) -> Optional[dict]:
         """Get the list of on chain blueprints."""
@@ -304,8 +301,7 @@ class NodeApiGateway:
                 "after": after,
                 "count": count,
                 "before": before,
-                "find_blueprint_id": find_blueprint_id,
-                "find_blueprint_name": find_blueprint_name,
+                "search": search,
                 "order": order,
             },
             timeout=NODE_API_TIMEOUT_IN_SECONDS,
@@ -316,9 +312,7 @@ class NodeApiGateway:
         after: Optional[str] = None,
         before: Optional[str] = None,
         count: Optional[int] = None,
-        find_nano_contract_id: Optional[str] = None,
-        find_blueprint_id: Optional[str] = None,
-        find_blueprint_name: Optional[str] = None,
+        search: Optional[str] = None,
         order: Optional[str] = None,
     ) -> Optional[dict]:
         """Get the list nano contract creations."""
@@ -328,9 +322,7 @@ class NodeApiGateway:
                 "after": after,
                 "count": count,
                 "before": before,
-                "find_nano_contract_id": find_nano_contract_id,
-                "find_blueprint_id": find_blueprint_id,
-                "find_blueprint_name": find_blueprint_name,
+                "search": search,
                 "order": order,
             },
             timeout=NODE_API_TIMEOUT_IN_SECONDS,

@@ -440,12 +440,11 @@ def nc_builtin_blueprints(
     after = event.query.get("after")
     before = event.query.get("before")
     count = event.query.get("count")
-    find_blueprint_id = event.query.get("find_blueprint_id")
-    find_blueprint_name = event.query.get("find_blueprint_name")
+    search = event.query.get("search")
 
     # This might throw HathorCoreTimeout error
     response = node_api.get_nc_builtin_blueprints(
-        after, before, count, find_blueprint_id, find_blueprint_name
+        after, before, count, search
     )
 
     if response is None or "error" in response:
@@ -472,13 +471,12 @@ def nc_on_chain_blueprints(
     after = event.query.get("after")
     before = event.query.get("before")
     count = event.query.get("count")
-    find_blueprint_id = event.query.get("find_blueprint_id")
-    find_blueprint_name = event.query.get("find_blueprint_name")
+    search = event.query.get("search")
     order = event.query.get("order")
 
     # This might throw HathorCoreTimeout error
     response = node_api.get_nc_on_chain_blueprints(
-        after, before, count, find_blueprint_id, find_blueprint_name, order
+        after, before, count, search, order
     )
 
     if response is None or "error" in response:
@@ -505,9 +503,7 @@ def nc_creation_list(
     after = event.query.get("after")
     before = event.query.get("before")
     count = event.query.get("count")
-    find_nano_contract_id = event.query.get("find_nano_contract_id")
-    find_blueprint_id = event.query.get("find_blueprint_id")
-    find_blueprint_name = event.query.get("find_blueprint_name")
+    search = event.query.get("search")
     order = event.query.get("order")
 
     # This might throw HathorCoreTimeout error
@@ -515,9 +511,7 @@ def nc_creation_list(
         after,
         before,
         count,
-        find_nano_contract_id,
-        find_blueprint_id,
-        find_blueprint_name,
+        search,
         order,
     )
 

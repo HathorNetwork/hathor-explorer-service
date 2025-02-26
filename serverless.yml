@@ -754,8 +754,7 @@ functions:
               - name: request.querystring.after
               - name: request.querystring.before
               - name: request.querystring.count
-              - name: request.querystring.find_blueprint_id
-              - name: request.querystring.find_blueprint_name
+              - name: request.querystring.search
               - name: request.header.origin
 
   node_api_nc_on_chain_blueprints:
@@ -778,8 +777,7 @@ functions:
               - name: request.querystring.after
               - name: request.querystring.before
               - name: request.querystring.count
-              - name: request.querystring.find_blueprint_id
-              - name: request.querystring.find_blueprint_name
+              - name: request.querystring.search
               - name: request.querystring.order
               - name: request.header.origin
 
@@ -803,9 +801,7 @@ functions:
               - name: request.querystring.after
               - name: request.querystring.before
               - name: request.querystring.count
-              - name: request.querystring.find_nano_contract_id
-              - name: request.querystring.find_blueprint_id
-              - name: request.querystring.find_blueprint_name
+              - name: request.querystring.search
               - name: request.querystring.order
               - name: request.header.origin
 

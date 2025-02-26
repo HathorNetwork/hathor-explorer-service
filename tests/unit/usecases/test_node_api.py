@@ -391,8 +391,7 @@ class TestNodeApiNanoContracts:
             "after": "1234",
             "before": None,
             "count": 10,
-            "find_blueprint_id": "5678",
-            "find_blueprint_name": None,
+            "search": "5678",
         }
         result = node_api.get_nc_builtin_blueprints(**data)
         node_api_gateway.get_nc_builtin_blueprints.assert_called_once_with(
@@ -409,8 +408,7 @@ class TestNodeApiNanoContracts:
             "after": "1234",
             "before": None,
             "count": 10,
-            "find_blueprint_id": "5678",
-            "find_blueprint_name": None,
+            "search": "5678",
             "order": "asc",
         }
         result = node_api.get_nc_on_chain_blueprints(**data)
@@ -428,9 +426,7 @@ class TestNodeApiNanoContracts:
             "after": "1234",
             "before": None,
             "count": 10,
-            "find_nano_contract_id": "11223344",
-            "find_blueprint_id": "5678",
-            "find_blueprint_name": None,
+            "search": "5678",
             "order": "asc",
         }
         result = node_api.get_nc_creation_list(**data)

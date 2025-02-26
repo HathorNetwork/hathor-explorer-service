@@ -396,8 +396,7 @@ class TestNodeApiGateway:
             "after": "1234",
             "before": None,
             "count": 10,
-            "find_blueprint_id": "5678",
-            "find_blueprint_name": None,
+            "search": "5678",
         }
         hathor_client.get = MagicMock(return_value=obj)
         gateway = NodeApiGateway(hathor_core_client=hathor_client)
@@ -415,8 +414,7 @@ class TestNodeApiGateway:
             "after": "1234",
             "before": None,
             "count": 10,
-            "find_blueprint_id": "5678",
-            "find_blueprint_name": None,
+            "search": "5678",
             "order": "asc",
         }
         hathor_client.get = MagicMock(return_value=obj)
@@ -435,9 +433,7 @@ class TestNodeApiGateway:
             "after": "1234",
             "before": None,
             "count": 10,
-            "find_nano_contract_id": "11223344",
-            "find_blueprint_id": "5678",
-            "find_blueprint_name": None,
+            "search": "5678",
             "order": "asc",
         }
         hathor_client.get = MagicMock(return_value=obj)
