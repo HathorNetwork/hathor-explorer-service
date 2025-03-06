@@ -772,7 +772,7 @@ functions:
           cors: true
           caching:
             enabled: true
-            ttlInSeconds: 300
+            ttlInSeconds: 10
             cacheKeyParameters:
               - name: request.querystring.after
               - name: request.querystring.before
@@ -796,7 +796,7 @@ functions:
           cors: true
           caching:
             enabled: true
-            ttlInSeconds: 300
+            ttlInSeconds: 10
             cacheKeyParameters:
               - name: request.querystring.after
               - name: request.querystring.before
