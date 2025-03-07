@@ -11,6 +11,7 @@ from gateways.clients.hathor_core_client import (
     NC_BLUEPRINT_INFORMATION_ENDPOINT,
     NC_BLUEPRINT_SOURCE_CODE_ENDPOINT,
     NC_BUILTIN_BLUEPRINTS_ENDPOINT,
+    NC_CREATION_LIST_ENDPOINT,
     NC_HISTORY_ENDPOINT,
     NC_ON_CHAIN_BLUEPRINTS_ENDPOINT,
     NC_STATE_ENDPOINT,
@@ -271,8 +272,7 @@ class NodeApiGateway:
         after: Optional[str] = None,
         before: Optional[str] = None,
         count: Optional[int] = None,
-        find_blueprint_id: Optional[str] = None,
-        find_blueprint_name: Optional[str] = None,
+        search: Optional[str] = None,
     ) -> Optional[dict]:
         """Get the list of built in blueprints."""
         return self.hathor_core_client.get(
@@ -281,8 +281,7 @@ class NodeApiGateway:
                 "after": after,
                 "count": count,
                 "before": before,
-                "find_blueprint_id": find_blueprint_id,
-                "find_blueprint_name": find_blueprint_name,
+                "search": search,
             },
             timeout=NODE_API_TIMEOUT_IN_SECONDS,
         )
@@ -292,8 +291,7 @@ class NodeApiGateway:
         after: Optional[str] = None,
         before: Optional[str] = None,
         count: Optional[int] = None,
-        find_blueprint_id: Optional[str] = None,
-        find_blueprint_name: Optional[str] = None,
+        search: Optional[str] = None,
         order: Optional[str] = None,
     ) -> Optional[dict]:
         """Get the list of on chain blueprints."""
@@ -303,8 +301,28 @@ class NodeApiGateway:
                 "after": after,
                 "count": count,
                 "before": before,
-                "find_blueprint_id": find_blueprint_id,
-                "find_blueprint_name": find_blueprint_name,
+                "search": search,
+                "order": order,
+            },
+            timeout=NODE_API_TIMEOUT_IN_SECONDS,
+        )
+
+    def get_nc_creation_list(
+        self,
+        after: Optional[str] = None,
+        before: Optional[str] = None,
+        count: Optional[int] = None,
+        search: Optional[str] = None,
+        order: Optional[str] = None,
+    ) -> Optional[dict]:
+        """Get the list nano contract creations."""
+        return self.hathor_core_client.get(
+            NC_CREATION_LIST_ENDPOINT,
+            params={
+                "after": after,
+                "count": count,
+                "before": before,
+                "search": search,
                 "order": order,
             },
             timeout=NODE_API_TIMEOUT_IN_SECONDS,
