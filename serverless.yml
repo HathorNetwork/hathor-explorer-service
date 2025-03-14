@@ -734,6 +734,77 @@ functions:
               - name: request.querystring.blueprint_id
               - name: request.header.origin
 
+  node_api_nc_builtin_blueprints:
+    handler: handlers/node_api.nc_builtin_blueprints
+    maximumRetryAttempts: 0
+    package:
+      patterns:
+        - 'handlers/node_api.py'
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: node_api/nc_builtin_blueprints
+          method: get
+          cors: true
+          caching:
+            enabled: true
+            ttlInSeconds: 300
+            cacheKeyParameters:
+              - name: request.querystring.after
+              - name: request.querystring.before
+              - name: request.querystring.count
+              - name: request.querystring.search
+              - name: request.header.origin
+
+  node_api_nc_on_chain_blueprints:
+    handler: handlers/node_api.nc_on_chain_blueprints
+    maximumRetryAttempts: 0
+    package:
+      patterns:
+        - 'handlers/node_api.py'
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: node_api/nc_on_chain_blueprints
+          method: get
+          cors: true
+          caching:
+            enabled: true
+            ttlInSeconds: 10
+            cacheKeyParameters:
+              - name: request.querystring.after
+              - name: request.querystring.before
+              - name: request.querystring.count
+              - name: request.querystring.search
+              - name: request.querystring.order
+              - name: request.header.origin
+
+  node_api_nc_creation_list:
+    handler: handlers/node_api.nc_creation_list
+    maximumRetryAttempts: 0
+    package:
+      patterns:
+        - 'handlers/node_api.py'
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: node_api/nc_creation_list
+          method: get
+          cors: true
+          caching:
+            enabled: true
+            ttlInSeconds: 10
+            cacheKeyParameters:
+              - name: request.querystring.after
+              - name: request.querystring.before
+              - name: request.querystring.count
+              - name: request.querystring.search
+              - name: request.querystring.order
+              - name: request.header.origin
+
   walletServiceAddressBalance:
     handler: handlers/wallet_service.handle_address_balance
     timeout: 15

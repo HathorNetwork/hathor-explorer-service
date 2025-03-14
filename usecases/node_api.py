@@ -116,3 +116,42 @@ class NodeApi:
 
     def get_nc_blueprint_source_code(self, blueprint_id: str) -> Optional[dict]:
         return self.node_api_gateway.get_nc_blueprint_source_code(blueprint_id)
+
+    def get_nc_builtin_blueprints(
+        self,
+        after: Optional[str] = None,
+        before: Optional[str] = None,
+        count: Optional[int] = None,
+        search: Optional[str] = None,
+    ) -> Optional[dict]:
+        return self.node_api_gateway.get_nc_builtin_blueprints(
+            after, before, count, search
+        )
+
+    def get_nc_on_chain_blueprints(
+        self,
+        after: Optional[str] = None,
+        before: Optional[str] = None,
+        count: Optional[int] = None,
+        search: Optional[str] = None,
+        order: Optional[str] = None,
+    ) -> Optional[dict]:
+        return self.node_api_gateway.get_nc_on_chain_blueprints(
+            after, before, count, search, order
+        )
+
+    def get_nc_creation_list(
+        self,
+        after: Optional[str] = None,
+        before: Optional[str] = None,
+        count: Optional[int] = None,
+        search: Optional[str] = None,
+        order: Optional[str] = None,
+    ) -> Optional[dict]:
+        return self.node_api_gateway.get_nc_creation_list(
+            after,
+            before,
+            count,
+            search,
+            order,
+        )
