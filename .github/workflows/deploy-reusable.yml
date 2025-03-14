@@ -100,7 +100,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Configure AWS Credentials
         # https://github.com/aws-actions/configure-aws-credentials/releases/tag/v4.0.2
@@ -131,6 +131,9 @@ jobs:
         uses: ./.github/actions/setup-python
         with:
           python_version: 3.9
+      - name: Install Poetry Export Plugin
+        run: |
+          poetry self add poetry-plugin-export
       - name: Deploy Lambdas
         run: |
           make deploy-lambdas-ci stage=${{ inputs.serverless_stage }}
