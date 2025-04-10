@@ -917,5 +917,5 @@ functions:
           method: get
           cors: true
           throttling:
-            maxRequestsPerSecond: 1
-            maxConcurrentRequests: 1
+            maxRequestsPerSecond: 2
+            maxConcurrentRequests: 2

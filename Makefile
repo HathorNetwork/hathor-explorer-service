@@ -64,6 +64,10 @@ stage=dev
 deploy-lambdas:
 	AWS_SDK_LOAD_CONFIG=1 npx serverless deploy --stage $(stage) --region eu-central-1
 
+.PHONY: deploy-lambdas-hackaton
+deploy-lambdas-hackaton:
+	AWS_SDK_LOAD_CONFIG=1 npx serverless deploy --stage hackaton --region eu-central-1 --aws-profile nano-testnet-hackaton
+
 .PHONY: deploy-lambdas-ci
 deploy-lambdas-ci:
 	npx serverless deploy --stage $(stage) --region eu-central-1
