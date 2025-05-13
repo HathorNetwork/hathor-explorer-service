@@ -9,6 +9,10 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: Install poetry
+      shell: bash
+      run: |
+        pip -q --no-input install poetry
     - name: Set up Python
       # https://github.com/actions/setup-python/releases/tag/v5.4.0
       uses: actions/setup-python@42375524e23c412d93fb67b49958b491fce71c38
@@ -19,7 +23,6 @@ runs:
     - name: Install Python Dependencies
       shell: bash
       run: |
-        pip -q --no-input install poetry
         poetry install
 
     - name: Linters
