@@ -14,6 +14,7 @@ runs:
       uses: actions/setup-python@42375524e23c412d93fb67b49958b491fce71c38
       with:
         python-version: ${{ inputs.python_version }}
+        cache: 'poetry'
 
     - name: Install Python Dependencies
       shell: bash
