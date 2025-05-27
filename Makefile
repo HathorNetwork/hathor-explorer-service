@@ -55,6 +55,7 @@ test:
 	ES_INDEX=dev-token \
 	ELASTIC_TX_INDEX=dev-tx \
 	ELASTIC_TOKEN_BALANCES_INDEX=dev-token-balance \
+	AWS_DEFAULT_REGION=us-west-1 \
 	pytest $(pytest_flags) ./tests
 
 stage=dev
