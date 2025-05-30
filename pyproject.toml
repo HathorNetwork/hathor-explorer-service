@@ -6,9 +6,6 @@ description = ""
 authors = ["Hathor Labs <contact@hathor.network>"]
 license = "MIT"
 
-[tool.poetry.requires-plugins]
-poetry-plugin-export = ">=1.9"
-
 [tool.poetry.dependencies]
 python = "^3.9"
 redis = "^3.5.3"
