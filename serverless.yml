@@ -757,7 +757,8 @@ functions:
               - name: request.querystring.search
               - name: request.header.origin
 
-  node_api_nc_on_chain_blueprints:
+  # Nano Contracts On-Chain Blueprints fullnode API
+  node_api_nc_on_chain_bprints:
     handler: handlers/node_api.nc_on_chain_blueprints
     maximumRetryAttempts: 0
     package:
