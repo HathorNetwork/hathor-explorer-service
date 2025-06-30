@@ -194,8 +194,8 @@ jobs:
       serverless_stage: nano-brav  # This typo is intentional because of length limitations in the Lambda names
       # XXX: Some env vars come from the secret https://eu-central-1.console.aws.amazon.com/secretsmanager/secret?name=ExplorerService%2Fnano-testnet&region=eu-central-1
       api_port: 3001
-      hathor_core_url: https://bravo.node1.nano-testnet.hathor.network
-      hathor_nodes: https://bravo.node1.nano-testnet.hathor.network,https://bravo.node2.nano-testnet.hathor.network
+      hathor_core_url: https://node1.bravo.nano-testnet.hathor.network
+      hathor_nodes: https://node1.bravo.nano-testnet.hathor.network,https://hathorplay.bravo.nano-testnet.hathor.network
       redis_key_prefix: hathor-explorer-service-nano-testnet-bravo
       redis_port: 6379
       redis_db: 2
