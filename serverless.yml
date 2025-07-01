@@ -30,6 +30,13 @@ provider:
       - ${env:AWS_SUBNET_ID_1}
       - ${env:AWS_SUBNET_ID_2}
       - ${env:AWS_SUBNET_ID_3}
+  iamRoleStatements:
+    # This permission
+    - Effect: Allow
+      Action:
+        - s3:PutObject
+      Resource:
+        - arn:aws:s3:::${env:METADATA_BUCKET}/dag/*
   environment:
     HATHOR_CORE_URL: ${env:HATHOR_CORE_URL}
     HATHOR_NODES: ${env:HATHOR_NODES}
