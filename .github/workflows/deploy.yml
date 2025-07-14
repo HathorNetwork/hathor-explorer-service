@@ -181,6 +181,35 @@ jobs:
       healthcheck_elasticsearch_enabled: true
       healthcheck_redis_enabled: true
 
+  deploy-nano-testnet-bravo:
+    needs: [init, dependencies]
+
+    if: ${{ needs.init.outputs.environment == 'testnet' }}
+
+    uses: ./.github/workflows/deploy-reusable.yml
+    with:
+      aws_region: eu-central-1
+      aws_iam_role: arn:aws:iam::471112952246:role/ExplorerServiceGitHubActionsRole
+      aws_secret_arn: arn:aws:secretsmanager:eu-central-1:471112952246:secret:ExplorerService/nano-testnet-bravo-ar20ep
+      serverless_stage: nano-brav  # This typo is intentional because of length limitations in the Lambda names
+      # XXX: Some env vars come from the secret https://eu-central-1.console.aws.amazon.com/secretsmanager/secret?name=ExplorerService%2Fnano-testnet&region=eu-central-1
+      api_port: 3001
+      hathor_core_url: https://node1.bravo.nano-testnet.hathor.network
+      hathor_nodes: https://node1.bravo.nano-testnet.hathor.network,https://hathorplay.bravo.nano-testnet.hathor.network
+      redis_key_prefix: hathor-explorer-service-nano-testnet-bravo
+      redis_port: 6379
+      redis_db: 2
+      metadata_bucket: hathor-explorer-metadata-nano-testnet-bravo
+      cors_allowed_regex: https?:\/\/([a-z0-9\-]*\.){0,5}hathor\.network
+      elastic_index: nano-testnet-bravo-token
+      elastic_tx_index: nano-testnet-bravo-tx
+      elastic_token_balances_index: nano-testnet-bravo-token-balance
+      healthcheck_hathor_core_enabled: true
+      healthcheck_wallet_service_db_enabled: true
+      healthcheck_elasticsearch_enabled: true
+      healthcheck_redis_enabled: true
+
+
   deploy-nano-testnet-hackaton:
     needs: [init, dependencies]
 
