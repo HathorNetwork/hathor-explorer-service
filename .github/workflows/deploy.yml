@@ -109,8 +109,8 @@ jobs:
       docker_image_tag: testnet-${{ github.sha }}-${{ needs.init.outputs.timestamp }}
       # XXX: Some env vars come from the secret https://eu-central-1.console.aws.amazon.com/secretsmanager/secret?name=ExplorerService%2Ftestnet&region=eu-central-1
       api_port: 3001
-      hathor_core_url: https://node.explorer.testnet.hathor.network
-      hathor_nodes: https://node1.testnet.hathor.network,https://node.explorer.testnet.hathor.network
+      hathor_core_url: https://node.explorer.golf.testnet.hathor.network
+      hathor_nodes: https://node1.golf.testnet.hathor.network,https://node.explorer.golf.testnet.hathor.network
       redis_key_prefix: hathor-explorer-service-testnet
       redis_port: 6379
       redis_db: 0
