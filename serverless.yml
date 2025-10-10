@@ -5,7 +5,7 @@
 # uses to deploy your code to your provider of choice
 
 # The `service` block is the name of the service
-service: hathor-explorer-service
+service: ${env:SERVERLESS_DEPLOY_PREFIX, "hathor-explorer-service"}
 useDotenv: true
 # The `provider` block defines where your service will be deployed
 provider:
