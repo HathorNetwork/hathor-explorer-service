@@ -136,7 +136,7 @@ jobs:
       aws_secret_arn: arn:aws:secretsmanager:eu-central-1:769498303037:secret:ExplorerService/testnet-hotel-Tw7Gcb
       serverless_stage: hotel
       docker_image_tag: testnet-${{ github.sha }}-${{ needs.init.outputs.timestamp }}
-      # XXX: Some env vars come from the secret https://eu-central-1.console.aws.amazon.com/secretsmanager/secret?name=ExplorerService%2Ftestnet&region=eu-central-1
+      # XXX: Some env vars come from the secret https://eu-central-1.console.aws.amazon.com/secretsmanager/secret?name=ExplorerService%2Ftestnet-hotel&region=eu-central-1
       api_port: 3001
       hathor_core_url: https://node.explorer.hotel.testnet.hathor.network
       hathor_nodes: https://node1.hotel.testnet.hathor.network,https://node.explorer.hotel.testnet.hathor.network
@@ -165,7 +165,7 @@ jobs:
       aws_secret_arn: arn:aws:secretsmanager:eu-central-1:769498303037:secret:ExplorerService/testnet-india-WKBJUk
       serverless_stage: india
       docker_image_tag: testnet-${{ github.sha }}-${{ needs.init.outputs.timestamp }}
-      # XXX: Some env vars come from the secret https://eu-central-1.console.aws.amazon.com/secretsmanager/secret?name=ExplorerService%2Ftestnet&region=eu-central-1
+      # XXX: Some env vars come from the secret https://eu-central-1.console.aws.amazon.com/secretsmanager/secret?name=ExplorerService%2Ftestnet-india&region=eu-central-1
       api_port: 3001
       hathor_core_url: https://node.explorer.india.testnet.hathor.network
       hathor_nodes: https://node1.india.testnet.hathor.network,https://node.explorer.india.testnet.hathor.network
