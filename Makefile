@@ -73,6 +73,10 @@ deploy-lambdas-testnet-hotel:
 deploy-lambdas-ci:
 	npx serverless deploy --stage $(stage) --region eu-central-1
 
+.PHONY: deploy-lambdas-playground
+deploy-lambdas-playground:
+	AWS_SDK_LOAD_CONFIG=1 npx serverless deploy --stage playground --region eu-central-1 --aws-profile testnet-playground
+
 .PHONY: install
 install:
 	npm install
