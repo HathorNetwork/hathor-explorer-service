@@ -813,6 +813,26 @@ functions:
               - name: request.querystring.order
               - name: request.header.origin
 
+  node_api_nc_execution_logs:
+    handler: handlers/node_api.nc_execution_logs
+    maximumRetryAttempts: 0
+    package:
+      patterns:
+        - 'handlers/node_api.py'
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: node_api/nc_execution_logs
+          method: get
+          cors: true
+          caching:
+            enabled: true
+            ttlInSeconds: 10
+            cacheKeyParameters:
+              - name: request.querystring.id
+              - name: request.header.origin
+
   walletServiceAddressBalance:
     handler: handlers/wallet_service.handle_address_balance
     timeout: 15
