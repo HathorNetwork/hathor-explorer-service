@@ -524,3 +524,35 @@ def nc_creation_list(
         "body": json.dumps(response or {}),
         "headers": {"Content-Type": "application/json"},
     }
+
+
+@ApiGateway()
+def nc_execution_logs(
+    event: ApiGatewayEvent, _context: LambdaContext, node_api: Optional[NodeApi] = None
+) -> dict:
+    """Get execution logs of a nano contract.
+
+    *IMPORTANT: Any changes on the parameters should be reflected on the `cacheKeyParameters` for this method.
+    """
+    node_api = node_api or NodeApi()
+    id = event.query.get("id")
+
+    if id is None:
+        raise ApiError("invalid_parameters")
+
+    # This might throw HathorCoreTimeout error
+    response = node_api.get_nc_execution_logs(id)
+
+    if response is None or "error" in response:
+        message = (
+            response.get("error")
+            if (response and "error" in response)
+            else "Unknown error"
+        )
+        raise ApiError(message)
+
+    return {
+        "statusCode": 200,
+        "body": json.dumps(response or {}),
+        "headers": {"Content-Type": "application/json"},
+    }

@@ -433,3 +433,12 @@ class TestNodeApiNanoContracts:
         node_api_gateway.get_nc_creation_list.assert_called_once_with(*data.values())
         assert result
         assert sorted(result) == sorted(obj)
+
+    def test_get_nc_execution_logs(self, node_api_gateway):
+        obj = {"foo": "bar"}
+        node_api_gateway.get_nc_execution_logs = MagicMock(return_value=obj)
+        node_api = NodeApi(node_api_gateway)
+        result = node_api.get_nc_execution_logs("1234")
+        node_api_gateway.get_nc_execution_logs.assert_called_once_with("1234")
+        assert result
+        assert sorted(result) == sorted(obj)
