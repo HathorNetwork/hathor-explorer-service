@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "hathor-explorer-service"
-version = "0.19.0"
+version = "0.20.0"
 package-mode = false
 description = ""
 authors = ["Hathor Labs <contact@hathor.network>"]
@@ -23,6 +23,7 @@ PyMySQL = "^1.0.2"
 SQLAlchemy = "^1.4.40"
 elasticsearch = "~8.1.2"
 python-healthchecklib = "^0.1.0"
+setuptools = "^80.4.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^6.2.4"

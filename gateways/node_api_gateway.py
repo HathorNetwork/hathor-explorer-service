@@ -12,6 +12,7 @@ from gateways.clients.hathor_core_client import (
     NC_BLUEPRINT_SOURCE_CODE_ENDPOINT,
     NC_BUILTIN_BLUEPRINTS_ENDPOINT,
     NC_CREATION_LIST_ENDPOINT,
+    NC_EXECUTION_LOGS_ENDPOINT,
     NC_HISTORY_ENDPOINT,
     NC_ON_CHAIN_BLUEPRINTS_ENDPOINT,
     NC_STATE_ENDPOINT,
@@ -325,5 +326,13 @@ class NodeApiGateway:
                 "search": search,
                 "order": order,
             },
+            timeout=NODE_API_TIMEOUT_IN_SECONDS,
+        )
+
+    def get_nc_execution_logs(self, id: str) -> Optional[dict]:
+        """Get execution logs of a nano contract."""
+        return self.hathor_core_client.get(
+            NC_EXECUTION_LOGS_ENDPOINT,
+            params={"id": id},
             timeout=NODE_API_TIMEOUT_IN_SECONDS,
         )

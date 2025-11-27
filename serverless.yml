@@ -5,7 +5,7 @@
 # uses to deploy your code to your provider of choice
 
 # The `service` block is the name of the service
-service: hathor-explorer-service
+service: ${env:SERVERLESS_DEPLOY_PREFIX, "hathor-explorer-service"}
 useDotenv: true
 # The `provider` block defines where your service will be deployed
 provider:
@@ -30,6 +30,13 @@ provider:
       - ${env:AWS_SUBNET_ID_1}
       - ${env:AWS_SUBNET_ID_2}
       - ${env:AWS_SUBNET_ID_3}
+  iamRoleStatements:
+    # This permission
+    - Effect: Allow
+      Action:
+        - s3:PutObject
+      Resource:
+        - arn:aws:s3:::${env:METADATA_BUCKET}/dag/*
   environment:
     HATHOR_CORE_URL: ${env:HATHOR_CORE_URL}
     HATHOR_NODES: ${env:HATHOR_NODES}
@@ -757,7 +764,8 @@ functions:
               - name: request.querystring.search
               - name: request.header.origin
 
-  node_api_nc_on_chain_blueprints:
+  # Nano Contracts On-Chain Blueprints fullnode API
+  node_api_nc_on_chain_bprints:
     handler: handlers/node_api.nc_on_chain_blueprints
     maximumRetryAttempts: 0
     package:
@@ -803,6 +811,26 @@ functions:
               - name: request.querystring.count
               - name: request.querystring.search
               - name: request.querystring.order
+              - name: request.header.origin
+
+  node_api_nc_execution_logs:
+    handler: handlers/node_api.nc_execution_logs
+    maximumRetryAttempts: 0
+    package:
+      patterns:
+        - 'handlers/node_api.py'
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: node_api/nc_execution_logs
+          method: get
+          cors: true
+          caching:
+            enabled: true
+            ttlInSeconds: 10
+            cacheKeyParameters:
+              - name: request.querystring.id
               - name: request.header.origin
 
   walletServiceAddressBalance:
@@ -917,5 +945,5 @@ functions:
           method: get
           cors: true
           throttling:
-            maxRequestsPerSecond: 1
-            maxConcurrentRequests: 1
+            maxRequestsPerSecond: 2
+            maxConcurrentRequests: 2

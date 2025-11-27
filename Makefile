@@ -55,6 +55,7 @@ test:
 	ES_INDEX=dev-token \
 	ELASTIC_TX_INDEX=dev-tx \
 	ELASTIC_TOKEN_BALANCES_INDEX=dev-token-balance \
+	AWS_DEFAULT_REGION=us-west-1 \
 	pytest $(pytest_flags) ./tests
 
 stage=dev
@@ -64,9 +65,17 @@ stage=dev
 deploy-lambdas:
 	AWS_SDK_LOAD_CONFIG=1 npx serverless deploy --stage $(stage) --region eu-central-1
 
+.PHONY: deploy-lambdas-testnet-hotel
+deploy-lambdas-testnet-hotel:
+	AWS_SDK_LOAD_CONFIG=1 npx serverless deploy --stage hotel --region eu-central-1 --aws-profile hathor-network
+
 .PHONY: deploy-lambdas-ci
 deploy-lambdas-ci:
 	npx serverless deploy --stage $(stage) --region eu-central-1
+
+.PHONY: deploy-lambdas-playground
+deploy-lambdas-playground:
+	AWS_SDK_LOAD_CONFIG=1 npx serverless deploy --stage playground --region eu-central-1 --aws-profile testnet-playground
 
 .PHONY: install
 install:

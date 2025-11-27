@@ -155,3 +155,6 @@ class NodeApi:
             search,
             order,
         )
+
+    def get_nc_execution_logs(self, id: str) -> Optional[dict]:
+        return self.node_api_gateway.get_nc_execution_logs(id)

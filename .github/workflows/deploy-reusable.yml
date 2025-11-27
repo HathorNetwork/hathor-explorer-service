@@ -131,9 +131,6 @@ jobs:
         uses: ./.github/actions/setup-python
         with:
           python_version: 3.9
-      - name: Install Poetry Export Plugin
-        run: |
-          poetry self add poetry-plugin-export
       - name: Deploy Lambdas
         run: |
           make deploy-lambdas-ci stage=${{ inputs.serverless_stage }}
