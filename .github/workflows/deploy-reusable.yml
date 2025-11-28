@@ -138,26 +138,26 @@ jobs:
         uses: ./.github/actions/setup-python
         with:
           python_version: 3.9
-      # - name: Deploy Lambdas
-      #   run: |
-      #     make deploy-lambdas-ci stage=${{ inputs.serverless_stage }}
-      #   env:
-      #     AWS_DEFAULT_REGION: ${{ inputs.aws_region }}
-      #     API_PORT: ${{ inputs.api_port }}
-      #     HATHOR_CORE_URL: ${{ inputs.hathor_core_url }}
-      #     HATHOR_NODES: ${{ inputs.hathor_nodes }}
-      #     REDIS_KEY_PREFIX: ${{ inputs.redis_key_prefix }}
-      #     REDIS_PORT: ${{ inputs.redis_port }}
-      #     REDIS_DB: ${{ inputs.redis_db }}
-      #     METADATA_BUCKET: ${{ inputs.metadata_bucket }}
-      #     CORS_ALLOWED_REGEX: ${{ inputs.cors_allowed_regex }}
-      #     ELASTIC_INDEX: ${{ inputs.elastic_index }}
-      #     ELASTIC_TX_INDEX: ${{ inputs.elastic_tx_index }}
-      #     ELASTIC_TOKEN_BALANCES_INDEX: ${{ inputs.elastic_token_balances_index }}
-      #     HEALTHCHECK_HATHOR_CORE_ENABLED: ${{ inputs.healthcheck_hathor_core_enabled }}
-      #     HEALTHCHECK_WALLET_SERVICE_DB_ENABLED: ${{ inputs.healthcheck_wallet_service_db_enabled }}
-      #     HEALTHCHECK_ELASTICSEARCH_ENABLED: ${{ inputs.healthcheck_elasticsearch_enabled }}
-      #     HEALTHCHECK_REDIS_ENABLED: ${{ inputs.healthcheck_redis_enabled }}
+      - name: Deploy Lambdas
+        run: |
+          make deploy-lambdas-ci stage=${{ inputs.serverless_stage }}
+        env:
+          AWS_DEFAULT_REGION: ${{ inputs.aws_region }}
+          API_PORT: ${{ inputs.api_port }}
+          HATHOR_CORE_URL: ${{ inputs.hathor_core_url }}
+          HATHOR_NODES: ${{ inputs.hathor_nodes }}
+          REDIS_KEY_PREFIX: ${{ inputs.redis_key_prefix }}
+          REDIS_PORT: ${{ inputs.redis_port }}
+          REDIS_DB: ${{ inputs.redis_db }}
+          METADATA_BUCKET: ${{ inputs.metadata_bucket }}
+          CORS_ALLOWED_REGEX: ${{ inputs.cors_allowed_regex }}
+          ELASTIC_INDEX: ${{ inputs.elastic_index }}
+          ELASTIC_TX_INDEX: ${{ inputs.elastic_tx_index }}
+          ELASTIC_TOKEN_BALANCES_INDEX: ${{ inputs.elastic_token_balances_index }}
+          HEALTHCHECK_HATHOR_CORE_ENABLED: ${{ inputs.healthcheck_hathor_core_enabled }}
+          HEALTHCHECK_WALLET_SERVICE_DB_ENABLED: ${{ inputs.healthcheck_wallet_service_db_enabled }}
+          HEALTHCHECK_ELASTICSEARCH_ENABLED: ${{ inputs.healthcheck_elasticsearch_enabled }}
+          HEALTHCHECK_REDIS_ENABLED: ${{ inputs.healthcheck_redis_enabled }}
 
       - name: Deploy Daemons
         # Deploy only if the inputs.docker_image_tag is not empty
