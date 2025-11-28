@@ -2,7 +2,7 @@ name: deploy
 
 on:
   push:
-    branches: [main, dev]
+    branches: [main, dev, fix/daemon-images-deploy]
     tags: ['v*.*.*']
 
 jobs:
@@ -24,6 +24,9 @@ jobs:
           elif [[ "${{github.base_ref}}" == "dev" || "${{github.ref}}" == "refs/heads/dev" ]]; then
             echo "Setting dev environment"
             echo "environment=dev" >> $GITHUB_OUTPUT
+          elif [[ "${{github.base_ref}}" == "fix/daemon-images-deploy" || "${{github.ref}}" == "refs/heads/fix/daemon-images-deploy" ]]; then
+            echo "Setting testnet environment"
+            echo "environment=testnet" >> $GITHUB_OUTPUT
           fi
 
           echo "timestamp=`date +%s`" >> $GITHUB_OUTPUT
