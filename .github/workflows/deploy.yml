@@ -307,6 +307,7 @@ jobs:
       aws_iam_role: arn:aws:iam::730335348496:role/ExplorerServiceGitHubActionsRole
       aws_secret_arn: arn:aws:secretsmanager:eu-central-1:730335348496:secret:ExplorerService/ekvilibro-testnet-DaDPgT
       serverless_stage: ekvilibro
+      docker_image_tag: ekvilibro-testnet-${{ github.sha }}-${{ needs.init.outputs.timestamp }}
       # XXX: Some env vars come from the secret https://eu-central-1.console.aws.amazon.com/secretsmanager/secret?name=ExplorerService%2Fekvilibro-testnet&region=eu-central-1
       api_port: 3001
       hathor_core_url: https://node-side-dag.ekvilibro-testnet.hathor.network
