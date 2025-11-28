@@ -94,6 +94,11 @@ on:
         description: 'Healthcheck Redis Enabled'
         required: true
         type: boolean
+      serverless_deploy_prefix:
+        description: 'Serverless Deploy Prefix'
+        required: false
+        default: 'hathor-explorer-service'
+        type: string
 
 jobs:
   deploy:
@@ -151,6 +156,7 @@ jobs:
           HEALTHCHECK_WALLET_SERVICE_DB_ENABLED: ${{ inputs.healthcheck_wallet_service_db_enabled }}
           HEALTHCHECK_ELASTICSEARCH_ENABLED: ${{ inputs.healthcheck_elasticsearch_enabled }}
           HEALTHCHECK_REDIS_ENABLED: ${{ inputs.healthcheck_redis_enabled }}
+          SERVERLESS_DEPLOY_PREFIX: ${{ inputs.serverless_deploy_prefix }}
 
       - name: Deploy Daemons
         # Deploy only if the inputs.docker_image_tag is not empty

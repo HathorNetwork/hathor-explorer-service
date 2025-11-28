@@ -181,6 +181,7 @@ jobs:
       healthcheck_wallet_service_db_enabled: true
       healthcheck_elasticsearch_enabled: true
       healthcheck_redis_enabled: true
+      serverless_deploy_prefix: explorer-svc
 
   # XXX: We've deployed this as a perfect copy of the nano-testnet environment, just to change the CORS regex
   deploy-nano-testnet-dev:
@@ -408,3 +409,4 @@ jobs:
       healthcheck_wallet_service_db_enabled: true
       healthcheck_elasticsearch_enabled: true
       healthcheck_redis_enabled: true
+      serverless_deploy_prefix: explorer-svc
