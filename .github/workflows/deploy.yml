@@ -106,7 +106,7 @@ jobs:
       aws_iam_role: arn:aws:iam::769498303037:role/ExplorerServiceGitHubActionsRole
       aws_secret_arn: arn:aws:secretsmanager:eu-central-1:769498303037:secret:ExplorerService/testnet-lcBuyc
       serverless_stage: testnet
-      docker_image_tag: testnet-${{ github.sha }}-${{ needs.init.outputs.timestamp }}
+      docker_image_tag: testnet-golf-${{ github.sha }}-${{ needs.init.outputs.timestamp }}
       # XXX: Some env vars come from the secret https://eu-central-1.console.aws.amazon.com/secretsmanager/secret?name=ExplorerService%2Ftestnet&region=eu-central-1
       api_port: 3001
       hathor_core_url: https://node.explorer.golf.testnet.hathor.network
@@ -135,7 +135,7 @@ jobs:
       aws_iam_role: arn:aws:iam::769498303037:role/ExplorerServiceGitHubActionsRole
       aws_secret_arn: arn:aws:secretsmanager:eu-central-1:769498303037:secret:ExplorerService/testnet-hotel-Tw7Gcb
       serverless_stage: hotel
-      docker_image_tag: testnet-${{ github.sha }}-${{ needs.init.outputs.timestamp }}
+      docker_image_tag: testnet-hotel-${{ github.sha }}-${{ needs.init.outputs.timestamp }}
       # XXX: Some env vars come from the secret https://eu-central-1.console.aws.amazon.com/secretsmanager/secret?name=ExplorerService%2Ftestnet-hotel&region=eu-central-1
       api_port: 3001
       hathor_core_url: https://node.explorer.hotel.testnet.hathor.network
@@ -164,7 +164,7 @@ jobs:
       aws_iam_role: arn:aws:iam::769498303037:role/ExplorerServiceGitHubActionsRole
       aws_secret_arn: arn:aws:secretsmanager:eu-central-1:769498303037:secret:ExplorerService/testnet-india-WKBJUk
       serverless_stage: india
-      docker_image_tag: testnet-${{ github.sha }}-${{ needs.init.outputs.timestamp }}
+      docker_image_tag: testnet-india-${{ github.sha }}-${{ needs.init.outputs.timestamp }}
       # XXX: Some env vars come from the secret https://eu-central-1.console.aws.amazon.com/secretsmanager/secret?name=ExplorerService%2Ftestnet-india&region=eu-central-1
       api_port: 3001
       hathor_core_url: https://node.explorer.india.testnet.hathor.network
@@ -296,6 +296,7 @@ jobs:
       healthcheck_wallet_service_db_enabled: true
       healthcheck_elasticsearch_enabled: true
       healthcheck_redis_enabled: true
+
   deploy-ekvilibro-testnet:
     needs: [init, dependencies]
 
@@ -307,6 +308,7 @@ jobs:
       aws_iam_role: arn:aws:iam::730335348496:role/ExplorerServiceGitHubActionsRole
       aws_secret_arn: arn:aws:secretsmanager:eu-central-1:730335348496:secret:ExplorerService/ekvilibro-testnet-DaDPgT
       serverless_stage: ekvilibro
+      docker_image_tag: ekvilibro-testnet-${{ github.sha }}-${{ needs.init.outputs.timestamp }}
       # XXX: Some env vars come from the secret https://eu-central-1.console.aws.amazon.com/secretsmanager/secret?name=ExplorerService%2Fekvilibro-testnet&region=eu-central-1
       api_port: 3001
       hathor_core_url: https://node-side-dag.ekvilibro-testnet.hathor.network
@@ -392,7 +394,7 @@ jobs:
       aws_iam_role: arn:aws:iam::438696047887:role/ExplorerServiceGitHubActionsRole
       aws_secret_arn: arn:aws:secretsmanager:eu-central-1:438696047887:secret:ExplorerService/testnet-playground-Hyknx3
       serverless_stage: playground
-      docker_image_tag: testnet-${{ github.sha }}-${{ needs.init.outputs.timestamp }}
+      docker_image_tag: testnet-playground-${{ github.sha }}-${{ needs.init.outputs.timestamp }}
       # XXX: Some env vars come from the secret https://eu-central-1.console.aws.amazon.com/secretsmanager/secret?name=ExplorerService%2Ftestnet-playground&region=eu-central-1
       api_port: 3001
       hathor_core_url: https://node1.playground.testnet.hathor.network

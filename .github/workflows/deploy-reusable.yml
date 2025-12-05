@@ -13,6 +13,13 @@ env:
 on:
   workflow_call:
     inputs:
+      aws_ecr_account_id:
+        # All our images are currently deployed to the main AWS account,
+        # because it's where Kubernetes runs
+        description: 'AWS Account ID for deploying Docker images to ECR'
+        required: false
+        default: '769498303037'
+        type: string
       aws_region:
         description: 'AWS Region'
         required: true
@@ -165,3 +172,5 @@ jobs:
           export DOCKER_IMAGE_TAG=${{ inputs.docker_image_tag }}
           make deploy-daemons
           rm /home/runner/.docker/config.json
+        env:
+          AWS_ECR_ACCOUNT_ID: ${{ inputs.aws_ecr_account_id }}
