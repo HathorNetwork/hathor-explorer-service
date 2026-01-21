@@ -102,8 +102,11 @@ custom:
     directory: /tmp
     buckets: ${env:METADATA_BUCKET}
   apiGatewayCaching:
-    enabled: true
+    enabled: ${self:custom.enableCaching.${self:custom.stage}, self:custom.enableCaching.default}
     ttlInSeconds: 300
+  enableCaching:
+    mainnet: true
+    default: false
   apiGatewayThrottling:
     # Apply to all http endpoints, unless overridden
     # According to AWS: "Each method in this stage will respect these rate and burst settings."
