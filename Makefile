@@ -65,10 +65,6 @@ stage=dev
 deploy-lambdas:
 	AWS_SDK_LOAD_CONFIG=1 npx serverless deploy --stage $(stage) --region eu-central-1
 
-.PHONY: deploy-lambdas-testnet-hotel
-deploy-lambdas-testnet-hotel:
-	AWS_SDK_LOAD_CONFIG=1 npx serverless deploy --stage hotel --region eu-central-1 --aws-profile hathor-network
-
 .PHONY: deploy-lambdas-ci
 deploy-lambdas-ci:
 	npx serverless deploy --stage $(stage) --region eu-central-1
