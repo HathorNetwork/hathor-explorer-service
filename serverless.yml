@@ -102,8 +102,11 @@ custom:
     directory: /tmp
     buckets: ${env:METADATA_BUCKET}
   apiGatewayCaching:
-    enabled: true
+    enabled: ${self:custom.enableCaching.${self:custom.stage}, self:custom.enableCaching.default}
     ttlInSeconds: 300
+  enableCaching:
+    mainnet: true
+    default: false
   apiGatewayThrottling:
     # Apply to all http endpoints, unless overridden
     # According to AWS: "Each method in this stage will respect these rate and burst settings."
@@ -168,6 +171,7 @@ custom:
 functions:
   get_node_handler:
     handler: handlers/get_node_handler.handle
+    memorySize: 256
     package:
       patterns:
         - 'handlers/get_node_handler.py'
@@ -185,6 +189,7 @@ functions:
 
   list_nodes_handler:
     handler: handlers/list_nodes_handler.handle
+    memorySize: 256
     package:
       patterns:
         - 'handlers/list_nodes_handler.py'
@@ -198,6 +203,7 @@ functions:
 
   get_network_handler:
     handler: handlers/get_network_handler.handle
+    memorySize: 128
     package:
       patterns:
         - 'handlers/get_network_handler.py'
@@ -211,6 +217,7 @@ functions:
 
   node_data_aggregator_handler:
     handler: handlers/node_data_aggregator.handle
+    memorySize: 256
     timeout: 30
     package:
       patterns:
@@ -220,6 +227,7 @@ functions:
 
   get_token_handler:
     handler: handlers/get_token_handler.handle
+    memorySize: 128
     package:
       patterns:
         - 'handlers/get_token_handler.py'
@@ -243,6 +251,7 @@ functions:
 
   get_tokenbalances_handler:
     handler: handlers/token_balance_api.get_token_balances
+    memorySize: 128
     timeout: 6
     maximumRetryAttempts: 0
     package:
@@ -267,6 +276,7 @@ functions:
 
   get_tokenbalance_info_handler:
     handler: handlers/token_balance_api.get_token_information
+    memorySize: 128
     timeout: 6
     maximumRetryAttempts: 0
     package:
@@ -287,6 +297,7 @@ functions:
 
   get_tokens_handler:
     handler: handlers/token_api.get_tokens
+    memorySize: 128
     timeout: 15
     maximumRetryAttempts: 0
     package:
@@ -312,6 +323,7 @@ functions:
   # This get_token will get tokens from the elasticsearch index
   es_get_token_handler:
     handler: handlers/token_api.get_token
+    memorySize: 128
     timeout: 15
     maximumRetryAttempts: 0
     package:
@@ -333,6 +345,7 @@ functions:
 
   get_best_chain_height:
     handler: handlers/block_api.get_best_chain_height
+    memorySize: 128
     timeout: 30
     maximumRetryAttempts: 0
     package:
@@ -353,6 +366,7 @@ functions:
 
   get_dag_metadata_handler:
     handler: handlers/dag_metadata_handler.handle_get
+    memorySize: 256
     package:
       patterns:
         - 'handlers/dag_metadata_handler.py'
@@ -372,6 +386,7 @@ functions:
 
   create_or_update_dag_metadata:
     handler: handlers/dag_metadata_handler.handle_create_or_update
+    memorySize: 128
     package:
       patterns:
         - 'handlers/dag_metadata_handler.py'
@@ -380,6 +395,7 @@ functions:
 
   node_api_get_address_balance:
     handler: handlers/node_api.get_address_balance
+    memorySize: 128
     timeout: 15
     maximumRetryAttempts: 0
     package:
@@ -401,6 +417,7 @@ functions:
 
   node_api_get_address_search:
     handler: handlers/node_api.get_address_search
+    memorySize: 128
     timeout: 15
     maximumRetryAttempts: 0
     package:
@@ -426,6 +443,7 @@ functions:
 
   node_api_get_version:
     handler: handlers/node_api.get_version
+    memorySize: 128
     timeout: 6
     maximumRetryAttempts: 0
     package:
@@ -446,6 +464,7 @@ functions:
 
   node_api_get_dashboard_tx:
     handler: handlers/node_api.get_dashboard_tx
+    memorySize: 128
     timeout: 6
     maximumRetryAttempts: 0
     package:
@@ -468,6 +487,7 @@ functions:
 
   node_api_get_tx_acc_w:
     handler: handlers/node_api.get_transaction_acc_weight
+    memorySize: 128
     timeout: 6
     maximumRetryAttempts: 0
     package:
@@ -489,6 +509,7 @@ functions:
 
   node_api_get_token_history:
     handler: handlers/node_api.get_token_history
+    memorySize: 128
     timeout: 6
     maximumRetryAttempts: 0
     package:
@@ -514,6 +535,7 @@ functions:
 
   node_api_get_transaction:
     handler: handlers/node_api.get_transaction
+    memorySize: 128
     timeout: 6
     maximumRetryAttempts: 0
     package:
@@ -535,6 +557,7 @@ functions:
 
   node_api_get_feature:
     handler: handlers/node_api.get_feature
+    memorySize: 128
     timeout: 6
     maximumRetryAttempts: 0
     package:
@@ -556,6 +579,7 @@ functions:
 
   node_api_list_transactions:
     handler: handlers/node_api.list_transactions
+    memorySize: 128
     timeout: 6
     maximumRetryAttempts: 0
     package:
@@ -581,6 +605,7 @@ functions:
 
   node_api_get_token:
     handler: handlers/node_api.get_token
+    memorySize: 128
     timeout: 6
     maximumRetryAttempts: 0
     package:
@@ -602,6 +627,7 @@ functions:
 
   node_api_decode_tx:
     handler: handlers/node_api.decode_tx
+    memorySize: 128
     timeout: 6
     maximumRetryAttempts: 0
     package:
@@ -623,6 +649,7 @@ functions:
 
   node_api_push_tx:
     handler: handlers/node_api.push_tx
+    memorySize: 128
     timeout: 6
     maximumRetryAttempts: 0
     package:
@@ -640,6 +667,7 @@ functions:
 
   node_api_gviz_dot_neighbors:
     handler: handlers/node_api.graphviz_dot_neighbors
+    memorySize: 128
     timeout: 6
     maximumRetryAttempts: 0
     package:
@@ -666,6 +694,7 @@ functions:
   # https://github.com/HathorNetwork/hathor-explorer-service/issues/318
   node_api_nc_state:
     handler: handlers/node_api.nc_state
+    memorySize: 128
     maximumRetryAttempts: 0
     package:
       patterns:
@@ -680,6 +709,7 @@ functions:
 
   node_api_nc_history:
     handler: handlers/node_api.nc_history
+    memorySize: 128
     maximumRetryAttempts: 0
     package:
       patterns:
@@ -703,6 +733,7 @@ functions:
 
   node_api_nc_blueprint_info:
     handler: handlers/node_api.nc_blueprint_information
+    memorySize: 128
     maximumRetryAttempts: 0
     package:
       patterns:
@@ -723,6 +754,7 @@ functions:
 
   node_api_nc_blueprint_code:
     handler: handlers/node_api.nc_blueprint_source_code
+    memorySize: 128
     maximumRetryAttempts: 0
     package:
       patterns:
@@ -743,6 +775,7 @@ functions:
 
   node_api_nc_builtin_blueprints:
     handler: handlers/node_api.nc_builtin_blueprints
+    memorySize: 128
     maximumRetryAttempts: 0
     package:
       patterns:
@@ -767,6 +800,7 @@ functions:
   # Nano Contracts On-Chain Blueprints fullnode API
   node_api_nc_on_chain_bprints:
     handler: handlers/node_api.nc_on_chain_blueprints
+    memorySize: 128
     maximumRetryAttempts: 0
     package:
       patterns:
@@ -791,6 +825,7 @@ functions:
 
   node_api_nc_creation_list:
     handler: handlers/node_api.nc_creation_list
+    memorySize: 128
     maximumRetryAttempts: 0
     package:
       patterns:
@@ -815,6 +850,7 @@ functions:
 
   node_api_nc_execution_logs:
     handler: handlers/node_api.nc_execution_logs
+    memorySize: 128
     maximumRetryAttempts: 0
     package:
       patterns:
@@ -835,6 +871,7 @@ functions:
 
   walletServiceAddressBalance:
     handler: handlers/wallet_service.handle_address_balance
+    memorySize: 128
     timeout: 15
     package:
       patterns:
@@ -859,6 +896,7 @@ functions:
 
   walletServiceAddressHistory:
     handler: handlers/wallet_service.handle_address_history
+    memorySize: 128
     timeout: 15
     package:
       patterns:
@@ -886,6 +924,7 @@ functions:
 
   walletServiceAddressTokens:
     handler: handlers/wallet_service.handle_address_tokens
+    memorySize: 128
     timeout: 15
     package:
       patterns:
@@ -911,6 +950,7 @@ functions:
 
   network_statistics_handler:
     handler: handlers/network_statistics.get_basic_statistics
+    memorySize: 128
     timeout: 5
     maximumRetryAttempts: 0
     package:
@@ -932,6 +972,7 @@ functions:
 
   healthcheck_handler:
     handler: handlers/get_healthcheck.get_healthcheck
+    memorySize: 256
     timeout: 15
     package:
       patterns:

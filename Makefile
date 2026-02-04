@@ -65,10 +65,6 @@ stage=dev
 deploy-lambdas:
 	AWS_SDK_LOAD_CONFIG=1 npx serverless deploy --stage $(stage) --region eu-central-1
 
-.PHONY: deploy-lambdas-testnet-hotel
-deploy-lambdas-testnet-hotel:
-	AWS_SDK_LOAD_CONFIG=1 npx serverless deploy --stage hotel --region eu-central-1 --aws-profile hathor-network
-
 .PHONY: deploy-lambdas-ci
 deploy-lambdas-ci:
 	npx serverless deploy --stage $(stage) --region eu-central-1
@@ -89,8 +85,8 @@ build:
 .ONESHELL:
 .PHONY: deploy-daemons
 deploy-daemons:
-	if [ -z "${AWS_ACCOUNT_ID}" ]; then \
-		echo "Please export a AWS_ACCOUNT_ID env var before running this"; \
+	if [ -z "${AWS_ECR_ACCOUNT_ID}" ]; then \
+		echo "Please export a AWS_ECR_ACCOUNT_ID env var before running this"; \
 		exit 1; \
 	fi
 
@@ -100,9 +96,9 @@ deploy-daemons:
 		export DOCKER_IMAGE_TAG="dev-$$commit-$$timestamp"; \
 	fi \
 
-	aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin $$AWS_ACCOUNT_ID.dkr.ecr.eu-central-1.amazonaws.com; \
-	docker build -t $$AWS_ACCOUNT_ID.dkr.ecr.eu-central-1.amazonaws.com/hathor-explorer-service:$$DOCKER_IMAGE_TAG -f Dockerfile_Daemons .; \
-	docker push $$AWS_ACCOUNT_ID.dkr.ecr.eu-central-1.amazonaws.com/hathor-explorer-service:$$DOCKER_IMAGE_TAG
+	aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin $$AWS_ECR_ACCOUNT_ID.dkr.ecr.eu-central-1.amazonaws.com; \
+	docker build -t $$AWS_ECR_ACCOUNT_ID.dkr.ecr.eu-central-1.amazonaws.com/hathor-explorer-service:$$DOCKER_IMAGE_TAG -f Dockerfile_Daemons .; \
+	docker push $$AWS_ECR_ACCOUNT_ID.dkr.ecr.eu-central-1.amazonaws.com/hathor-explorer-service:$$DOCKER_IMAGE_TAG
 
 .PHONY: run
 run:

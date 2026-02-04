@@ -13,6 +13,13 @@ env:
 on:
   workflow_call:
     inputs:
+      aws_ecr_account_id:
+        # All our images are currently deployed to the main AWS account,
+        # because it's where Kubernetes runs
+        description: 'AWS Account ID for deploying Docker images to ECR'
+        required: false
+        default: '769498303037'
+        type: string
       aws_region:
         description: 'AWS Region'
         required: true
@@ -94,6 +101,11 @@ on:
         description: 'Healthcheck Redis Enabled'
         required: true
         type: boolean
+      serverless_deploy_prefix:
+        description: 'Serverless Deploy Prefix'
+        required: false
+        default: 'hathor-explorer-service'
+        type: string
 
 jobs:
   deploy:
@@ -151,6 +163,7 @@ jobs:
           HEALTHCHECK_WALLET_SERVICE_DB_ENABLED: ${{ inputs.healthcheck_wallet_service_db_enabled }}
           HEALTHCHECK_ELASTICSEARCH_ENABLED: ${{ inputs.healthcheck_elasticsearch_enabled }}
           HEALTHCHECK_REDIS_ENABLED: ${{ inputs.healthcheck_redis_enabled }}
+          SERVERLESS_DEPLOY_PREFIX: ${{ inputs.serverless_deploy_prefix }}
 
       - name: Deploy Daemons
         # Deploy only if the inputs.docker_image_tag is not empty
@@ -159,3 +172,5 @@ jobs:
           export DOCKER_IMAGE_TAG=${{ inputs.docker_image_tag }}
           make deploy-daemons
           rm /home/runner/.docker/config.json
+        env:
+          AWS_ECR_ACCOUNT_ID: ${{ inputs.aws_ecr_account_id }}
