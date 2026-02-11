@@ -2,7 +2,12 @@ from typing import List, Optional
 
 from elasticsearch import Elasticsearch
 
-from common.configuration import ELASTIC_CLOUD_ID, ELASTIC_PASSWORD, ELASTIC_USER
+from common.configuration import (
+    ELASTIC_CLOUD_ID,
+    ELASTIC_NODE,
+    ELASTIC_PASSWORD,
+    ELASTIC_USER,
+)
 from utils.elastic_search.elastic_search_utils import ElasticSearchUtils
 
 
@@ -10,11 +15,20 @@ class ElasticSearchClient:
     def __init__(
         self, elastic_index: str, client: Optional[Elasticsearch] = None
     ) -> None:
-        """Client to make async requests to ElasticSearch, using Cloud ID and Elastic Password"""
+        """Client to make async requests to ElasticSearch.
+
+        Supports two connection modes:
+        - Cloud ID: Uses ELASTIC_CLOUD_ID with basic auth (production)
+        - Local node: Uses ELASTIC_NODE URL directly (local development)
+        """
 
         if client:
             self.client = client
+        elif ELASTIC_NODE:
+            # Local ES connection (no auth required)
+            self.client = Elasticsearch(hosts=[ELASTIC_NODE])
         else:
+            # Cloud ES connection
             self.client = Elasticsearch(
                 cloud_id=ELASTIC_CLOUD_ID, basic_auth=(ELASTIC_USER, ELASTIC_PASSWORD)
             )
