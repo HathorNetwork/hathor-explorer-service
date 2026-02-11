@@ -59,25 +59,8 @@ RESPONSE_TRANSFORMATION_BY_INDEX = {
 
 
 class ElasticSearchUtils:
-    # Fee model search terms mapped to version numbers
-    FEE_MODEL_TERMS = {
-        "native": 0,
-        "deposit": 1,
-        "fee": 2,
-    }
-
     def __init__(self, elastic_index: str):
         self.elastic_index = elastic_index
-
-    def _get_fee_model_filter(self, search_text: str) -> Optional[int]:
-        """Check if search text matches a fee model term and return the version number.
-
-        :param search_text: Input text requested by user
-        :type search_text: str
-        :return: Version number if fee model term found, None otherwise
-        """
-        normalized_text = search_text.strip().lower()
-        return self.FEE_MODEL_TERMS.get(normalized_text)
 
     def get_sort_by_complement(self, sortable_fields: dict, sort_by: str) -> str:
         """Returns the complement (if any) on sort_by field that is passed to ES
@@ -146,15 +129,8 @@ class ElasticSearchUtils:
         }
 
         if search_text:
-            # Check if searching by fee model (version)
-            fee_model_filter = self._get_fee_model_filter(search_text)
-            if fee_model_filter is not None:
-                body["query"] = {"term": {"version": fee_model_filter}}
-            else:
-                fields = SEARCH_TEXT_FIELDS_BY_INDEX[self.elastic_index]
-                body["query"] = {
-                    "multi_match": {"query": search_text, "fields": fields}
-                }
+            fields = SEARCH_TEXT_FIELDS_BY_INDEX[self.elastic_index]
+            body["query"] = {"multi_match": {"query": search_text, "fields": fields}}
 
         if search_after:
             body["search_after"] = search_after
