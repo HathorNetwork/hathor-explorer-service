@@ -26,6 +26,7 @@ SORTABLE_FIELDS_BY_INDEX = {
         "name": "keyword",
         "symbol": "keyword",
         "transactions_count": "integer",
+        "version": "integer",
     },
     ELASTIC_TOKEN_BALANCES_INDEX: {
         "address": "keyword",
@@ -42,7 +43,7 @@ SEARCH_TEXT_FIELDS_BY_INDEX = {
 }
 
 DEFAULT_SORT_ORDER_BY_INDEX = {
-    ELASTIC_INDEX: ["transaction_timestamp", "id", "name", "symbol"],
+    ELASTIC_INDEX: ["transaction_timestamp", "id", "name", "symbol", "version"],
     ELASTIC_TOKEN_BALANCES_INDEX: [
         "unlocked_balance",
         "locked_balance",
