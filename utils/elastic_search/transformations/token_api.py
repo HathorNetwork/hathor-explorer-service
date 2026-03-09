@@ -22,7 +22,4 @@ def es_hit_to_result(hit: dict) -> dict:
     else:
         result["nft"] = False
 
-    if "version" in hit["_source"]:
-        result["version"] = hit["_source"]["version"]
-
     return result
