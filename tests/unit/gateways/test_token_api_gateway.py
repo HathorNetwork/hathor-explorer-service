@@ -33,6 +33,7 @@ class TestTokenApiGateway:
                                 "created_at": "2022-04-19T12:41:04Z",
                                 "transaction_timestamp": 1649473276,
                                 "id": "00000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a",
+                                "version": 1,
                             },
                             "sort": [
                                 "00000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a",
@@ -52,6 +53,7 @@ class TestTokenApiGateway:
                                 "created_at": "2022-04-19T12:41:07Z",
                                 "transaction_timestamp": 1000000000,
                                 "id": "10000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a",
+                                "version": 1,
                             },
                             "sort": [
                                 "10000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a",
@@ -74,6 +76,7 @@ class TestTokenApiGateway:
                     "symbol": "TST1",
                     "transaction_timestamp": 1649473276,
                     "transactions_count": 0,
+                    "version": 1,
                     "sort": [
                         "00000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a",
                         1649473276,
@@ -86,6 +89,7 @@ class TestTokenApiGateway:
                     "symbol": "TST2",
                     "transaction_timestamp": 1000000000,
                     "transactions_count": 0,
+                    "version": 1,
                     "sort": [
                         "10000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a",
                         1000000000,
@@ -123,6 +127,7 @@ class TestTokenApiGateway:
                                 "@timestamp": "2022-08-24T13:42:10.124937Z",
                                 "symbol": "HTR",
                                 "updated_at": "2022-08-24T13:42:00Z",
+                                "version": 0,
                             },
                         }
                     ],
@@ -141,6 +146,7 @@ class TestTokenApiGateway:
                     "symbol": "HTR",
                     "transaction_timestamp": None,
                     "transactions_count": 2061288,
+                    "version": 0,
                     "nft": False,
                 }
             ],

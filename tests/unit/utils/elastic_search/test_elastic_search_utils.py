@@ -82,6 +82,7 @@ class TestElasticSearchUtils:
                             "transaction_timestamp": 1649473276,
                             "transactions": 3,
                             "id": "00000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a",
+                            "version": 1,
                         },
                         "sort": [
                             "00000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a",
@@ -101,6 +102,7 @@ class TestElasticSearchUtils:
                             "transaction_timestamp": 1000000000,
                             "transactions": 3,
                             "id": "10000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a",
+                            "version": 2,
                         },
                         "sort": [
                             "10000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a",
@@ -117,11 +119,12 @@ class TestElasticSearchUtils:
                     "name": "Test1",
                     "symbol": "TST1",
                     "transaction_timestamp": 1649473276,
+                    "transactions_count": 3,
+                    "version": 1,
                     "sort": [
                         "00000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a",
                         1649473276,
                     ],
-                    "transactions_count": 3,
                     "nft": False,
                 },
                 {
@@ -129,11 +132,12 @@ class TestElasticSearchUtils:
                     "name": "Test2",
                     "symbol": "TST2",
                     "transaction_timestamp": 1000000000,
+                    "transactions_count": 3,
+                    "version": 2,
                     "sort": [
                         "10000000906db3a2146ec96b452f9ff7431fa273a432d9b14837eb72e17b587a",
                         1000000000,
                     ],
-                    "transactions_count": 3,
                     "nft": False,
                 },
             ],

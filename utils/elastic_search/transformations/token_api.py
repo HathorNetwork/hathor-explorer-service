@@ -10,6 +10,7 @@ def es_hit_to_result(hit: dict) -> dict:
         "symbol": hit["_source"]["symbol"],
         "transaction_timestamp": hit["_source"]["transaction_timestamp"],
         "transactions_count": hit["_source"]["transactions"],
+        "version": hit["_source"].get("version"),
     }
 
     # If we are searching for a single result, we won't have sort in the result
