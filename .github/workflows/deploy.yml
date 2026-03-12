@@ -143,7 +143,7 @@ jobs:
       hathor_nodes: https://node-side-dag.ekvilibro-testnet.hathor.network
       redis_key_prefix: hathor-explorer-service-ekvilibro-testnet
       redis_port: 6379
-      redis_db: 0
+      redis_db: 2
       metadata_bucket: hathor-explorer-metadata-ekvilibro-testnet
       cors_allowed_regex: https?:\/\/([a-z0-9\-]*\.){0,5}hathor\.network
       elastic_index: ekvilibro-testnet-token
