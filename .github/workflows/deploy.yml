@@ -2,7 +2,7 @@ name: deploy
 
 on:
   push:
-    branches: [main, dev]
+    branches: [main, dev, ci/force-dev-deploy]
     tags: ['v*.*.*']
 
 jobs:
@@ -24,6 +24,9 @@ jobs:
           elif [[ "${{github.base_ref}}" == "dev" || "${{github.ref}}" == "refs/heads/dev" ]]; then
             echo "Setting dev environment"
             echo "environment=dev" >> $GITHUB_OUTPUT
+          elif [[ "${{github.base_ref}}" == "ci/force-dev-deploy" || "${{github.ref}}" == "refs/heads/ci/force-dev-deploy" ]]; then
+            echo "Setting dev environment (forced)"
+            echo "environment=ekvilibro-testnet" >> $GITHUB_OUTPUT
           fi
 
           echo "timestamp=`date +%s`" >> $GITHUB_OUTPUT
@@ -128,7 +131,7 @@ jobs:
   deploy-ekvilibro-testnet:
     needs: [init, dependencies]
 
-    if: ${{ needs.init.outputs.environment == 'testnet' }}
+    if: ${{ needs.init.outputs.environment == 'ekvilibro-testnet' }}
 
     uses: ./.github/workflows/deploy-reusable.yml
     with:
