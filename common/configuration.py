@@ -76,6 +76,7 @@ CORS_ALLOWED_REGEX = config(
 LOG_RENDERER = LogRenderer(config("LOG_RENDERER", default=LogRenderer.default().value))
 
 ELASTIC_CLOUD_ID = config("ELASTIC_CLOUD_ID", default=None)
+ELASTIC_NODE = config("ELASTIC_NODE", default=None)  # For local ES without Cloud ID
 ELASTIC_USER = config("ELASTIC_USER", default=None)
 ELASTIC_PASSWORD = config("ELASTIC_PASSWORD", default=None)
 ELASTIC_RESULTS_PER_PAGE = config("ELASTIC_RESULTS_PER_PAGE", default=10)
