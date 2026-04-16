@@ -111,3 +111,7 @@ validate_docs:
 .PHONY: bundle_docs
 bundle_docs:
 	npx swagger-cli bundle -o openapi.yml -t yaml text/api-docs.yml
+
+.PHONY: deploy-lambdas-shielded
+deploy-lambdas-shielded:
+	AWS_SDK_LOAD_CONFIG=1 npx serverless deploy --stage shielded --region eu-central-1 --aws-profile testnet-shielded-outputs

@@ -31,7 +31,7 @@ provider:
     binaryMediaTypes:
       - 'image/*'
   logs:
-    restApi: # TODO: add data to make the serverless create this role by itself
+    restApi:
       role: arn:aws:iam::${env:AWS_ACCOUNT_ID}:role/APIGatewayPushLogsToCloudWatch
   vpc:
     securityGroupIds:
@@ -1025,3 +1025,21 @@ functions:
           throttling:
             maxRequestsPerSecond: 2
             maxConcurrentRequests: 2
+
+resources:
+  Resources:
+    ApiGatewayCloudWatchLogsRole:
+      Type: AWS::IAM::Role
+      Properties:
+        RoleName: APIGatewayPushLogsToCloudWatch
+        AssumeRolePolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service: apigateway.amazonaws.com
+              Action: sts:AssumeRole
+        ManagedPolicyArns:
+          - arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs
+    CustomApiGatewayAccountCloudWatchRole:
+      DependsOn: ApiGatewayCloudWatchLogsRole
