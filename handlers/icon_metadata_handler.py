@@ -15,8 +15,8 @@ def handle_get(
     metadata = metadata or Metadata()
     if "id" not in event.query:
         raise ApiError("invalid_parameters")
-    hash = event.query["id"]
-    response = metadata.get("icon", hash)
+    icon_id = event.query["id"]
+    response = metadata.get("icon", icon_id)
 
     if response is None:
         raise ApiError("not_found")

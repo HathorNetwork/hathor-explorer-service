@@ -29,7 +29,7 @@ provider:
     # other responses if Content-Type headers are missing. We preferred letting the clients
     # set the client `Accept` header.
     binaryMediaTypes:
-      - 'image/png'
+      - 'image/*'
   logs:
     restApi: # TODO: add data to make the serverless create this role by itself
       role: arn:aws:iam::${env:AWS_ACCOUNT_ID}:role/APIGatewayPushLogsToCloudWatch
@@ -45,6 +45,7 @@ provider:
     - Effect: Allow
       Action:
         - s3:PutObject
+        - s3:GetObject
       Resource:
         - arn:aws:s3:::${env:METADATA_BUCKET}/dag/*
     - Effect: Allow
@@ -427,6 +428,7 @@ functions:
             cacheKeyParameters:
               - name: request.querystring.id
               - name: request.header.origin
+              - name: request.header.Accept
 
   node_api_get_address_balance:
     handler: handlers/node_api.get_address_balance

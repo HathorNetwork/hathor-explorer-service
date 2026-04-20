@@ -1,5 +1,5 @@
 import json
-from typing import Optional, Union
+from typing import Optional
 
 from common.configuration import METADATA_BUCKET
 from common.errors import ConfigError
