@@ -1,5 +1,5 @@
 import json
-from typing import Optional
+from typing import Optional, Union
 
 from common.configuration import METADATA_BUCKET
 from common.errors import ConfigError
@@ -26,6 +26,18 @@ class MetadataGateway:
         if metadata is None:
             return None
         return json.dumps({id: metadata})
+
+    def get_icon_metadata(self, id: str) -> Optional[bytes]:
+        """Retrieve icon image bytes from a png file stored in s3
+
+        :param id: token/transaction hash id
+        :type id: str
+        :raises ConfigError: The name of the bucket used to store files must be on config
+        :return: raw PNG bytes or None if not found
+        :rtype: bytes | None
+        """
+        metadata_bucket = self._metadata_bucket()
+        return self.s3_client.load_file_bytes(metadata_bucket, f"icons/{id}.png")
 
     def put_dag_metadata(self, id: str, contents: str) -> None:
         """Update dag metadata on a json file stored in s3, with contents received via parameter

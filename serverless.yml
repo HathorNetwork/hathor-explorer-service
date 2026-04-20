@@ -20,6 +20,16 @@ provider:
   apiGateway:
     apiKeys:
       - explorer-service-${self:custom.stage}-healthcheck-api-key
+    # API Gateway decodes Lambda responses marked as base64 only when the
+    # request's `Accept` header matches one of the configured binary media types.
+    #
+    # Clients (wget, curl) should send `Accept: image/png` to receive raw PNG
+    # bytes. We could include '*/*' here for broader compatibility so generic clients
+    # would also receive binary responses, but that could affect how API Gateway treats
+    # other responses if Content-Type headers are missing. We preferred letting the clients
+    # set the client `Accept` header.
+    binaryMediaTypes:
+      - 'image/png'
   logs:
     restApi: # TODO: add data to make the serverless create this role by itself
       role: arn:aws:iam::${env:AWS_ACCOUNT_ID}:role/APIGatewayPushLogsToCloudWatch
@@ -37,6 +47,11 @@ provider:
         - s3:PutObject
       Resource:
         - arn:aws:s3:::${env:METADATA_BUCKET}/dag/*
+    - Effect: Allow
+      Action:
+        - s3:GetObject
+      Resource:
+        - arn:aws:s3:::${env:METADATA_BUCKET}/icons/*
   environment:
     HATHOR_CORE_URL: ${env:HATHOR_CORE_URL}
     HATHOR_NODES: ${env:HATHOR_NODES}
@@ -392,6 +407,26 @@ functions:
         - 'handlers/dag_metadata_handler.py'
     layers:
       - { Ref: PythonRequirementsLambdaLayer }
+
+  get_icon_metadata_handler:
+    handler: handlers/icon_metadata_handler.handle_get
+    memorySize: 256
+    package:
+      patterns:
+        - 'handlers/icon_metadata_handler.py'
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: metadata/icon
+          method: get
+          cors: true
+          caching:
+            enabled: true
+            ttlInSeconds: 300
+            cacheKeyParameters:
+              - name: request.querystring.id
+              - name: request.header.origin
 
   node_api_get_address_balance:
     handler: handlers/node_api.get_address_balance

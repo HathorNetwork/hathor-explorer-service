@@ -32,6 +32,22 @@ class S3Client:
             # TODO: Add log here
             return None
 
+    def load_file_bytes(self, bucket: str, file: str) -> Union[bytes, None]:
+        """Loads raw bytes from a file in s3 bucket (for binary files such as images)
+
+        :param bucket: bucket name
+        :type bucket: str
+        :param file: file path
+        :type file: str
+        :return: the raw file bytes or None if not found
+        :rtype: bytes | None
+        """
+        try:
+            response = self.client.get_object(Bucket=bucket, Key=file)
+            return response["Body"].read()
+        except self.client.exceptions.NoSuchKey:
+            return None
+
     def upload_file(self, bucket: str, file: str, content: str) -> dict:
         """Writes a string to a file in the storage.
 

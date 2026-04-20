@@ -43,3 +43,35 @@ class TestS3Client:
         result = s3_client.load_file("kicked", "broken")
 
         assert result is None
+
+    @patch("gateways.clients.s3_client.S3_ENDPOINT", "http://lambda.invoke.endpoint")
+    def test_load_file_bytes(self):
+        s3_client = S3Client()
+
+        stubber = Stubber(s3_client.client)
+
+        raw_bytes = b"\x89PNG\r\n\x1a\n"
+        s3_expected_params = {"Bucket": "head", "Key": "icons/token.png"}
+        s3_response = {"Body": StreamingBody(BytesIO(raw_bytes), len(raw_bytes))}
+        stubber.add_response("get_object", s3_response, s3_expected_params)
+        stubber.activate()
+
+        result = s3_client.load_file_bytes("head", "icons/token.png")
+
+        assert result == raw_bytes
+
+    @patch("gateways.clients.s3_client.S3_ENDPOINT", None)
+    def test_load_file_bytes_error(self):
+        s3_client = S3Client()
+
+        stubber = Stubber(s3_client.client)
+
+        s3_expected_params = {"Bucket": "head", "Key": "icons/missing.png"}
+        stubber.add_client_error(
+            "get_object", "NoSuchKey", expected_params=s3_expected_params
+        )
+        stubber.activate()
+
+        result = s3_client.load_file_bytes("head", "icons/missing.png")
+
+        assert result is None

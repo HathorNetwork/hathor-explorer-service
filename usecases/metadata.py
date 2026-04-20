@@ -11,6 +11,7 @@ class Metadata:
     def get(self, type: str, id: str) -> Optional[str]:
         metadata_methods = {
             "dag": self.metadata_gateway.get_dag_metadata,
+            "icon": self.metadata_gateway.get_icon_metadata,
         }
         method = metadata_methods.get(type, None)
         if method is None:
