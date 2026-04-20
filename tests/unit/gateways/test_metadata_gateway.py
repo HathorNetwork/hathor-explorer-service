@@ -112,7 +112,9 @@ class TestMetadataGateway:
 
         result = gateway.get_icon_metadata(hash_id)
 
-        s3_client.load_file_bytes.assert_called_once_with("metadata", f"icons/{hash_id}.png")
+        s3_client.load_file_bytes.assert_called_once_with(
+            "metadata", f"icons/{hash_id}.png"
+        )
         assert result == icon_bytes
 
     @patch("gateways.metadata_gateway.METADATA_BUCKET", "metadata")
@@ -123,7 +125,9 @@ class TestMetadataGateway:
 
         result = gateway.get_icon_metadata("some-id")
 
-        s3_client.load_file_bytes.assert_called_once_with("metadata", "icons/some-id.png")
+        s3_client.load_file_bytes.assert_called_once_with(
+            "metadata", "icons/some-id.png"
+        )
         assert result is None
 
     @patch("gateways.metadata_gateway.METADATA_BUCKET", None)

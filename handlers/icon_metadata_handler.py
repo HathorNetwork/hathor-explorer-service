@@ -20,6 +20,8 @@ def handle_get(
 
     if response is None:
         raise ApiError("not_found")
+    if not isinstance(response, bytes):
+        raise ApiError("internal_error")
 
     return {
         "statusCode": 200,
