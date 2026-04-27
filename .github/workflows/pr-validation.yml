@@ -4,7 +4,7 @@ on:
     paths-ignore:
       - '**.md'
   push:
-    branches: [master, dev]
+    branches: [main]
 jobs:
   build:
     runs-on: ubuntu-22.04

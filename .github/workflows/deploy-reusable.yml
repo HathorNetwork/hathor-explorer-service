@@ -106,6 +106,15 @@ on:
         required: false
         default: 'hathor-explorer-service'
         type: string
+      slack_notify:
+        description: 'Send a Slack notification to #deploys on completion'
+        required: false
+        default: false
+        type: boolean
+
+    secrets:
+      SLACK_WEBHOOK:
+        required: false
 
 jobs:
   deploy:
@@ -174,3 +183,17 @@ jobs:
           rm /home/runner/.docker/config.json
         env:
           AWS_ECR_ACCOUNT_ID: ${{ inputs.aws_ecr_account_id }}
+
+      - name: Slack Notification
+        if: ${{ inputs.slack_notify }}
+        # https://github.com/rtCamp/action-slack-notify/releases/tag/v2.3.3
+        uses: rtCamp/action-slack-notify@e31e87e03dd19038e411e38ae27cbad084a90661
+        env:
+          SLACK_CHANNEL: deploys
+          SLACK_COLOR: ${{ job.status }}
+          SLACK_TITLE: 'HathorExplorerService - ${{ inputs.serverless_stage }} deployed :rocket:'
+          SLACK_MESSAGE: 'Make sure the daemon is correctly deployed by checking if a new commit by fluxcdbot was made in: https://github.com/HathorNetwork/ops-tools/commits/master'
+          SLACK_USERNAME: HathorSlack
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_FOOTER: ''
+          MSG_MINIMAL: actions url
