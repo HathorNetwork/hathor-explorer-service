@@ -424,7 +424,7 @@ functions:
           cors: true
           caching:
             enabled: true
-            ttlInSeconds: 300
+            ttlInSeconds: 86400  # one day cache, as icons don't change often
             cacheKeyParameters:
               - name: request.querystring.id
               - name: request.header.origin
