@@ -9,4 +9,4 @@ Link here the release-candidates that were deployed as part of this release
 # Checklist
 
 - [ ] I've read and followed the release process described in https://github.com/HathorNetwork/ops-tools/blob/master/docs/release-guides/hathor-explorer-service.md#stable-release
-- [ ] The QA process was run successfully during the tests of the corresponding release-candidate(s)
+- [ ] All CI checks on the `release-candidate` branch are green
