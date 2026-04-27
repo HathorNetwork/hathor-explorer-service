@@ -28,6 +28,27 @@ class TestMetadata:
 
         assert result is None
 
+    def test_get_for_icon(self, metadata_gateway):
+        icon_bytes = b"\x89PNG\r\n\x1a\n"
+        metadata_gateway.get_icon_metadata = MagicMock(return_value=icon_bytes)
+
+        get_metadata = Metadata(metadata_gateway)
+
+        result = get_metadata.get("icon", "some-id")
+
+        metadata_gateway.get_icon_metadata.assert_called_once_with("some-id")
+        assert result == icon_bytes
+
+    def test_get_icon_return_none(self, metadata_gateway):
+        metadata_gateway.get_icon_metadata = MagicMock(return_value=None)
+
+        get_metadata = Metadata(metadata_gateway)
+
+        result = get_metadata.get("icon", "some-id")
+
+        metadata_gateway.get_icon_metadata.assert_called_once_with("some-id")
+        assert result is None
+
     def test_get_return_none(self, metadata_gateway):
         metadata_gateway.get_dag_metadata = MagicMock(return_value=None)
 

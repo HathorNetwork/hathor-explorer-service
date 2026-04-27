@@ -1,5 +1,5 @@
 import json
-from typing import Optional
+from typing import Callable, Optional, Union
 
 from gateways.metadata_gateway import MetadataGateway
 
@@ -8,9 +8,10 @@ class Metadata:
     def __init__(self, metadata_gateway: Optional[MetadataGateway] = None) -> None:
         self.metadata_gateway = metadata_gateway or MetadataGateway()
 
-    def get(self, type: str, id: str) -> Optional[str]:
-        metadata_methods = {
+    def get(self, type: str, id: str) -> Optional[Union[str, bytes]]:
+        metadata_methods: dict[str, Callable[[str], Optional[Union[str, bytes]]]] = {
             "dag": self.metadata_gateway.get_dag_metadata,
+            "icon": self.metadata_gateway.get_icon_metadata,
         }
         method = metadata_methods.get(type, None)
         if method is None:

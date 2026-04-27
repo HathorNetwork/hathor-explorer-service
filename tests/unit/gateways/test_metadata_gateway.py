@@ -100,3 +100,39 @@ class TestMetadataGateway:
 
         result = gateway._get_metadata("obj_name")
         assert result is None
+
+    @patch("gateways.metadata_gateway.METADATA_BUCKET", "metadata")
+    def test_get_icon_metadata(self, s3_client):
+        icon_bytes = b"\x89PNG\r\n\x1a\n"
+        hash_id = "0000000073dd17b4c0f4670da70b7a2c9a07a629e38b9a47196c0fe7335f333e"
+
+        s3_client.load_file_bytes = MagicMock(return_value=icon_bytes)
+
+        gateway = MetadataGateway(s3_client=s3_client)
+
+        result = gateway.get_icon_metadata(hash_id)
+
+        s3_client.load_file_bytes.assert_called_once_with(
+            "metadata", f"icons/{hash_id}.png"
+        )
+        assert result == icon_bytes
+
+    @patch("gateways.metadata_gateway.METADATA_BUCKET", "metadata")
+    def test_get_icon_metadata_return_none(self, s3_client):
+        s3_client.load_file_bytes = MagicMock(return_value=None)
+
+        gateway = MetadataGateway(s3_client=s3_client)
+
+        result = gateway.get_icon_metadata("some-id")
+
+        s3_client.load_file_bytes.assert_called_once_with(
+            "metadata", "icons/some-id.png"
+        )
+        assert result is None
+
+    @patch("gateways.metadata_gateway.METADATA_BUCKET", None)
+    def test_get_icon_metadata_raises_exception(self):
+        gateway = MetadataGateway()
+
+        with raises(ConfigError, match=r"No bucket name in config"):
+            gateway.get_icon_metadata("some-id")
