@@ -32,10 +32,7 @@ provider:
       - 'image/*'
   logs:
     restApi:
-      role:
-        Fn::GetAtt:
-          - APIGatewayPushLogsToCloudWatchRole
-          - Arn
+      role: !GetAtt ApiGatewayCloudWatchLogsRole.Arn
   vpc:
     securityGroupIds:
       - ${env:AWS_VPC_DEFAULT_SG_ID}
@@ -1044,4 +1041,7 @@ resources:
         ManagedPolicyArns:
           - arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs
     CustomApiGatewayAccountCloudWatchRole:
+      Type: AWS::ApiGateway::Account
       DependsOn: ApiGatewayCloudWatchLogsRole
+      Properties:
+        CloudWatchRoleArn: !GetAtt ApiGatewayCloudWatchLogsRole.Arn
