@@ -32,7 +32,10 @@ provider:
       - 'image/*'
   logs:
     restApi:
-      role: arn:aws:iam::${env:AWS_ACCOUNT_ID}:role/APIGatewayPushLogsToCloudWatch
+      role:
+        Fn::GetAtt:
+          - APIGatewayPushLogsToCloudWatchRole
+          - Arn
   vpc:
     securityGroupIds:
       - ${env:AWS_VPC_DEFAULT_SG_ID}
