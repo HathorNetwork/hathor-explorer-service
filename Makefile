@@ -61,8 +61,12 @@ test:
 stage=dev
 # The "AWS_SDK_LOAD_CONFIG=1" is needed to load the AWS credentials from the ~/.aws/config file
 # This is part of the solution to make it work with `aws sso login`
+.PHONY: ensure-poetry-export-plugin
+ensure-poetry-export-plugin:
+	@poetry self show plugins 2>/dev/null | grep -q poetry-plugin-export || poetry self add poetry-plugin-export
+
 .PHONY: deploy-lambdas
-deploy-lambdas:
+deploy-lambdas: ensure-poetry-export-plugin
 	AWS_SDK_LOAD_CONFIG=1 npx serverless deploy --stage $(stage) --region eu-central-1
 
 .PHONY: deploy-lambdas-ci
@@ -70,11 +74,11 @@ deploy-lambdas-ci:
 	npx serverless deploy --stage $(stage) --region eu-central-1
 
 .PHONY: deploy-lambdas-playground
-deploy-lambdas-playground:
+deploy-lambdas-playground: ensure-poetry-export-plugin
 	AWS_SDK_LOAD_CONFIG=1 npx serverless deploy --stage playground --region eu-central-1 --aws-profile testnet-playground
 
 .PHONY: install
-install:
+install: ensure-poetry-export-plugin
 	npm install
 	poetry install
 
@@ -111,3 +115,7 @@ validate_docs:
 .PHONY: bundle_docs
 bundle_docs:
 	npx swagger-cli bundle -o openapi.yml -t yaml text/api-docs.yml
+
+.PHONY: deploy-lambdas-shielded
+deploy-lambdas-shielded: ensure-poetry-export-plugin
+	AWS_SDK_LOAD_CONFIG=1 npx serverless deploy --stage shielded --region eu-central-1 --aws-profile testnet-shielded-outputs
