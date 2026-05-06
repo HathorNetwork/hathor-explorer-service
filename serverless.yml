@@ -1034,7 +1034,6 @@ resources:
     ApiGatewayCloudWatchLogsRole:
       Type: AWS::IAM::Role
       Properties:
-        RoleName: APIGatewayPushLogsToCloudWatch
         AssumeRolePolicyDocument:
           Version: '2012-10-17'
           Statement:
