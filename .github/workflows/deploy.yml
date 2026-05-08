@@ -125,7 +125,8 @@ jobs:
       healthcheck_redis_enabled: true
       serverless_deploy_prefix: explorer-svc
       slack_notify: true
-    secrets: inherit
+    secrets:
+      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 
   deploy-ekvilibro-testnet:
     needs: [init, dependencies]
@@ -156,7 +157,8 @@ jobs:
       healthcheck_elasticsearch_enabled: true
       healthcheck_redis_enabled: true
       slack_notify: true
-    secrets: inherit
+    secrets:
+      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 
   deploy-ekvilibro-mainnet:
     needs: [init, dependencies]
@@ -186,7 +188,8 @@ jobs:
       healthcheck_elasticsearch_enabled: true
       healthcheck_redis_enabled: true
       slack_notify: true
-    secrets: inherit
+    secrets:
+      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 
   deploy-mainnet:
     needs: [init, dependencies]
@@ -217,7 +220,8 @@ jobs:
       healthcheck_elasticsearch_enabled: true
       healthcheck_redis_enabled: true
       slack_notify: true
-    secrets: inherit
+    secrets:
+      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 
   deploy-testnet-playground:
     needs: [init, dependencies]
@@ -249,4 +253,5 @@ jobs:
       healthcheck_redis_enabled: true
       serverless_deploy_prefix: explorer-svc
       slack_notify: true
-    secrets: inherit
+    secrets:
+      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
