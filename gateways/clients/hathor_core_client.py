@@ -81,11 +81,9 @@ class HathorCoreAsyncClient:
                     async with session.get(url, params=params) as response:
                         if response.status > 299:
                             body = await response.text()
+                            is_retryable = response.status in self.RETRYABLE_STATUS_CODES
 
-                            if (
-                                response.status in self.RETRYABLE_STATUS_CODES
-                                and attempt < self.MAX_RETRIES
-                            ):
+                            if is_retryable and attempt < self.MAX_RETRIES:
                                 await asyncio.sleep(self.RETRY_DELAY)
                                 continue
                             self.log.warning(
@@ -94,8 +92,9 @@ class HathorCoreAsyncClient:
                                 status=response.status,
                                 body=body,
                             )
-
-                            return {"error": f"status {response.status}"}
+                            if is_retryable:
+                                return {"error": f"status {response.status}"}
+                            return await response.json(content_type=content_type)
                         return await response.json(content_type=content_type)
         except Exception as e:
             self.log.error("hathor_core_error", path=path, error=repr(e))
