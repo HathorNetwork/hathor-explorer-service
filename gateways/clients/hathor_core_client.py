@@ -64,7 +64,8 @@ class HathorCoreAsyncClient:
         :type path: str
         :param params: params to be sent
         :type params: Optional[dict]
-        :param timeout: timeout in seconds
+        :param timeout: per-attempt timeout in seconds; total elapsed time may be higher
+            when retries are triggered
         :type timeout: Optional[float]
         """
         url = parse.urljoin(self.url, path)
@@ -72,15 +73,19 @@ class HathorCoreAsyncClient:
         if not timeout:
             timeout = self.DEFAULT_TIMEOUT
 
-        for attempt in range(self.MAX_RETRIES + 1):
-            try:
-                async with aiohttp.ClientSession(
-                    timeout=aiohttp.ClientTimeout(total=timeout)
-                ) as session:
+        try:
+            async with aiohttp.ClientSession(
+                timeout=aiohttp.ClientTimeout(total=timeout)
+            ) as session:
+                for attempt in range(self.MAX_RETRIES + 1):
                     async with session.get(url, params=params) as response:
-                        if response.status in self.RETRYABLE_STATUS_CODES:
+                        if response.status > 299:
                             body = await response.text()
-                            if attempt < self.MAX_RETRIES:
+
+                            if (
+                                response.status in self.RETRYABLE_STATUS_CODES
+                                and attempt < self.MAX_RETRIES
+                            ):
                                 await asyncio.sleep(self.RETRY_DELAY)
                                 continue
                             self.log.warning(
@@ -89,18 +94,12 @@ class HathorCoreAsyncClient:
                                 status=response.status,
                                 body=body,
                             )
+
                             return {"error": f"status {response.status}"}
-                        if response.status > 299:
-                            self.log.warning(
-                                "hathor_core_error",
-                                path=path,
-                                status=response.status,
-                                body=await response.text(),
-                            )
                         return await response.json(content_type=content_type)
-            except Exception as e:
-                self.log.error("hathor_core_error", path=path, error=repr(e))
-                return {"error": repr(e)}
+        except Exception as e:
+            self.log.error("hathor_core_error", path=path, error=repr(e))
+            return {"error": repr(e)}
 
     async def post(
         self, path: str, body: Optional[dict] = None, timeout: Optional[float] = None
