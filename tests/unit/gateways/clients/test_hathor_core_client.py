@@ -1,5 +1,6 @@
 import json
 import unittest
+from typing import Any
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import requests
@@ -9,7 +10,9 @@ from pytest import raises
 from gateways.clients.hathor_core_client import HathorCoreAsyncClient, HathorCoreClient
 
 
-def _make_response(status: int, json_data=None, text_data: str = "") -> MagicMock:
+def _make_response(
+    status: int, json_data: Any = None, text_data: str = ""
+) -> MagicMock:
     """Build a minimal aiohttp response mock."""
     mock = MagicMock()
     mock.status = status

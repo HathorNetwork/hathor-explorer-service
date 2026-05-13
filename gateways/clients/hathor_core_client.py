@@ -101,6 +101,8 @@ class HathorCoreAsyncClient:
             self.log.error("hathor_core_error", path=path, error=repr(e))
             return {"error": repr(e)}
 
+        return {"error": "max retries exceeded"}
+
     async def post(
         self, path: str, body: Optional[dict] = None, timeout: Optional[float] = None
     ) -> Dict[Any, Any]:
