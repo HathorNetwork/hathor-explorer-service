@@ -81,7 +81,9 @@ class HathorCoreAsyncClient:
                     async with session.get(url, params=params) as response:
                         if response.status > 299:
                             body = await response.text()
-                            is_retryable = response.status in self.RETRYABLE_STATUS_CODES
+                            is_retryable = (
+                                response.status in self.RETRYABLE_STATUS_CODES
+                            )
 
                             if is_retryable and attempt < self.MAX_RETRIES:
                                 await asyncio.sleep(self.RETRY_DELAY)

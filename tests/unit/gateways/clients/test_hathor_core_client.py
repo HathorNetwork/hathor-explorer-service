@@ -136,26 +136,32 @@ class TestHathorCoreAsyncClientGet(unittest.IsolatedAsyncioTestCase):
 
     @patch("aiohttp.ClientSession.get")
     @patch("gateways.clients.hathor_core_client.asyncio.sleep", new_callable=AsyncMock)
-    async def test_get_4xx_non_json_body_returns_error_without_parsing_json(
+    async def test_get_4xx_non_json_body_returns_parsing_error(
         self, mock_sleep, mock_get
     ):
-        """4xx error bodies must not be parsed as JSON."""
+        """4xx non-JSON error bodies still go through response.json()."""
         response = _make_response(404, text_data="Not Found")
-        response.json = AsyncMock(side_effect=_make_non_json_error())
+        parsing_error = _make_non_json_error()
+        response.json = AsyncMock(side_effect=parsing_error)
         mock_get.return_value = _as_ctx(response)
 
         client = HathorCoreAsyncClient("http://test.node")
         with patch.object(client, "log") as mock_log:
             result = await client.get("/v1a/missing")
 
-        assert result == {"error": "status 404"}
-        response.json.assert_not_called()
+        assert result == {"error": repr(parsing_error)}
+        response.json.assert_called_once_with(content_type="application/json")
         mock_sleep.assert_not_called()
         mock_log.warning.assert_called_once_with(
             "hathor_core_error",
             path="/v1a/missing",
             status=404,
             body="Not Found",
+        )
+        mock_log.error.assert_called_once_with(
+            "hathor_core_error",
+            path="/v1a/missing",
+            error=repr(parsing_error),
         )
 
     @patch("aiohttp.ClientSession.get")
