@@ -1,3 +1,4 @@
+import asyncio
 import json
 from typing import Any, Dict, Optional
 from urllib import parse
@@ -37,6 +38,9 @@ HEALTH_ENDPOINT = "/v1a/health"
 
 class HathorCoreAsyncClient:
     DEFAULT_TIMEOUT = 60  # seconds
+    MAX_RETRIES = 2
+    RETRY_DELAY = 1.0  # seconds between retries
+    RETRYABLE_STATUS_CODES = frozenset({502, 503, 504})
 
     def __init__(self, url: Optional[str] = None) -> None:
         """Client to make async requests
@@ -60,7 +64,8 @@ class HathorCoreAsyncClient:
         :type path: str
         :param params: params to be sent
         :type params: Optional[dict]
-        :param timeout: timeout in seconds
+        :param timeout: per-attempt timeout in seconds; total elapsed time may be higher
+            when retries are triggered
         :type timeout: Optional[float]
         """
         url = parse.urljoin(self.url, path)
@@ -72,18 +77,32 @@ class HathorCoreAsyncClient:
             async with aiohttp.ClientSession(
                 timeout=aiohttp.ClientTimeout(total=timeout)
             ) as session:
-                async with session.get(url, params=params) as response:
-                    if response.status > 299:
-                        self.log.warning(
-                            "hathor_core_error",
-                            path=path,
-                            status=response.status,
-                            body=await response.text(),
-                        )
-                    return await response.json(content_type=content_type)
+                for attempt in range(self.MAX_RETRIES + 1):
+                    async with session.get(url, params=params) as response:
+                        if response.status > 299:
+                            body = await response.text()
+                            is_retryable = (
+                                response.status in self.RETRYABLE_STATUS_CODES
+                            )
+
+                            if is_retryable and attempt < self.MAX_RETRIES:
+                                await asyncio.sleep(self.RETRY_DELAY)
+                                continue
+                            self.log.warning(
+                                "hathor_core_error",
+                                path=path,
+                                status=response.status,
+                                body=body,
+                            )
+                            if is_retryable:
+                                return {"error": f"status {response.status}"}
+                            return await response.json(content_type=content_type)
+                        return await response.json(content_type=content_type)
         except Exception as e:
             self.log.error("hathor_core_error", path=path, error=repr(e))
             return {"error": repr(e)}
+
+        return {"error": "max retries exceeded"}
 
     async def post(
         self, path: str, body: Optional[dict] = None, timeout: Optional[float] = None
