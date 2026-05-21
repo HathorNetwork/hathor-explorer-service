@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       environment: ${{ steps.setenv.outputs.environment}}
+      timestamp: ${{ steps.setenv.outputs.timestamp }}
 
     steps:
       - name: Set environment
