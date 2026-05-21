@@ -186,14 +186,14 @@ jobs:
           AWS_ECR_ACCOUNT_ID: ${{ inputs.aws_ecr_account_id }}
 
       - name: Slack Notification
-        if: ${{ inputs.slack_notify }}
+        if: ${{ inputs.slack_notify && always() }}
         # https://github.com/rtCamp/action-slack-notify/releases/tag/v2.3.3
         uses: rtCamp/action-slack-notify@e31e87e03dd19038e411e38ae27cbad084a90661
         env:
           SLACK_CHANNEL: deploys
           SLACK_COLOR: ${{ job.status }}
-          SLACK_TITLE: 'HathorExplorerService - ${{ inputs.serverless_stage }} deployed :rocket:'
-          SLACK_MESSAGE: 'Make sure the daemon is correctly deployed by checking if a new commit by fluxcdbot was made in: https://github.com/HathorNetwork/ops-tools/commits/master'
+          SLACK_TITLE: "${{ job.status == 'success' && format('HathorExplorerService - {0} deployed :rocket:', inputs.serverless_stage) || format('HathorExplorerService - {0} deployment failed :x:', inputs.serverless_stage) }}"
+          SLACK_MESSAGE: "${{ job.status == 'success' && 'Make sure the daemon is correctly deployed by checking if a new commit by fluxcdbot was made in: https://github.com/HathorNetwork/ops-tools/commits/master' || 'Check the GitHub Actions logs for the failed deployment step before retrying.' }}"
           SLACK_USERNAME: HathorSlack
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_FOOTER: ''
