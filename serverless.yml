@@ -31,8 +31,8 @@ provider:
     binaryMediaTypes:
       - 'image/*'
   logs:
-    restApi: # TODO: add data to make the serverless create this role by itself
-      role: arn:aws:iam::${env:AWS_ACCOUNT_ID}:role/APIGatewayPushLogsToCloudWatch
+    restApi:
+      roleManagedExternally: true
   vpc:
     securityGroupIds:
       - ${env:AWS_VPC_DEFAULT_SG_ID}
