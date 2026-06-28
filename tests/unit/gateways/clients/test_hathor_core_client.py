@@ -211,6 +211,43 @@ class TestHathorCoreAsyncClientGet(unittest.IsolatedAsyncioTestCase):
 
     @patch("aiohttp.ClientSession.get")
     @patch("gateways.clients.hathor_core_client.asyncio.sleep", new_callable=AsyncMock)
+    async def test_get_retry_false_skips_retries_on_5xx(self, mock_sleep, mock_get):
+        """retry=False returns the first 5xx response without retrying."""
+        retry_body = "<html>503 Service Unavailable</html>"
+        mock_get.return_value = _as_ctx(_make_response(503, text_data=retry_body))
+
+        client = HathorCoreAsyncClient("http://test.node")
+        with patch.object(client, "log") as mock_log:
+            result = await client.get("/v1a/health", retry=False)
+
+        assert result == {"error": "status 503", "body": retry_body}
+        assert mock_get.call_count == 1
+        mock_sleep.assert_not_called()
+        mock_log.warning.assert_called_once_with(
+            "hathor_core_error",
+            path="/v1a/health",
+            status=503,
+            body=retry_body,
+        )
+
+    @patch("aiohttp.ClientSession.get")
+    @patch("gateways.clients.hathor_core_client.asyncio.sleep", new_callable=AsyncMock)
+    async def test_get_retry_false_keeps_json_body_on_5xx(self, mock_sleep, mock_get):
+        """retry=False still returns the server-provided JSON body as-is."""
+        health_body = {"status": "fail", "checks": {}}
+        mock_get.return_value = _as_ctx(
+            _make_response(503, text_data=json.dumps(health_body))
+        )
+
+        client = HathorCoreAsyncClient("http://test.node")
+        result = await client.get("/v1a/health", retry=False)
+
+        assert result == health_body
+        assert mock_get.call_count == 1
+        mock_sleep.assert_not_called()
+
+    @patch("aiohttp.ClientSession.get")
+    @patch("gateways.clients.hathor_core_client.asyncio.sleep", new_callable=AsyncMock)
     async def test_get_no_retry_on_exception(self, mock_sleep, mock_get):
         """Network exception: logged as error immediately, no retry."""
         mock_get.side_effect = Exception("connection refused")

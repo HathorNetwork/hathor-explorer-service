@@ -57,6 +57,7 @@ class HathorCoreAsyncClient:
         params: Optional[dict] = None,
         timeout: Optional[float] = None,
         content_type: Optional[str] = "application/json",
+        retry: bool = True,
     ) -> Dict[Any, Any]:
         """Make a get request async
 
@@ -67,24 +68,31 @@ class HathorCoreAsyncClient:
         :param timeout: per-attempt timeout in seconds; total elapsed time may be higher
             when retries are triggered
         :type timeout: Optional[float]
+        :param retry: whether to retry on transient gateway errors (502/503/504).
+            Disable it for endpoints where such a status is a legitimate answer
+            rather than a transient gateway failure (e.g. the health endpoint,
+            which returns 503 when the fullnode is unhealthy).
+        :type retry: bool
         """
         url = parse.urljoin(self.url, path)
 
         if not timeout:
             timeout = self.DEFAULT_TIMEOUT
 
+        max_retries = self.MAX_RETRIES if retry else 0
+
         try:
             async with aiohttp.ClientSession(
                 timeout=aiohttp.ClientTimeout(total=timeout)
             ) as session:
-                for attempt in range(self.MAX_RETRIES + 1):
+                for attempt in range(max_retries + 1):
                     async with session.get(url, params=params) as response:
                         if response.status <= 299:
                             return await response.json(content_type=content_type)
 
                         body = await response.text()
                         is_retryable = response.status in self.RETRYABLE_STATUS_CODES
-                        if is_retryable and attempt < self.MAX_RETRIES:
+                        if is_retryable and attempt < max_retries:
                             await asyncio.sleep(self.RETRY_DELAY)
                             continue
 
