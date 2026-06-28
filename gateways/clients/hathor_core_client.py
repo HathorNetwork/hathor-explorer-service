@@ -79,30 +79,49 @@ class HathorCoreAsyncClient:
             ) as session:
                 for attempt in range(self.MAX_RETRIES + 1):
                     async with session.get(url, params=params) as response:
-                        if response.status > 299:
-                            body = await response.text()
-                            is_retryable = (
-                                response.status in self.RETRYABLE_STATUS_CODES
-                            )
-
-                            if is_retryable and attempt < self.MAX_RETRIES:
-                                await asyncio.sleep(self.RETRY_DELAY)
-                                continue
-                            self.log.warning(
-                                "hathor_core_error",
-                                path=path,
-                                status=response.status,
-                                body=body,
-                            )
-                            if is_retryable:
-                                return {"error": f"status {response.status}"}
+                        if response.status <= 299:
                             return await response.json(content_type=content_type)
-                        return await response.json(content_type=content_type)
+
+                        body = await response.text()
+                        is_retryable = response.status in self.RETRYABLE_STATUS_CODES
+                        if is_retryable and attempt < self.MAX_RETRIES:
+                            await asyncio.sleep(self.RETRY_DELAY)
+                            continue
+
+                        self.log.warning(
+                            "hathor_core_error",
+                            path=path,
+                            status=response.status,
+                            body=body,
+                        )
+                        return self._decode_error_body(response.status, body)
         except Exception as e:
             self.log.error("hathor_core_error", path=path, error=repr(e))
             return {"error": repr(e)}
 
         return {"error": "max retries exceeded"}
+
+    @staticmethod
+    def _decode_error_body(status: int, body: str) -> Dict[Any, Any]:
+        """Build the return value for an error response (status > 299).
+
+        Whenever the body is valid JSON we return it as-is, so callers keep
+        access to the server-provided error details. Some upstream errors
+        (e.g. GCP load balancer 5xx) come back as plain text/HTML instead, so
+        in that case we return the status together with the raw body, which
+        usually carries enough context to understand what went wrong.
+
+        :param status: HTTP status code of the response
+        :param body: response body already read as text
+        """
+        try:
+            decoded = json.loads(body)
+        except ValueError:
+            return {"error": f"status {status}", "body": body}
+
+        if isinstance(decoded, dict):
+            return decoded
+        return {"error": f"status {status}", "body": decoded}
 
     async def post(
         self, path: str, body: Optional[dict] = None, timeout: Optional[float] = None

@@ -122,35 +122,37 @@ class TestHathorCoreAsyncClientGet(unittest.IsolatedAsyncioTestCase):
     @patch("aiohttp.ClientSession.get")
     @patch("gateways.clients.hathor_core_client.asyncio.sleep", new_callable=AsyncMock)
     async def test_get_no_retry_on_4xx(self, mock_sleep, mock_get):
-        """4xx error: logged immediately without any retry."""
+        """4xx error: logged immediately without any retry, JSON body kept."""
+        error_body = {"success": False, "message": "not found"}
         mock_get.return_value = _as_ctx(
-            _make_response(404, text_data="Not Found", json_data=None)
+            _make_response(404, text_data=json.dumps(error_body))
         )
 
         client = HathorCoreAsyncClient("http://test.node")
         with patch.object(client, "log") as mock_log:
-            await client.get("/v1a/missing")
+            result = await client.get("/v1a/missing")
 
+        assert result == error_body
         mock_sleep.assert_not_called()
         mock_log.warning.assert_called_once()
 
     @patch("aiohttp.ClientSession.get")
     @patch("gateways.clients.hathor_core_client.asyncio.sleep", new_callable=AsyncMock)
-    async def test_get_4xx_non_json_body_returns_parsing_error(
+    async def test_get_4xx_non_json_body_returns_status_and_body(
         self, mock_sleep, mock_get
     ):
-        """4xx non-JSON error bodies still go through response.json()."""
+        """4xx non-JSON error bodies are returned as status + raw body."""
         response = _make_response(404, text_data="Not Found")
-        parsing_error = _make_non_json_error()
-        response.json = AsyncMock(side_effect=parsing_error)
+        # json() must never be called: we decode the text body ourselves.
+        response.json = AsyncMock(side_effect=_make_non_json_error())
         mock_get.return_value = _as_ctx(response)
 
         client = HathorCoreAsyncClient("http://test.node")
         with patch.object(client, "log") as mock_log:
             result = await client.get("/v1a/missing")
 
-        assert result == {"error": repr(parsing_error)}
-        response.json.assert_called_once_with(content_type="application/json")
+        assert result == {"error": "status 404", "body": "Not Found"}
+        response.json.assert_not_called()
         mock_sleep.assert_not_called()
         mock_log.warning.assert_called_once_with(
             "hathor_core_error",
@@ -158,18 +160,14 @@ class TestHathorCoreAsyncClientGet(unittest.IsolatedAsyncioTestCase):
             status=404,
             body="Not Found",
         )
-        mock_log.error.assert_called_once_with(
-            "hathor_core_error",
-            path="/v1a/missing",
-            error=repr(parsing_error),
-        )
+        mock_log.error.assert_not_called()
 
     @patch("aiohttp.ClientSession.get")
     @patch("gateways.clients.hathor_core_client.asyncio.sleep", new_callable=AsyncMock)
-    async def test_get_5xx_non_json_body_returns_error_after_retries(
+    async def test_get_5xx_non_json_body_returns_status_and_body_after_retries(
         self, mock_sleep, mock_get
     ):
-        """Retryable 5xx error bodies must not be parsed as JSON after retries."""
+        """Retryable 5xx non-JSON bodies are returned as status + raw body."""
         retry_body = "<html>502 Bad Gateway</html>"
         total_attempts = HathorCoreAsyncClient.MAX_RETRIES + 1
         responses = []
@@ -183,7 +181,7 @@ class TestHathorCoreAsyncClientGet(unittest.IsolatedAsyncioTestCase):
         with patch.object(client, "log") as mock_log:
             result = await client.get("/v1a/status")
 
-        assert result == {"error": "status 502"}
+        assert result == {"error": "status 502", "body": retry_body}
         for response_ctx in responses:
             response_ctx.__aenter__.return_value.json.assert_not_called()
         assert mock_sleep.call_count == HathorCoreAsyncClient.MAX_RETRIES
@@ -193,6 +191,23 @@ class TestHathorCoreAsyncClientGet(unittest.IsolatedAsyncioTestCase):
             status=502,
             body=retry_body,
         )
+
+    @patch("aiohttp.ClientSession.get")
+    @patch("gateways.clients.hathor_core_client.asyncio.sleep", new_callable=AsyncMock)
+    async def test_get_5xx_json_body_returned_after_retries(self, mock_sleep, mock_get):
+        """Retryable 5xx with a JSON body keeps the server-provided payload."""
+        error_body = {"error": "upstream exploded"}
+        total_attempts = HathorCoreAsyncClient.MAX_RETRIES + 1
+        mock_get.side_effect = [
+            _as_ctx(_make_response(503, text_data=json.dumps(error_body)))
+            for _ in range(total_attempts)
+        ]
+
+        client = HathorCoreAsyncClient("http://test.node")
+        result = await client.get("/v1a/status")
+
+        assert result == error_body
+        assert mock_sleep.call_count == HathorCoreAsyncClient.MAX_RETRIES
 
     @patch("aiohttp.ClientSession.get")
     @patch("gateways.clients.hathor_core_client.asyncio.sleep", new_callable=AsyncMock)
