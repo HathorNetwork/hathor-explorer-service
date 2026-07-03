@@ -15,7 +15,7 @@ class WalletService:
         return balance.to_dict()
 
     def address_history(
-        self, address: str, token: str, limit: int, last_tx: str, last_ts: int
+        self, address: str, token: str, limit: int, last_tx: Optional[str], last_ts: int
     ) -> dict:
         history = self.wallet_service_gateway.address_history(
             address, token, limit, last_tx, last_ts

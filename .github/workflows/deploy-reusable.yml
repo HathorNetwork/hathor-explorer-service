@@ -152,7 +152,7 @@ jobs:
       - name: Set up Python and Dependencies
         uses: ./.github/actions/setup-python
         with:
-          python_version: 3.9
+          python_version: 3.13
       - name: Deploy Lambdas
         run: |
           make deploy-lambdas-ci stage=${{ inputs.serverless_stage }}
