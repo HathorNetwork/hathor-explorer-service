@@ -1,10 +1,264 @@
 import json
-from unittest.mock import patch
+import unittest
+from typing import Any
+from unittest.mock import AsyncMock, MagicMock, patch
 
 import requests
+from aiohttp import ContentTypeError, RequestInfo
 from pytest import raises
 
-from gateways.clients.hathor_core_client import HathorCoreClient
+from gateways.clients.hathor_core_client import HathorCoreAsyncClient, HathorCoreClient
+
+
+def _make_response(
+    status: int, json_data: Any = None, text_data: str = ""
+) -> MagicMock:
+    """Build a minimal aiohttp response mock."""
+    mock = MagicMock()
+    mock.status = status
+    mock.text = AsyncMock(return_value=text_data)
+    mock.json = AsyncMock(return_value=json_data)
+    return mock
+
+
+def _as_ctx(response_mock: MagicMock) -> MagicMock:
+    """Wrap a response mock so it can be used as an async context manager."""
+    cm = MagicMock()
+    cm.__aenter__ = AsyncMock(return_value=response_mock)
+    cm.__aexit__ = AsyncMock(return_value=None)
+    return cm
+
+
+def _make_non_json_error() -> ContentTypeError:
+    request_info = MagicMock(spec=RequestInfo)
+    request_info.real_url = "http://test.node/v1a/status"
+    return ContentTypeError(request_info=request_info, history=())
+
+
+class TestHathorCoreAsyncClientGet(unittest.IsolatedAsyncioTestCase):
+    @patch("aiohttp.ClientSession.get")
+    @patch("gateways.clients.hathor_core_client.asyncio.sleep", new_callable=AsyncMock)
+    async def test_get_success(self, mock_sleep, mock_get):
+        """200 response: returns parsed JSON, no retries."""
+        data = {"success": True}
+        mock_get.return_value = _as_ctx(_make_response(200, json_data=data))
+
+        client = HathorCoreAsyncClient("http://test.node")
+        result = await client.get("/v1a/status")
+
+        assert result == data
+        mock_sleep.assert_not_called()
+
+    @patch("aiohttp.ClientSession.get")
+    @patch("gateways.clients.hathor_core_client.asyncio.sleep", new_callable=AsyncMock)
+    async def test_get_retries_on_502_then_succeeds(self, mock_sleep, mock_get):
+        """502 on first attempt, 200 on retry: no warning logged, returns data."""
+        data = {"id": "abc"}
+        mock_get.side_effect = [
+            _as_ctx(_make_response(502, text_data="<html>502 Bad Gateway</html>")),
+            _as_ctx(_make_response(200, json_data=data)),
+        ]
+
+        client = HathorCoreAsyncClient("http://test.node")
+        with patch.object(client, "log") as mock_log:
+            result = await client.get("/v1a/status")
+
+        assert result == data
+        mock_log.warning.assert_not_called()
+        mock_sleep.assert_called_once_with(HathorCoreAsyncClient.RETRY_DELAY)
+
+    @patch("gateways.clients.hathor_core_client.aiohttp.ClientSession")
+    @patch("gateways.clients.hathor_core_client.asyncio.sleep", new_callable=AsyncMock)
+    async def test_get_reuses_single_session_across_retries(
+        self, mock_sleep, mock_client_session
+    ):
+        """Retries reuse one aiohttp session while keeping per-attempt timeouts."""
+        data = {"id": "abc"}
+        session = MagicMock()
+        session.get.side_effect = [
+            _as_ctx(_make_response(502, text_data="<html>502 Bad Gateway</html>")),
+            _as_ctx(_make_response(200, json_data=data)),
+        ]
+        session_cm = MagicMock()
+        session_cm.__aenter__ = AsyncMock(return_value=session)
+        session_cm.__aexit__ = AsyncMock(return_value=None)
+        mock_client_session.return_value = session_cm
+
+        client = HathorCoreAsyncClient("http://test.node")
+        result = await client.get("/v1a/status", timeout=7)
+
+        assert result == data
+        mock_client_session.assert_called_once()
+        assert mock_client_session.call_args.kwargs["timeout"].total == 7
+        assert session.get.call_count == 2
+        mock_sleep.assert_called_once_with(HathorCoreAsyncClient.RETRY_DELAY)
+
+    @patch("aiohttp.ClientSession.get")
+    @patch("gateways.clients.hathor_core_client.asyncio.sleep", new_callable=AsyncMock)
+    async def test_get_logs_warning_after_all_retries_exhausted(
+        self, mock_sleep, mock_get
+    ):
+        """All attempts return 502: exactly one warning logged, returns error dict."""
+        retry_body = "<html>502 Bad Gateway</html>"
+        total_attempts = HathorCoreAsyncClient.MAX_RETRIES + 1
+        mock_get.side_effect = [
+            _as_ctx(_make_response(502, text_data=retry_body))
+            for _ in range(total_attempts)
+        ]
+
+        client = HathorCoreAsyncClient("http://test.node")
+        with patch.object(client, "log") as mock_log:
+            result = await client.get("/v1a/status")
+
+        assert "error" in result
+        mock_log.warning.assert_called_once_with(
+            "hathor_core_error",
+            path="/v1a/status",
+            status=502,
+            body=retry_body,
+        )
+        assert mock_sleep.call_count == HathorCoreAsyncClient.MAX_RETRIES
+
+    @patch("aiohttp.ClientSession.get")
+    @patch("gateways.clients.hathor_core_client.asyncio.sleep", new_callable=AsyncMock)
+    async def test_get_no_retry_on_4xx(self, mock_sleep, mock_get):
+        """4xx error: logged immediately without any retry, JSON body kept."""
+        error_body = {"success": False, "message": "not found"}
+        mock_get.return_value = _as_ctx(
+            _make_response(404, text_data=json.dumps(error_body))
+        )
+
+        client = HathorCoreAsyncClient("http://test.node")
+        with patch.object(client, "log") as mock_log:
+            result = await client.get("/v1a/missing")
+
+        assert result == error_body
+        mock_sleep.assert_not_called()
+        mock_log.warning.assert_called_once()
+
+    @patch("aiohttp.ClientSession.get")
+    @patch("gateways.clients.hathor_core_client.asyncio.sleep", new_callable=AsyncMock)
+    async def test_get_4xx_non_json_body_returns_status_and_body(
+        self, mock_sleep, mock_get
+    ):
+        """4xx non-JSON error bodies are returned as status + raw body."""
+        response = _make_response(404, text_data="Not Found")
+        # json() must never be called: we decode the text body ourselves.
+        response.json = AsyncMock(side_effect=_make_non_json_error())
+        mock_get.return_value = _as_ctx(response)
+
+        client = HathorCoreAsyncClient("http://test.node")
+        with patch.object(client, "log") as mock_log:
+            result = await client.get("/v1a/missing")
+
+        assert result == {"error": "status 404", "body": "Not Found"}
+        response.json.assert_not_called()
+        mock_sleep.assert_not_called()
+        mock_log.warning.assert_called_once_with(
+            "hathor_core_error",
+            path="/v1a/missing",
+            status=404,
+            body="Not Found",
+        )
+        mock_log.error.assert_not_called()
+
+    @patch("aiohttp.ClientSession.get")
+    @patch("gateways.clients.hathor_core_client.asyncio.sleep", new_callable=AsyncMock)
+    async def test_get_5xx_non_json_body_returns_status_and_body_after_retries(
+        self, mock_sleep, mock_get
+    ):
+        """Retryable 5xx non-JSON bodies are returned as status + raw body."""
+        retry_body = "<html>502 Bad Gateway</html>"
+        total_attempts = HathorCoreAsyncClient.MAX_RETRIES + 1
+        responses = []
+        for _ in range(total_attempts):
+            response = _make_response(502, text_data=retry_body)
+            response.json = AsyncMock(side_effect=_make_non_json_error())
+            responses.append(_as_ctx(response))
+        mock_get.side_effect = responses
+
+        client = HathorCoreAsyncClient("http://test.node")
+        with patch.object(client, "log") as mock_log:
+            result = await client.get("/v1a/status")
+
+        assert result == {"error": "status 502", "body": retry_body}
+        for response_ctx in responses:
+            response_ctx.__aenter__.return_value.json.assert_not_called()
+        assert mock_sleep.call_count == HathorCoreAsyncClient.MAX_RETRIES
+        mock_log.warning.assert_called_once_with(
+            "hathor_core_error",
+            path="/v1a/status",
+            status=502,
+            body=retry_body,
+        )
+
+    @patch("aiohttp.ClientSession.get")
+    @patch("gateways.clients.hathor_core_client.asyncio.sleep", new_callable=AsyncMock)
+    async def test_get_5xx_json_body_returned_after_retries(self, mock_sleep, mock_get):
+        """Retryable 5xx with a JSON body keeps the server-provided payload."""
+        error_body = {"error": "upstream exploded"}
+        total_attempts = HathorCoreAsyncClient.MAX_RETRIES + 1
+        mock_get.side_effect = [
+            _as_ctx(_make_response(503, text_data=json.dumps(error_body)))
+            for _ in range(total_attempts)
+        ]
+
+        client = HathorCoreAsyncClient("http://test.node")
+        result = await client.get("/v1a/status")
+
+        assert result == error_body
+        assert mock_sleep.call_count == HathorCoreAsyncClient.MAX_RETRIES
+
+    @patch("aiohttp.ClientSession.get")
+    @patch("gateways.clients.hathor_core_client.asyncio.sleep", new_callable=AsyncMock)
+    async def test_get_retry_false_skips_retries_on_5xx(self, mock_sleep, mock_get):
+        """retry=False returns the first 5xx response without retrying."""
+        retry_body = "<html>503 Service Unavailable</html>"
+        mock_get.return_value = _as_ctx(_make_response(503, text_data=retry_body))
+
+        client = HathorCoreAsyncClient("http://test.node")
+        with patch.object(client, "log") as mock_log:
+            result = await client.get("/v1a/health", retry=False)
+
+        assert result == {"error": "status 503", "body": retry_body}
+        assert mock_get.call_count == 1
+        mock_sleep.assert_not_called()
+        mock_log.warning.assert_called_once_with(
+            "hathor_core_error",
+            path="/v1a/health",
+            status=503,
+            body=retry_body,
+        )
+
+    @patch("aiohttp.ClientSession.get")
+    @patch("gateways.clients.hathor_core_client.asyncio.sleep", new_callable=AsyncMock)
+    async def test_get_retry_false_keeps_json_body_on_5xx(self, mock_sleep, mock_get):
+        """retry=False still returns the server-provided JSON body as-is."""
+        health_body = {"status": "fail", "checks": {}}
+        mock_get.return_value = _as_ctx(
+            _make_response(503, text_data=json.dumps(health_body))
+        )
+
+        client = HathorCoreAsyncClient("http://test.node")
+        result = await client.get("/v1a/health", retry=False)
+
+        assert result == health_body
+        assert mock_get.call_count == 1
+        mock_sleep.assert_not_called()
+
+    @patch("aiohttp.ClientSession.get")
+    @patch("gateways.clients.hathor_core_client.asyncio.sleep", new_callable=AsyncMock)
+    async def test_get_no_retry_on_exception(self, mock_sleep, mock_get):
+        """Network exception: logged as error immediately, no retry."""
+        mock_get.side_effect = Exception("connection refused")
+
+        client = HathorCoreAsyncClient("http://test.node")
+        with patch.object(client, "log") as mock_log:
+            result = await client.get("/v1a/status")
+
+        assert "error" in result
+        mock_log.error.assert_called_once()
+        mock_sleep.assert_not_called()
 
 
 class TestHathorCoreClient:
