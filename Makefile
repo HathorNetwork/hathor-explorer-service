@@ -73,10 +73,6 @@ deploy-lambdas: ensure-poetry-export-plugin
 deploy-lambdas-ci:
 	npx serverless deploy --stage $(stage) --region eu-central-1
 
-.PHONY: deploy-lambdas-playground
-deploy-lambdas-playground: ensure-poetry-export-plugin
-	AWS_SDK_LOAD_CONFIG=1 npx serverless deploy --stage playground --region eu-central-1 --aws-profile testnet-playground
-
 .PHONY: install
 install: ensure-poetry-export-plugin
 	npm install
