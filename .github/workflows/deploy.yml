@@ -129,38 +129,6 @@ jobs:
     secrets:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 
-  deploy-ekvilibro-testnet:
-    needs: [init, dependencies]
-
-    if: ${{ needs.init.outputs.environment == 'testnet' }}
-
-    uses: ./.github/workflows/deploy-reusable.yml
-    with:
-      aws_region: eu-central-1
-      aws_iam_role: arn:aws:iam::730335348496:role/ExplorerServiceGitHubActionsRole
-      aws_secret_arn: arn:aws:secretsmanager:eu-central-1:730335348496:secret:ExplorerService/ekvilibro-testnet-DaDPgT
-      serverless_stage: ekvilibro
-      docker_image_tag: ekvilibro-testnet-${{ github.sha }}-${{ needs.init.outputs.timestamp }}
-      # XXX: Some env vars come from the secret https://eu-central-1.console.aws.amazon.com/secretsmanager/secret?name=ExplorerService%2Fekvilibro-testnet&region=eu-central-1
-      api_port: 3001
-      hathor_core_url: https://node-side-dag.ekvilibro-testnet.hathor.network
-      hathor_nodes: https://node-side-dag.ekvilibro-testnet.hathor.network
-      redis_key_prefix: hathor-explorer-service-ekvilibro-testnet
-      redis_port: 6379
-      redis_db: 2
-      metadata_bucket: hathor-explorer-metadata-ekvilibro-testnet
-      cors_allowed_regex: https?:\/\/([a-z0-9\-]*\.){0,5}hathor\.network
-      elastic_index: ekvilibro-testnet-token
-      elastic_tx_index: ekvilibro-testnet-tx
-      elastic_token_balances_index: ekvilibro-testnet-token-balance
-      healthcheck_hathor_core_enabled: true
-      healthcheck_wallet_service_db_enabled: true
-      healthcheck_elasticsearch_enabled: true
-      healthcheck_redis_enabled: true
-      slack_notify: true
-    secrets:
-      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-
   deploy-ekvilibro-mainnet:
     needs: [init, dependencies]
 
