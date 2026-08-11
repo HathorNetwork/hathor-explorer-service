@@ -10,7 +10,7 @@ license = "MIT"
 poetry-plugin-export = ">=1.8"
 
 [tool.poetry.dependencies]
-python = "^3.12"
+python = "^3.13"
 redis = "^3.5.3"
 boto3 = "^1.28.83"
 python-dotenv = "^0.17.1"
