@@ -134,7 +134,7 @@ class WalletServiceDBClient:
         return result._asdict()
 
     def get_address_history(
-        self, address: str, token: str, limit: int, last_tx: str, last_ts: int
+        self, address: str, token: str, limit: int, last_tx: Optional[str], last_ts: int
     ) -> List[dict]:
         """Fetch the transaction history for an address/token pair."""
         result: List[dict] = []

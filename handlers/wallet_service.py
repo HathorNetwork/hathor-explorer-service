@@ -48,7 +48,7 @@ def handle_address_history(
 
     address: Optional[str] = event.query.get("address")
     token: Optional[str] = event.query.get("token")
-    last_tx: str = event.query.get("last_tx", None)
+    last_tx: Optional[str] = event.query.get("last_tx", None)
     last_ts_str: str = event.query.get("last_ts", "0")
     limit_str: str = event.query.get("limit", "10")
 
