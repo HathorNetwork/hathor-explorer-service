@@ -78,6 +78,15 @@ class TestWalletServiceDBClient:
             address, token, limit, last_tx, last_ts
         )
 
+    def test_address_has_confidential_activity(self, db_client):
+        db_client.get_address_has_confidential_activity.return_value = True
+
+        gateway = WalletServiceGateway(db_client)
+        address = "H" + fake.pystr()
+
+        assert gateway.address_has_confidential_activity(address) is True
+        db_client.get_address_has_confidential_activity.assert_called_once_with(address)
+
     def test_address_balance(self, db_client):
         balance = TokenBalanceFactory()
         db_client.get_address_balance.return_value = balance.to_dict()
