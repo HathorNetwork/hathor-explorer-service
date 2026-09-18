@@ -14,7 +14,7 @@ class WalletServiceGateway:
         return TokenBalance.from_dict(balance)
 
     def address_history(
-        self, address: str, token: str, limit: int, last_tx: str, last_ts: int
+        self, address: str, token: str, limit: int, last_tx: Optional[str], last_ts: int
     ) -> dict:
         """Fetch the tx history for an address/token pair, paginated."""
         history = self.db_client.get_address_history(

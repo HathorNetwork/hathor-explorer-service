@@ -11,7 +11,7 @@ useDotenv: true
 provider:
   name: aws
   # WARN: If you change this, make sure you also change the `Dockerfile_Serverless` base image to match the python version
-  runtime: "python3.9"
+  runtime: "python3.13"
   region: ${env:AWS_DEFAULT_REGION}
   lambdaHashingVersion: 20201221
   stackTags:
