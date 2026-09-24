@@ -42,6 +42,11 @@ class HealthcheckGateway:
             HEALTH_ENDPOINT,
             timeout=HEALTHCHECK_CLIENT_TIMEOUT_IN_SECONDS,
             content_type=None,
+            # The health endpoint returns 503 when the fullnode is unhealthy, which
+            # is a legitimate answer (the body still carries the 'status') rather than
+            # a transient gateway error. Retrying it would only waste the tight
+            # healthcheck timeout budget, so we opt out of retries here.
+            retry=False,
         )
 
     def ping_redis(self) -> bool:

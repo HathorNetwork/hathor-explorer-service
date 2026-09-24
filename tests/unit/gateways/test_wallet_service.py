@@ -49,7 +49,7 @@ class TestWalletServiceDBClient:
             [ret == exp for ret, exp in zip(returned, [htr_token, token1, token2])]
         )
 
-        assert db_client.get_address_tokens.called_once_with(address, limit, offset)
+        db_client.get_address_tokens.assert_called_once_with(address, limit, offset)
 
     def test_address_history(self, db_client):
         tx1 = TxHistoryEntryFactory()
@@ -74,7 +74,7 @@ class TestWalletServiceDBClient:
             [ret == exp.to_dict() for ret, exp in zip(returned["history"], [tx1, tx2])]
         )
 
-        assert db_client.get_address_history.called_once_with(
+        db_client.get_address_history.assert_called_once_with(
             address, token, limit, last_tx, last_ts
         )
 
@@ -89,4 +89,4 @@ class TestWalletServiceDBClient:
 
         assert gw.address_balance(address, token) == balance
 
-        assert db_client.get_address_history.called_once_with(address, token)
+        db_client.get_address_balance.assert_called_once_with(address, token)
