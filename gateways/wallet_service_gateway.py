@@ -43,3 +43,7 @@ class WalletServiceGateway:
         total, tokens = self.db_client.get_address_tokens(address, limit, offset)
 
         return total, [TokenEntry.from_dict(token) for token in tokens]
+
+    def address_has_confidential_activity(self, address: str) -> bool:
+        """Whether the address has any shielded (confidential) output."""
+        return self.db_client.get_address_has_confidential_activity(address)
