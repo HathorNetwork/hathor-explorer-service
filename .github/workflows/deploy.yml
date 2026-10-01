@@ -214,7 +214,7 @@ jobs:
       cors_allowed_regex: https?://([a-z0-9\-]*\.)*testnet\.hathor\.network
       elastic_index: testnet-shielded-outputs-token
       elastic_tx_index: testnet-shielded-outputs-tx
-      elastic_token_balances_index: testnet-shielded-outputs-token_balances
+      elastic_token_balances_index: testnet-shielded-outputs-token-balance
       healthcheck_hathor_core_enabled: true
       healthcheck_wallet_service_db_enabled: true
       healthcheck_elasticsearch_enabled: true
