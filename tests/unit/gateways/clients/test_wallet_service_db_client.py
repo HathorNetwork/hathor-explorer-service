@@ -8,6 +8,7 @@ from common.errors import RdsError, RdsNotFoundError
 from gateways.clients.wallet_service_db_client import (
     WalletServiceDBClient,
     address_balance_query,
+    address_has_confidential_activity_query,
     address_has_htr_query,
     address_history_query,
     address_tokens_count_query,
@@ -259,6 +260,58 @@ class TestWalletServiceDBClient:
         )
         assert connection.execute.call_args_list[1][0][0].text == address_has_htr_query
         assert connection.execute.call_args_list[2][0][0].text == address_tokens_query
+
+    def test_get_address_has_confidential_activity_true(self, engine, connection):
+        cursor = MagicMock()
+        cursor.one.return_value = self.row_from_dict({"has_confidential_activity": 1})
+        connection.execute.return_value = cursor
+
+        client = WalletServiceDBClient(engine)
+        address = "H" + fake.pystr()
+
+        assert client.get_address_has_confidential_activity(address) is True
+        connection.execute.assert_called_once_with(ANY, address=address)
+        assert (
+            connection.execute.call_args[0][0].text
+            == address_has_confidential_activity_query
+        )
+
+    def test_get_address_has_confidential_activity_false(self, engine, connection):
+        cursor = MagicMock()
+        cursor.one.return_value = self.row_from_dict({"has_confidential_activity": 0})
+        connection.execute.return_value = cursor
+
+        client = WalletServiceDBClient(engine)
+        address = "H" + fake.pystr()
+
+        assert client.get_address_has_confidential_activity(address) is False
+
+    def test_get_address_has_confidential_activity_degrades_on_error(
+        self, engine, connection
+    ):
+        # When the `mode` column does not exist yet (wallet-service shielded
+        # migrations not deployed), the query raises. The flag must degrade to
+        # False rather than break the address page.
+        connection.execute.side_effect = Exception("Unknown column 'mode'")
+
+        client = WalletServiceDBClient(engine)
+        address = "H" + fake.pystr()
+
+        assert client.get_address_has_confidential_activity(address) is False
+
+    def test_get_address_has_confidential_activity_degrades_on_cursor_error(
+        self, engine, connection
+    ):
+        # An error after execute (e.g. cursor.one() raising) must also degrade
+        # to False rather than propagate.
+        cursor = MagicMock()
+        cursor.one.side_effect = Exception("cursor failure")
+        connection.execute.return_value = cursor
+
+        client = WalletServiceDBClient(engine)
+        address = "H" + fake.pystr()
+
+        assert client.get_address_has_confidential_activity(address) is False
 
     def test_ping(self, engine, connection):
         class mockRow(list):

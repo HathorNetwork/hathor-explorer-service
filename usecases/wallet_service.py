@@ -27,7 +27,11 @@ class WalletService:
         total, tokens = self.wallet_service_gateway.address_tokens(
             address, limit, offset
         )
+        has_confidential_activity = (
+            self.wallet_service_gateway.address_has_confidential_activity(address)
+        )
         return {
             "total": total,
             "tokens": {token.token_id: token.to_dict() for token in tokens},
+            "has_confidential_activity": has_confidential_activity,
         }
