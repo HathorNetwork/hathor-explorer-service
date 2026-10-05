@@ -33,6 +33,11 @@ provider:
   logs:
     restApi:
       roleManagedExternally: true
+      # Keep the access log (one line per request), used by runbooks and incident analysis.
+      # Execution logs only for errors, and without request/response bodies: at the Serverless
+      # defaults (INFO + full execution data) they stored ~190 GB that nobody reads.
+      level: ERROR
+      fullExecutionData: false
   vpc:
     securityGroupIds:
       - ${env:AWS_VPC_DEFAULT_SG_ID}
