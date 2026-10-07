@@ -62,6 +62,7 @@ class TestWalletService:
         objs = [TokenEntryFactory() for _ in range(fake.random_int(min=1, max=10))]
         total = fake.pyint()
         wallet_service_gateway.address_tokens.return_value = (total, objs)
+        wallet_service_gateway.address_has_confidential_activity.return_value = True
 
         addr = fake.pystr()
         limit = fake.pyint()
@@ -80,6 +81,10 @@ class TestWalletService:
         assert all(
             [ret == obj for ret, obj in zip(returned["tokens"], expected["tokens"])]
         )
+        assert returned["has_confidential_activity"] is True
         wallet_service_gateway.address_tokens.assert_called_once_with(
             addr, limit, offset
+        )
+        wallet_service_gateway.address_has_confidential_activity.assert_called_once_with(
+            addr
         )
