@@ -75,3 +75,17 @@ class TestS3Client:
         result = s3_client.load_file_bytes("head", "icons/missing.png")
 
         assert result is None
+
+    @patch("gateways.clients.s3_client.S3_ENDPOINT", None)
+    def test_reuses_boto3_client_across_instances(self):
+        # Warm Lambda invocations must not build a new boto3 client each time.
+        assert S3Client().client is S3Client().client
+
+    def test_builds_one_boto3_client_per_endpoint(self):
+        with patch("gateways.clients.s3_client.S3_ENDPOINT", None):
+            default_client = S3Client().client
+        with patch("gateways.clients.s3_client.S3_ENDPOINT", "http://s3.local"):
+            custom_client = S3Client().client
+
+        assert default_client is not custom_client
+        assert custom_client.meta.endpoint_url == "http://s3.local"

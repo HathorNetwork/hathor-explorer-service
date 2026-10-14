@@ -1,19 +1,30 @@
 import json
+from functools import lru_cache
+from typing import Any, Optional
 
 import boto3
 
 from common.configuration import LAMBDA_INVOKE_URL
 
 
+@lru_cache(maxsize=None)
+def get_boto3_lambda_client(endpoint_url: Optional[str]) -> Any:
+    """Return the boto3 lambda client for the endpoint, built once per process.
+
+    See `gateways.clients.s3_client.get_boto3_s3_client` for why the client
+    is reused instead of built on every call.
+
+    :param endpoint_url: custom endpoint, or None for the AWS default
+    :type endpoint_url: Optional[str]
+    """
+    return boto3.session.Session().client("lambda", endpoint_url=endpoint_url)
+
+
 class LambdaClient:
     """This is an abstraction for boto3 lambda client"""
 
     def __init__(self) -> None:
-        session = boto3.session.Session()
-        if LAMBDA_INVOKE_URL is None:
-            self.client = session.client("lambda")
-        else:
-            self.client = session.client("lambda", endpoint_url=LAMBDA_INVOKE_URL)
+        self.client = get_boto3_lambda_client(LAMBDA_INVOKE_URL)
 
     def invoke_async(self, function: str, payload: dict) -> int:
         """Invoke lambda asyncronously
