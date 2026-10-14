@@ -1,7 +1,8 @@
 import asyncio
 import json
+import math
 from time import monotonic
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Tuple
 from urllib import parse
 
 import aiohttp
@@ -86,45 +87,75 @@ class HathorCoreAsyncClient:
         max_retries = self.MAX_RETRIES if retry else 0
         start = monotonic()
         deadline = start + timeout
+        # The last retryable error response, as (status, body)
+        last_error: Optional[Tuple[int, str]] = None
 
         try:
-            async with aiohttp.ClientSession(
-                timeout=aiohttp.ClientTimeout(total=timeout)
-            ) as session:
+            async with aiohttp.ClientSession() as session:
                 for attempt in range(max_retries + 1):
-                    remaining = deadline - monotonic()
-                    async with session.get(
-                        url,
-                        params=params,
-                        timeout=aiohttp.ClientTimeout(total=remaining),
-                    ) as response:
-                        if response.status <= 299:
-                            return await response.json(content_type=content_type)
+                    # aiohttp treats a total <= 0 as "no timeout", so never pass one.
+                    # ceil_threshold=inf stops aiohttp from rounding the deadline up
+                    # to the next second, which would let the attempt overrun the budget.
+                    attempt_timeout = aiohttp.ClientTimeout(
+                        total=max(deadline - monotonic(), 0.001),
+                        ceil_threshold=math.inf,
+                    )
+                    try:
+                        async with session.get(
+                            url, params=params, timeout=attempt_timeout
+                        ) as response:
+                            if response.status <= 299:
+                                return await response.json(content_type=content_type)
 
-                        body = await response.text()
-                        is_retryable = response.status in self.RETRYABLE_STATUS_CODES
-                        remaining = deadline - monotonic()
-                        fits_budget = (
-                            remaining - self.RETRY_DELAY >= self.MIN_RETRY_ATTEMPT_TIME
-                        )
-                        if is_retryable and attempt < max_retries and fits_budget:
-                            self.log.info(
-                                "hathor_core_retry",
-                                path=path,
-                                status=response.status,
-                                attempt=attempt + 1,
-                                elapsed=round(monotonic() - start, 3),
-                            )
-                            await asyncio.sleep(self.RETRY_DELAY)
-                            continue
-
+                            status = response.status
+                            body = await response.text()
+                    except asyncio.TimeoutError:
+                        if last_error is None:
+                            raise
+                        # A retry ran out of time. The error that caused the retry
+                        # says more about the upstream problem than the timeout does.
+                        status, body = last_error
                         self.log.warning(
                             "hathor_core_error",
                             path=path,
-                            status=response.status,
+                            status=status,
                             body=body,
+                            attempt=attempt + 1,
+                            elapsed=round(monotonic() - start, 3),
+                            retry_timed_out=True,
                         )
-                        return self._decode_error_body(response.status, body)
+                        return self._decode_error_body(status, body)
+
+                    now = monotonic()
+                    can_retry = (
+                        status in self.RETRYABLE_STATUS_CODES and attempt < max_retries
+                    )
+                    fits_budget = (
+                        deadline - now - self.RETRY_DELAY >= self.MIN_RETRY_ATTEMPT_TIME
+                    )
+                    if can_retry and fits_budget:
+                        self.log.info(
+                            "hathor_core_retry",
+                            path=path,
+                            status=status,
+                            attempt=attempt + 1,
+                            elapsed=round(now - start, 3),
+                        )
+                        last_error = (status, body)
+                        await asyncio.sleep(self.RETRY_DELAY)
+                        continue
+
+                    self.log.warning(
+                        "hathor_core_error",
+                        path=path,
+                        status=status,
+                        body=body,
+                        attempt=attempt + 1,
+                        elapsed=round(now - start, 3),
+                        # True when a retry was possible but did not fit the budget
+                        budget_exhausted=can_retry and not fits_budget,
+                    )
+                    return self._decode_error_body(status, body)
         except Exception as e:
             self.log.error("hathor_core_error", path=path, error=repr(e))
             return {"error": repr(e)}
