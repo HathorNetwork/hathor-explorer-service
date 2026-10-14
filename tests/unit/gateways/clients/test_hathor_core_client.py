@@ -72,7 +72,7 @@ class TestHathorCoreAsyncClientGet(unittest.IsolatedAsyncioTestCase):
     async def test_get_reuses_single_session_across_retries(
         self, mock_sleep, mock_client_session
     ):
-        """Retries reuse one aiohttp session while keeping per-attempt timeouts."""
+        """Retries reuse one aiohttp session, bounded by the total timeout."""
         data = {"id": "abc"}
         session = MagicMock()
         session.get.side_effect = [
@@ -91,7 +91,82 @@ class TestHathorCoreAsyncClientGet(unittest.IsolatedAsyncioTestCase):
         mock_client_session.assert_called_once()
         assert mock_client_session.call_args.kwargs["timeout"].total == 7
         assert session.get.call_count == 2
+        for call in session.get.call_args_list:
+            assert 0 < call.kwargs["timeout"].total <= 7
         mock_sleep.assert_called_once_with(HathorCoreAsyncClient.RETRY_DELAY)
+
+    @patch("aiohttp.ClientSession.get")
+    @patch("gateways.clients.hathor_core_client.asyncio.sleep", new_callable=AsyncMock)
+    async def test_get_logs_each_retry(self, mock_sleep, mock_get):
+        """Each retry is logged with the upstream status and the attempt number."""
+        data = {"id": "abc"}
+        mock_get.side_effect = [
+            _as_ctx(_make_response(503, text_data="unavailable")),
+            _as_ctx(_make_response(200, json_data=data)),
+        ]
+
+        client = HathorCoreAsyncClient("http://test.node")
+        with patch.object(client, "log") as mock_log:
+            result = await client.get("/v1a/status")
+
+        assert result == data
+        mock_log.info.assert_called_once()
+        assert mock_log.info.call_args.args == ("hathor_core_retry",)
+        kwargs = mock_log.info.call_args.kwargs
+        assert kwargs["path"] == "/v1a/status"
+        assert kwargs["status"] == 503
+        assert kwargs["attempt"] == 1
+        assert kwargs["elapsed"] >= 0
+
+    @patch("gateways.clients.hathor_core_client.monotonic")
+    @patch("aiohttp.ClientSession.get")
+    @patch("gateways.clients.hathor_core_client.asyncio.sleep", new_callable=AsyncMock)
+    async def test_get_skips_retry_that_does_not_fit_the_budget(
+        self, mock_sleep, mock_get, mock_monotonic
+    ):
+        """A 5xx near the end of the budget is returned instead of retried."""
+        retry_body = "<html>504 Gateway Timeout</html>"
+        mock_get.return_value = _as_ctx(_make_response(504, text_data=retry_body))
+        # start, before the first attempt, then after the 504: 4.5 s of 5 s used
+        mock_monotonic.side_effect = [100.0, 100.0, 104.5]
+
+        client = HathorCoreAsyncClient("http://test.node")
+        with patch.object(client, "log") as mock_log:
+            result = await client.get("/v1a/status", timeout=5)
+
+        assert result == {"error": "status 504", "body": retry_body}
+        assert mock_get.call_count == 1
+        mock_sleep.assert_not_called()
+        mock_log.info.assert_not_called()
+        mock_log.warning.assert_called_once_with(
+            "hathor_core_error",
+            path="/v1a/status",
+            status=504,
+            body=retry_body,
+        )
+
+    @patch("gateways.clients.hathor_core_client.monotonic")
+    @patch("aiohttp.ClientSession.get")
+    @patch("gateways.clients.hathor_core_client.asyncio.sleep", new_callable=AsyncMock)
+    async def test_get_second_attempt_gets_only_the_remaining_budget(
+        self, mock_sleep, mock_get, mock_monotonic
+    ):
+        """After a retry, the next attempt's timeout is what is left of the budget."""
+        data = {"id": "abc"}
+        mock_get.side_effect = [
+            _as_ctx(_make_response(502, text_data="bad gateway")),
+            _as_ctx(_make_response(200, json_data=data)),
+        ]
+        # start, attempt 1, after the 502, retry log, attempt 2 (3 s of 10 s used)
+        mock_monotonic.side_effect = [0.0, 0.0, 2.0, 2.0, 3.0]
+
+        client = HathorCoreAsyncClient("http://test.node")
+        result = await client.get("/v1a/status", timeout=10)
+
+        assert result == data
+        first, second = mock_get.call_args_list
+        assert first.kwargs["timeout"].total == 10
+        assert second.kwargs["timeout"].total == 7
 
     @patch("aiohttp.ClientSession.get")
     @patch("gateways.clients.hathor_core_client.asyncio.sleep", new_callable=AsyncMock)

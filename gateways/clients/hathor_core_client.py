@@ -1,5 +1,6 @@
 import asyncio
 import json
+from time import monotonic
 from typing import Any, Dict, Optional
 from urllib import parse
 
@@ -40,6 +41,8 @@ class HathorCoreAsyncClient:
     DEFAULT_TIMEOUT = 60  # seconds
     MAX_RETRIES = 2
     RETRY_DELAY = 1.0  # seconds between retries
+    # A retry only starts when at least this much of the budget is left after the delay
+    MIN_RETRY_ATTEMPT_TIME = 1.0  # seconds
     RETRYABLE_STATUS_CODES = frozenset({502, 503, 504})
 
     def __init__(self, url: Optional[str] = None) -> None:
@@ -65,8 +68,9 @@ class HathorCoreAsyncClient:
         :type path: str
         :param params: params to be sent
         :type params: Optional[dict]
-        :param timeout: per-attempt timeout in seconds; total elapsed time may be higher
-            when retries are triggered
+        :param timeout: total time budget in seconds for the request, retries and the
+            delays between them included. Each attempt only gets the time that is left,
+            and a retry is skipped when it would not fit in the budget.
         :type timeout: Optional[float]
         :param retry: whether to retry on transient gateway errors (502/503/504).
             Disable it for endpoints where such a status is a legitimate answer
@@ -80,19 +84,37 @@ class HathorCoreAsyncClient:
             timeout = self.DEFAULT_TIMEOUT
 
         max_retries = self.MAX_RETRIES if retry else 0
+        start = monotonic()
+        deadline = start + timeout
 
         try:
             async with aiohttp.ClientSession(
                 timeout=aiohttp.ClientTimeout(total=timeout)
             ) as session:
                 for attempt in range(max_retries + 1):
-                    async with session.get(url, params=params) as response:
+                    remaining = deadline - monotonic()
+                    async with session.get(
+                        url,
+                        params=params,
+                        timeout=aiohttp.ClientTimeout(total=remaining),
+                    ) as response:
                         if response.status <= 299:
                             return await response.json(content_type=content_type)
 
                         body = await response.text()
                         is_retryable = response.status in self.RETRYABLE_STATUS_CODES
-                        if is_retryable and attempt < max_retries:
+                        remaining = deadline - monotonic()
+                        fits_budget = (
+                            remaining - self.RETRY_DELAY >= self.MIN_RETRY_ATTEMPT_TIME
+                        )
+                        if is_retryable and attempt < max_retries and fits_budget:
+                            self.log.info(
+                                "hathor_core_retry",
+                                path=path,
+                                status=response.status,
+                                attempt=attempt + 1,
+                                elapsed=round(monotonic() - start, 3),
+                            )
                             await asyncio.sleep(self.RETRY_DELAY)
                             continue
 
