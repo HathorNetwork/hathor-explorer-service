@@ -109,7 +109,7 @@ class HathorCoreAsyncClient:
 
                             status = response.status
                             body = await response.text()
-                    except asyncio.TimeoutError:
+                    except asyncio.TimeoutError as e:
                         if last_error is None:
                             raise
                         # A retry ran out of time. The error that caused the retry
@@ -123,6 +123,9 @@ class HathorCoreAsyncClient:
                             attempt=attempt + 1,
                             elapsed=round(monotonic() - start, 3),
                             retry_timed_out=True,
+                            # Tells a connect timeout (ConnectionTimeoutError) from a
+                            # slow response, e.g. a 200 whose body read timed out
+                            error=repr(e),
                         )
                         return self._decode_error_body(status, body)
 

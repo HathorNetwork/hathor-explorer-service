@@ -287,6 +287,7 @@ class TestHathorCoreAsyncClientGet(unittest.IsolatedAsyncioTestCase):
             attempt=2,
             elapsed=ANY,
             retry_timed_out=True,
+            error="TimeoutError()",
         )
 
     @patch("aiohttp.ClientSession.get")
