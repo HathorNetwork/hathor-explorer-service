@@ -1,19 +1,14 @@
 import json
 
-import boto3
-
 from common.configuration import LAMBDA_INVOKE_URL
+from gateways.clients.boto3_client import get_boto3_client
 
 
 class LambdaClient:
     """This is an abstraction for boto3 lambda client"""
 
     def __init__(self) -> None:
-        session = boto3.session.Session()
-        if LAMBDA_INVOKE_URL is None:
-            self.client = session.client("lambda")
-        else:
-            self.client = session.client("lambda", endpoint_url=LAMBDA_INVOKE_URL)
+        self.client = get_boto3_client("lambda", LAMBDA_INVOKE_URL)
 
     def invoke_async(self, function: str, payload: dict) -> int:
         """Invoke lambda asyncronously
