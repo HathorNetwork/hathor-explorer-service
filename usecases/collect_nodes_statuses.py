@@ -30,7 +30,16 @@ class CollectNodesStatuses:
         if "error" in data:
             self.log.warning("collect_status_error", error=data["error"])
             return
-        node = Node.from_status_dict(data)
+        try:
+            node = Node.from_status_dict(data)
+        except (KeyError, TypeError) as e:
+            # An error response without an "error" key (e.g. a 5xx with a JSON body)
+            # reaches this point. Skip it, so it doesn't end the collector loop.
+            # A full status payload can be large, so log only its start
+            self.log.warning(
+                "collect_status_error", error=repr(e), data=str(data)[:500]
+            )
+            return
         # XXX: https://github.com/HathorNetwork/internal-issues/issues/73
         # A big enough known_peers list can reach the limit of data passed to a lambda.
         # This filters the unnecessary peer ids.

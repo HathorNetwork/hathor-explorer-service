@@ -57,3 +57,19 @@ class TestLambdaClient:
 
         assert result["StatusCode"] == 200
         assert result["Payload"].read().decode() == "You are a stark"
+
+    @patch("gateways.clients.lambda_client.LAMBDA_INVOKE_URL", None)
+    def test_reuses_boto3_client_across_instances(self):
+        # Warm Lambda invocations must not build a new boto3 client each time.
+        assert LambdaClient().client is LambdaClient().client
+
+    def test_builds_one_boto3_client_per_endpoint(self):
+        with patch("gateways.clients.lambda_client.LAMBDA_INVOKE_URL", None):
+            default_client = LambdaClient().client
+        with patch(
+            "gateways.clients.lambda_client.LAMBDA_INVOKE_URL", "http://lambda.local"
+        ):
+            custom_client = LambdaClient().client
+
+        assert default_client is not custom_client
+        assert custom_client.meta.endpoint_url == "http://lambda.local"
