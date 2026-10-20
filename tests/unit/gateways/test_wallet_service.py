@@ -4,6 +4,7 @@ from faker import Faker
 from pytest import fixture
 
 from domain.wallet_service import TokenEntry
+from gateways.clients.wallet_service_db_client import FULLY_SHIELDED_TOKEN_ID
 from gateways.wallet_service_gateway import WalletServiceGateway
 from tests.fixtures.wallet_service_factory import (
     TokenBalanceFactory,
@@ -54,10 +55,10 @@ class TestWalletServiceDBClient:
     def test_address_history(self, db_client):
         tx1 = TxHistoryEntryFactory()
         tx2 = TxHistoryEntryFactory()
-        db_client.get_address_history.return_value = [
-            {**tx1.to_dict(), "has_next": 1},
-            {**tx2.to_dict(), "has_next": 1},
-        ]
+        db_client.get_address_history.return_value = (
+            True,
+            [tx1.to_dict(), tx2.to_dict()],
+        )
 
         gw = WalletServiceGateway(db_client)
 
@@ -69,14 +70,67 @@ class TestWalletServiceDBClient:
 
         returned = gw.address_history(address, token, limit, last_tx, last_ts)
 
-        assert len(returned["history"]) == 2
-        assert all(
-            [ret == exp.to_dict() for ret, exp in zip(returned["history"], [tx1, tx2])]
-        )
+        assert returned["has_next"] is True
+        assert returned["history"] == [tx1.to_dict(), tx2.to_dict()]
 
         db_client.get_address_history.assert_called_once_with(
             address, token, limit, last_tx, last_ts
         )
+
+    def test_address_history_empty(self, db_client):
+        db_client.get_address_history.return_value = (False, [])
+
+        gw = WalletServiceGateway(db_client)
+
+        assert gw.address_history(fake.pystr(), fake.sha256(), 10, None, 0) == {
+            "has_next": False,
+            "history": [],
+        }
+
+    def test_address_confidential_history(self, db_client):
+        tx1 = TxHistoryEntryFactory(token_id=FULLY_SHIELDED_TOKEN_ID, balance=0)
+        tx2 = TxHistoryEntryFactory(token_id=FULLY_SHIELDED_TOKEN_ID, balance=0)
+        db_client.get_address_history.return_value = (
+            False,
+            [tx1.to_dict(), tx2.to_dict()],
+        )
+
+        gw = WalletServiceGateway(db_client)
+
+        address = fake.pystr()
+        limit = fake.pyint()
+        last_tx = fake.sha256()
+        last_ts = fake.pyint()
+
+        returned = gw.address_confidential_history(address, limit, last_tx, last_ts)
+
+        assert returned["has_next"] is False
+        # The sentinel and the stored balance are not returned
+        assert returned["history"] == [
+            {**tx.to_dict(), "token_id": None, "balance": None} for tx in (tx1, tx2)
+        ]
+
+        db_client.get_address_history.assert_called_once_with(
+            address, FULLY_SHIELDED_TOKEN_ID, limit, last_tx, last_ts
+        )
+
+    def test_is_reserved_token(self, db_client):
+        gw = WalletServiceGateway(db_client)
+
+        assert gw.is_reserved_token(FULLY_SHIELDED_TOKEN_ID)
+        assert not gw.is_reserved_token("00")
+        assert not gw.is_reserved_token(fake.sha256())
+
+    def test_address_flags(self, db_client):
+        flags = {"has_confidential_activity": True, "has_hidden_token_activity": False}
+        db_client.get_address_flags.return_value = flags
+
+        gw = WalletServiceGateway(db_client)
+
+        address = fake.pystr()
+
+        assert gw.address_flags(address) == flags
+        db_client.get_address_flags.assert_called_once_with(address)
 
     def test_address_balance(self, db_client):
         balance = TokenBalanceFactory()

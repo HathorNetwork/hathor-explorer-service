@@ -69,6 +69,7 @@ omit = [
 [tool.mypy]
 ignore_missing_imports = true
 strict_optional = true
+explicit_package_bases = true
 exclude = [
     '/tests',
 ]

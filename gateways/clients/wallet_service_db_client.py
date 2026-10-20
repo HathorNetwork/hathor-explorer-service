@@ -18,76 +18,89 @@ if TYPE_CHECKING:
     from sqlalchemy.engine import Engine, Row
 
 
-address_balance_query: str = """\
-SELECT
-    token_id,
-    transactions,
-    total_received,
-    unlocked_balance,
-    locked_balance,
-    unlocked_authorities,
-    locked_authorities
-FROM address_balance
-WHERE address = :address AND token_id = :token LIMIT 1"""
+# FullyShielded involvement is recorded in the public address tables under this
+# token_id, never under a real token. It is not hex, so it never matches a `token`
+# row. The wallet-service daemon uses the same literal.
+FULLY_SHIELDED_TOKEN_ID = "fully_shielded"
 
-address_history_query = """\
-  SELECT address_tx_history.tx_id AS tx_id,
-         address_tx_history.token_id AS token_id,
-         address_tx_history.balance AS balance,
-         address_tx_history.timestamp AS timestamp,
-         transaction.version AS version,
-         transaction.height AS height,
-         (
-          SELECT 1 FROM address_tx_history
-           WHERE address_tx_history.address = :address
-             AND (
-                ((ISNULL(:last_tx) = 0) AND (address_tx_history.timestamp, address_tx_history.tx_id) < (:last_ts, :last_tx))
-                OR
-                ((ISNULL(:last_tx) = 1) AND (address_tx_history.timestamp, address_tx_history.tx_id) > (0, NULL))
-             )
-             AND address_tx_history.token_id = :token
-           LIMIT 1
-          OFFSET :limit
-         ) AS has_next
-    FROM address_tx_history INNER JOIN transaction ON address_tx_history.tx_id = transaction.tx_id
-   WHERE transaction.voided = FALSE
-     AND address_tx_history.address = :address
-     AND address_tx_history.token_id = :token
-     AND (
-        ((ISNULL(:last_tx) = 0) AND (address_tx_history.timestamp, address_tx_history.tx_id) < (:last_ts, :last_tx))
-        OR
-        ((ISNULL(:last_tx) = 1) AND (address_tx_history.timestamp, address_tx_history.tx_id) > (0, NULL))
-     )
-ORDER BY timestamp DESC, tx_id DESC
-   LIMIT :limit"""
+# The address queries read only the public address tables, `token`, `transaction`
+# and the transparent columns of `address_balance`. Shielded-output recovery writes
+# `tx_output`, `address_tx_history` and the rest of `address_balance`, so reading
+# those would reveal which outputs were recovered.
+
+# A pair with only AmountShielded involvement may have no `address_balance` row,
+# so its amounts are 0. COALESCE with a literal returns a DECIMAL, hence the CAST.
+address_balance_query: str = """\
+   SELECT p.token_id AS token_id,
+          p.transactions AS transactions,
+          CAST(COALESCE(b.total_received, 0) AS UNSIGNED) AS total_received,
+          CAST(COALESCE(b.unlocked_balance, 0) AS UNSIGNED) AS unlocked_balance,
+          CAST(COALESCE(b.locked_balance, 0) AS UNSIGNED) AS locked_balance,
+          CAST(COALESCE(b.unlocked_authorities, 0) AS UNSIGNED) AS unlocked_authorities,
+          CAST(COALESCE(b.locked_authorities, 0) AS UNSIGNED) AS locked_authorities
+     FROM public_address_tokens p
+LEFT JOIN address_balance b
+       ON b.address = p.address AND b.token_id = p.token_id
+    WHERE p.address = :address AND p.token_id = :token"""
+
+# The page is selected from the history's primary key first, then joined with
+# `transaction`. The cursor is written as an expanded OR because MySQL does not
+# range-optimize a row-constructor comparison.
+_address_history_query_template = """\
+    SELECT page.tx_id AS tx_id,
+           page.token_id AS token_id,
+           page.balance AS balance,
+           page.timestamp AS timestamp,
+           transaction.version AS version,
+           transaction.height AS height
+      FROM (
+             SELECT tx_id, token_id, balance, timestamp
+               FROM public_address_tx_history
+              WHERE address = :address
+                AND token_id = :token{cursor}
+           ORDER BY timestamp DESC, tx_id DESC
+              LIMIT :limit
+           ) page
+INNER JOIN transaction ON transaction.tx_id = page.tx_id
+  ORDER BY page.timestamp DESC, page.tx_id DESC"""
+
+address_history_query: str = _address_history_query_template.format(cursor="")
+
+address_history_after_query: str = _address_history_query_template.format(
+    cursor="""
+                AND (timestamp < :last_ts OR (timestamp = :last_ts AND tx_id < :last_tx))"""
+)
 
 address_tokens_query: str = """\
-    SELECT token.id AS token_id,
+    SELECT p.token_id AS token_id,
            token.name AS name,
            token.symbol AS symbol
-      FROM token
-INNER JOIN (
-             SELECT token_id,
-                    MAX(timestamp) AS timestamp
-               FROM address_tx_history
-              WHERE address = :address
-                AND token_id != '00'
-           GROUP BY token_id
-           ) address_tokens
-        ON token.id = address_tokens.token_id
-  ORDER BY address_tokens.timestamp DESC
-LIMIT :limit OFFSET :offset"""
+      FROM public_address_tokens p
+INNER JOIN token ON token.id = p.token_id
+     WHERE p.address = :address AND p.token_id <> '00'
+  ORDER BY p.last_activity DESC, p.token_id DESC
+     LIMIT :limit OFFSET :offset"""
 
 address_has_htr_query: str = """\
-SELECT '00' as token_id, 'Hathor' as name, 'HTR' as symbol
-WHERE EXISTS (SELECT 1 FROM address_balance WHERE address = :address and token_id = '00')
-"""
+SELECT '00' AS token_id, 'Hathor' AS name, 'HTR' AS symbol
+  FROM public_address_tokens
+ WHERE address = :address AND token_id = '00'"""
 
-address_tokens_count_query = """\
-SELECT COUNT(*) as total
-FROM token INNER JOIN address_balance
-ON token.id = address_balance.token_id
-WHERE address_balance.address = :address"""
+address_tokens_count_query: str = """\
+    SELECT COUNT(*) AS total
+      FROM public_address_tokens p
+INNER JOIN token ON token.id = p.token_id
+     WHERE p.address = :address"""
+
+address_flags_query: str = f"""\
+SELECT EXISTS (
+         SELECT 1 FROM public_address_tokens
+          WHERE address = :address AND shielded_transactions > 0
+       ) AS has_confidential_activity,
+       EXISTS (
+         SELECT 1 FROM public_address_tokens
+          WHERE address = :address AND token_id = '{FULLY_SHIELDED_TOKEN_ID}'
+       ) AS has_hidden_token_activity"""
 
 ping_query: str = "SELECT 1"
 
@@ -135,23 +148,29 @@ class WalletServiceDBClient:
 
     def get_address_history(
         self, address: str, token: str, limit: int, last_tx: Optional[str], last_ts: int
-    ) -> List[dict]:
-        """Fetch the transaction history for an address/token pair."""
+    ) -> Tuple[bool, List[dict]]:
+        """Fetch a page of the transaction history for an address/token pair.
+
+        The page starts after the (`last_ts`, `last_tx`) cursor, or at the newest
+        transaction when `last_tx` is None.
+
+        Returns whether there is a next page, and the page's rows.
+        """
+        params: dict = {"address": address, "token": token, "limit": limit + 1}
+        query = address_history_query
+        if last_tx is not None:
+            query = address_history_after_query
+            params.update(last_tx=last_tx, last_ts=last_ts)
+
         result: List[dict] = []
         with self.engine.connect() as connection:
-            cursor = connection.execute(
-                text(address_history_query),
-                address=address,
-                token=token,
-                limit=limit,
-                last_tx=last_tx,
-                last_ts=last_ts,
-            )
+            cursor = connection.execute(text(query), **params)
 
             for row in cursor:
                 result.append(row._asdict())
 
-        return result
+        # One row more than the page was fetched to tell whether there is a next page
+        return len(result) > limit, result[:limit]
 
     def get_address_tokens(
         self, address: str, limit: int, offset: int
@@ -201,6 +220,20 @@ class WalletServiceDBClient:
                 result.append(row._asdict())
 
         return total, result
+
+    def get_address_flags(self, address: str) -> dict:
+        """Fetch the address's confidential activity flags.
+
+        `has_confidential_activity`: the address has any shielded output or input.
+        `has_hidden_token_activity`: the address has a FullyShielded output or input.
+        """
+        with self.engine.connect() as connection:
+            cursor = connection.execute(text(address_flags_query), address=address)
+            try:
+                result = cursor.one()
+            finally:
+                cursor.close()
+        return {key: bool(value) for key, value in result._asdict().items()}
 
     def ping(self, timeout: int = 5) -> Tuple[bool, dict]:
         """Ping the database to check if it's alive."""
