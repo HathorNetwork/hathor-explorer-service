@@ -13,10 +13,12 @@ from common.configuration import (
     WALLET_SERVICE_DB_USERNAME,
 )
 from common.errors import RdsError, RdsNotFoundError
+from common.logging import get_logger
 
 if TYPE_CHECKING:
     from sqlalchemy.engine import Engine, Row
 
+logger = get_logger()
 
 address_balance_query: str = """\
 SELECT
@@ -88,6 +90,12 @@ SELECT COUNT(*) as total
 FROM token INNER JOIN address_balance
 ON token.id = address_balance.token_id
 WHERE address_balance.address = :address"""
+
+address_has_confidential_activity_query: str = """\
+SELECT EXISTS(
+    SELECT 1 FROM tx_output
+    WHERE address = :address AND mode != 0 AND voided = FALSE
+) AS has_confidential_activity"""
 
 ping_query: str = "SELECT 1"
 
@@ -201,6 +209,33 @@ class WalletServiceDBClient:
                 result.append(row._asdict())
 
         return total, result
+
+    def get_address_has_confidential_activity(self, address: str) -> bool:
+        """Whether the address has any shielded (confidential) output.
+
+        Reads `tx_output.mode` (0 = transparent, 1 = AmountShielded,
+        2 = FullShielded), a column added by the wallet-service shielded
+        migrations. If that column is not deployed yet the query raises; we
+        treat any failure as "no confidential activity" so the address page
+        keeps working (the banner is a non-critical enhancement).
+        """
+        try:
+            with self.engine.connect() as connection:
+                cursor = connection.execute(
+                    text(address_has_confidential_activity_query), address=address
+                )
+                try:
+                    result = cursor.one()
+                finally:
+                    cursor.close()
+            return bool(result._asdict()["has_confidential_activity"])
+        except Exception as exc:
+            logger.warning(
+                "confidential_activity_check_failed",
+                address=address,
+                error=repr(exc),
+            )
+            return False
 
     def ping(self, timeout: int = 5) -> Tuple[bool, dict]:
         """Ping the database to check if it's alive."""
