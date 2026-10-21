@@ -48,11 +48,20 @@ def handle_address_history(
 
     address: Optional[str] = event.query.get("address")
     token: Optional[str] = event.query.get("token")
+    confidential_str: str = event.query.get("confidential", "false")
     last_tx: Optional[str] = event.query.get("last_tx", None)
     last_ts_str: str = event.query.get("last_ts", "0")
     limit_str: str = event.query.get("limit", "10")
 
-    if address is None or token is None:
+    if address is None:
+        raise ApiError("invalid_parameters")
+
+    if confidential_str not in ("true", "false"):
+        raise ApiError("invalid_parameters")
+    confidential = confidential_str == "true"
+
+    # The history is either of a token or of the address's confidential tokens
+    if confidential == (token is not None):
         raise ApiError("invalid_parameters")
 
     limit: int
@@ -66,10 +75,18 @@ def handle_address_history(
     if last_ts < 0:
         raise ApiError("invalid_parameters")
 
-    if limit > 100:
+    if limit < 1 or limit > 100:
         raise ApiError("invalid_parameters")
 
-    response = wallet_service.address_history(address, token, limit, last_tx, last_ts)
+    response: dict
+    if token is None:
+        response = wallet_service.address_confidential_history(
+            address, limit, last_tx, last_ts
+        )
+    else:
+        response = wallet_service.address_history(
+            address, token, limit, last_tx, last_ts
+        )
 
     return {
         "statusCode": 200,

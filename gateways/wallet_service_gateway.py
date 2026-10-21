@@ -1,12 +1,19 @@
 from typing import List, Optional, Tuple
 
 from domain.wallet_service import TokenBalance, TokenEntry, TxHistoryEntry
-from gateways.clients.wallet_service_db_client import WalletServiceDBClient
+from gateways.clients.wallet_service_db_client import (
+    FULLY_SHIELDED_TOKEN_ID,
+    WalletServiceDBClient,
+)
 
 
 class WalletServiceGateway:
     def __init__(self, db_client: Optional[WalletServiceDBClient] = None):
         self.db_client = db_client or WalletServiceDBClient()
+
+    def is_reserved_token(self, token: str) -> bool:
+        """Whether `token` is an internal token_id that is not a real token."""
+        return token == FULLY_SHIELDED_TOKEN_ID
 
     def address_balance(self, address: str, token: str) -> TokenBalance:
         """Fetch the balance of a token on a particular address."""
@@ -17,16 +24,33 @@ class WalletServiceGateway:
         self, address: str, token: str, limit: int, last_tx: Optional[str], last_ts: int
     ) -> dict:
         """Fetch the tx history for an address/token pair, paginated."""
-        history = self.db_client.get_address_history(
+        has_next, history = self.db_client.get_address_history(
             address, token, limit, last_tx, last_ts
         )
 
-        has_next = False
-
-        if len(history) > 0:
-            has_next = bool(history[0]["has_next"])
-
         tx_history = [TxHistoryEntry.from_dict(tx) for tx in history]
+
+        return {
+            "has_next": has_next,
+            "history": [tx.to_dict() for tx in tx_history],
+        }
+
+    def address_confidential_history(
+        self, address: str, limit: int, last_tx: Optional[str], last_ts: int
+    ) -> dict:
+        """Fetch the txs where the address has FullyShielded involvement, paginated.
+
+        Their token and amount are hidden, so every entry has `token_id` and
+        `balance` set to None.
+        """
+        has_next, history = self.db_client.get_address_history(
+            address, FULLY_SHIELDED_TOKEN_ID, limit, last_tx, last_ts
+        )
+
+        tx_history = [
+            TxHistoryEntry.from_dict({**tx, "token_id": None, "balance": None})
+            for tx in history
+        ]
 
         return {
             "has_next": has_next,
@@ -43,3 +67,7 @@ class WalletServiceGateway:
         total, tokens = self.db_client.get_address_tokens(address, limit, offset)
 
         return total, [TokenEntry.from_dict(token) for token in tokens]
+
+    def address_flags(self, address: str) -> dict:
+        """Fetch the address's confidential activity flags."""
+        return self.db_client.get_address_flags(address)

@@ -27,7 +27,11 @@ methods:
                 $ref: "#/schemas/TokenBalance"
   address_history:
     get:
-      summary: Returns the tx history for an address and token
+      summary: Returns the tx history for an address and token, or for its confidential tokens
+      description: |
+        Pass either `token`, for the history of that token, or `confidential=true`, for the
+        transactions where the address has a FullyShielded output or input. The token and amount
+        of those are hidden, so their entries have `token_id` and `balance` set to null.
       operationId: wallet_address_history
       tags:
         - wallet_service
@@ -40,10 +44,17 @@ methods:
             type: string
         - name: token
           in: query
-          description: Token to filter for
-          required: true
+          description: Token to filter for. Required unless `confidential` is true.
+          required: false
           schema:
             type: string
+        - name: confidential
+          in: query
+          description: Return the history of the address's confidential tokens instead of a token's
+          required: false
+          schema:
+            type: boolean
+            default: false
         - name: limit
           in: query
           description: Limit to the number of transactions on the response
@@ -54,9 +65,15 @@ methods:
             maximum: 100
             minimum: 1
             default: 10
-        - name: offset
+        - name: last_tx
           in: query
-          description: Offset for the first transactions on the history
+          description: Id of the last transaction of the previous page
+          required: false
+          schema:
+            type: string
+        - name: last_ts
+          in: query
+          description: Timestamp of the last transaction of the previous page
           required: false
           schema:
             type: integer
@@ -65,13 +82,21 @@ methods:
             default: 0
       responses:
         "200":
-          description: Token balance
+          description: A page of the tx history
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/schemas/TxHistoryEntry"
+                type: object
+                required:
+                  - has_next
+                  - history
+                properties:
+                  has_next:
+                    type: boolean
+                  history:
+                    type: array
+                    items:
+                      $ref: "#/schemas/TxHistoryEntry"
   address_tokens:
     get:
       summary: Returns the tokens of a given address
@@ -114,10 +139,18 @@ methods:
                 required:
                     - total
                     - tokens
+                    - has_confidential_activity
+                    - has_hidden_token_activity
                 properties:
                   total:
                     type: integer
                     format: uint64
+                  has_confidential_activity:
+                    type: boolean
+                    description: The address has any shielded output or input
+                  has_hidden_token_activity:
+                    type: boolean
+                    description: The address has a FullyShielded output or input, whose token is hidden
                   tokens:
                     type: object
                     maxProperties: 100
@@ -153,6 +186,7 @@ schemas:
       transactions:
         type: integer
         format: uint64
+        description: Transactions of the token the address is involved in, including ones with only shielded outputs or inputs
       total_received:
         type: integer
         format: uint64
@@ -180,11 +214,15 @@ schemas:
     properties:
       token_id:
         type: string
+        nullable: true
+        description: Null on the confidential history
       tx_id:
         type: string
       balance:
         type: integer
         format: int64
+        nullable: true
+        description: Transparent balance change. Null on the confidential history
       timestamp:
         type: integer
         format: uint64

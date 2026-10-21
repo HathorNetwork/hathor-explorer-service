@@ -1,5 +1,5 @@
 from dataclasses import asdict, dataclass
-from typing import Union
+from typing import Optional, Union
 
 from dacite import from_dict
 
@@ -52,14 +52,14 @@ class TxHistoryEntry:
     :param tx_id: Transaction unique id
     :type tx_id: str
 
-    :param token_id: Token unique id
-    :type token_id: str
+    :param token_id: Token unique id, None when the token is hidden
+    :type token_id: Optional[str]
 
     :param timestamp: Transaction timestamp
     :type timestamp: int
 
-    :param balance: Transaction balance for the token
-    :type balance: int
+    :param balance: Transaction balance for the token, None when the amount is hidden
+    :type balance: Optional[int]
 
     :param version: Transaction version
     :type type: int
@@ -69,9 +69,9 @@ class TxHistoryEntry:
     """
 
     tx_id: str
-    token_id: str
+    token_id: Optional[str]
     timestamp: int
-    balance: int
+    balance: Optional[int]
     version: int
     height: Union[int, None]
 

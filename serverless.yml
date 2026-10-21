@@ -959,6 +959,7 @@ functions:
             cacheKeyParameters:
               - name: request.querystring.address
               - name: request.querystring.token
+              - name: request.querystring.confidential
               - name: request.querystring.limit
               - name: request.querystring.last_tx
               - name: request.querystring.last_ts
