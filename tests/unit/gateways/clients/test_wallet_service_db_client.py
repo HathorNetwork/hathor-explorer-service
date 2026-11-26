@@ -4,6 +4,7 @@ from unittest.mock import ANY, MagicMock, call
 import pytest
 from faker import Faker
 from sqlalchemy.exc import MultipleResultsFound, NoResultFound
+from sqlalchemy.pool import QueuePool
 
 from common.errors import RdsError, RdsNotFoundError
 from gateways.clients import wallet_service_db_client
@@ -451,3 +452,43 @@ class TestWalletServiceDBClient:
         connection.execute.assert_called_once()
         # Should use the correct query for this method
         assert connection.execute.call_args[0][0].text == "SELECT 1"
+
+
+class TestGetEngine:
+    @pytest.fixture(autouse=True)
+    def no_cached_engine(self, monkeypatch):
+        monkeypatch.setattr(wallet_service_db_client, "_engine", None)
+
+    def test_creates_the_engine_once(self, monkeypatch):
+        create_engine = MagicMock()
+        monkeypatch.setattr(wallet_service_db_client, "create_engine", create_engine)
+
+        first = wallet_service_db_client.get_engine()
+        second = wallet_service_db_client.get_engine()
+
+        assert first is second
+        create_engine.assert_called_once()
+
+    def test_clients_share_the_engine(self, monkeypatch):
+        monkeypatch.setattr(wallet_service_db_client, "create_engine", MagicMock())
+
+        assert WalletServiceDBClient().engine is WalletServiceDBClient().engine
+
+    def test_pool_keeps_one_connection(self):
+        engine = wallet_service_db_client.create_wallet_service_engine()
+
+        assert isinstance(engine.pool, QueuePool)
+        assert engine.pool.size() == 1
+        assert engine.pool._max_overflow == 0
+        assert engine.pool._pre_ping is True
+        assert engine.pool._recycle == wallet_service_db_client.POOL_RECYCLE_SECONDS
+
+    def test_connection_sets_a_short_wait_timeout(self, monkeypatch):
+        create_engine = MagicMock()
+        monkeypatch.setattr(wallet_service_db_client, "create_engine", create_engine)
+
+        wallet_service_db_client.create_wallet_service_engine()
+
+        init_command = create_engine.call_args.kwargs["connect_args"]["init_command"]
+        timeout = wallet_service_db_client.SESSION_WAIT_TIMEOUT_SECONDS
+        assert init_command == f"SET SESSION wait_timeout = {timeout}"

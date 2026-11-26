@@ -59,6 +59,9 @@ provider:
       Resource:
         - arn:aws:s3:::${env:METADATA_BUCKET}/icons/*
   environment:
+    # Without it the code defaults to DEV, which logs every SQL statement
+    # (~5 KB per request in the address sweeps of on-call-incidents#318).
+    ENVIRONMENT: ${self:custom.environment.${self:custom.stage}, self:custom.environment.default}
     HATHOR_CORE_URL: ${env:HATHOR_CORE_URL}
     HATHOR_NODES: ${env:HATHOR_NODES}
     REDIS_KEY_PREFIX: ${env:REDIS_KEY_PREFIX}
@@ -128,6 +131,9 @@ custom:
   enableCaching:
     mainnet: true
     default: false
+  environment:
+    dev: DEV
+    default: PROD
   apiGatewayThrottling:
     # Apply to all http endpoints, unless overridden
     # According to AWS: "Each method in this stage will respect these rate and burst settings."
@@ -184,6 +190,22 @@ custom:
         treatMissingData: notBreaching
         alarmActions:
           - minor
+      # Only for big request sweeps. The baseline is under 30 invocations per
+      # hour. 2500 in 15 minutes is a rate of 10k per hour: it catches the
+      # address sweeps of on-call-incidents#318 (20k to 190k per hour) but not
+      # small bursts.
+      addressSweepInvocations:
+        description: "More than 2500 invocations in 15 minutes: probably a bot sweeping addresses. Runbook: https://github.com/HathorNetwork/on-call-incidents/issues/318"
+        namespace: 'AWS/Lambda'
+        metric: Invocations
+        threshold: 2500
+        statistic: Sum
+        period: 900
+        evaluationPeriods: 1
+        comparisonOperator: GreaterThanOrEqualToThreshold
+        treatMissingData: notBreaching
+        alarmActions:
+          - medium
     alarms: # Alarms that will be applied to all functions
       - majorFunctionErrors
       - mediumFunctionErrors
@@ -434,28 +456,6 @@ functions:
               - name: request.querystring.id
               - name: request.header.origin
               - name: request.header.Accept
-
-  node_api_get_address_balance:
-    handler: handlers/node_api.get_address_balance
-    memorySize: 128
-    timeout: 15
-    maximumRetryAttempts: 0
-    package:
-      patterns:
-        - 'handlers/node_api.py'
-    layers:
-      - { Ref: PythonRequirementsLambdaLayer }
-    events:
-      - http:
-          path: node_api/address_balance
-          method: get
-          cors: true
-          caching:
-            enabled: true
-            ttlInSeconds: 300
-            cacheKeyParameters:
-              - name: request.querystring.address
-              - name: request.header.origin
 
   node_api_get_address_search:
     handler: handlers/node_api.get_address_search
@@ -969,6 +969,8 @@ functions:
     handler: handlers/wallet_service.handle_address_tokens
     memorySize: 128
     timeout: 15
+    alarms:
+      - addressSweepInvocations
     package:
       patterns:
         - 'handlers/wallet_service.py'

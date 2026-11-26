@@ -12,28 +12,6 @@ UNKNOWN_ERROR_MSG = {"error": "unknown_error"}
 
 
 @ApiGateway()
-def get_address_balance(
-    event: ApiGatewayEvent, _context: LambdaContext, node_api: Optional[NodeApi] = None
-) -> dict:
-    """Get the token balance of a given address.
-
-    *IMPORTANT: Any changes on the parameters should be reflected on the `cacheKeyParameters` for this method.
-    """
-    node_api = node_api or NodeApi()
-    address = event.query.get("address")
-    if address is None:
-        raise ApiError("invalid_parameters")
-
-    response = node_api.get_address_balance(address)
-
-    return {
-        "statusCode": 200,
-        "body": json.dumps(response or UNKNOWN_ERROR_MSG),
-        "headers": {"Content-Type": "application/json"},
-    }
-
-
-@ApiGateway()
 def get_address_search(
     event: ApiGatewayEvent, _context: LambdaContext, node_api: Optional[NodeApi] = None
 ) -> dict:
