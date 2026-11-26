@@ -14,7 +14,6 @@ from common.logging import get_logger
 
 logger = get_logger()
 
-ADDRESS_BALANCE_ENDPOINT = "/v1a/thin_wallet/address_balance"
 ADDRESS_SEARCH_ENDPOINT = "/v1a/thin_wallet/address_search"
 DASHBOARD_TX_ENDPOINT = "/v1a/dashboard_tx"
 DECODE_TX_ENDPOINT = "/v1a/decode_tx"

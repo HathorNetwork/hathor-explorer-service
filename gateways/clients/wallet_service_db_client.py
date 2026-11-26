@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING, List, Optional, Tuple
 
 from sqlalchemy.engine import URL, create_engine
 from sqlalchemy.exc import MultipleResultsFound, NoResultFound
-from sqlalchemy.pool import NullPool
+from sqlalchemy.pool import QueuePool
 from sqlalchemy.sql import text
 
 from common.configuration import (
@@ -105,11 +105,27 @@ SELECT EXISTS (
 ping_query: str = "SELECT 1"
 
 
-def get_engine():
-    """Returns the engine for connecting with the wallet service database.
+# MySQL closes a connection after it is idle for this many seconds. The server
+# default is 28800 (8 h). A frozen Lambda container cannot close its connection,
+# so without a short timeout idle containers would use up `max_connections`,
+# which the wallet-service shares.
+SESSION_WAIT_TIMEOUT_SECONDS = 60
 
-    NullPool is used to disable connection pooling
-    making each connect/disconnect actually grab a connection and release the connection.
+# A connection older than this is replaced when a request takes it from the
+# pool. This lets the client pick up a new DB host after a failover.
+POOL_RECYCLE_SECONDS = 300
+
+_engine: Optional["Engine"] = None
+
+
+def create_wallet_service_engine() -> "Engine":
+    """Create an engine for the wallet service database.
+
+    The pool keeps one connection. A Lambda container serves one request at a
+    time, and each request opens one connection at a time, so one is enough.
+    `max_overflow=0` keeps the number of connections per container at one.
+    `pool_pre_ping` replaces a connection that MySQL closed while the container
+    was frozen.
     """
     wallet_service_url = URL(
         "mysql+pymysql",
@@ -121,8 +137,32 @@ def get_engine():
     )
 
     return create_engine(
-        wallet_service_url, poolclass=NullPool, echo=ENVIRONMENT.is_dev
+        wallet_service_url,
+        poolclass=QueuePool,
+        pool_size=1,
+        max_overflow=0,
+        pool_pre_ping=True,
+        pool_recycle=POOL_RECYCLE_SECONDS,
+        connect_args={
+            "init_command": f"SET SESSION wait_timeout = {SESSION_WAIT_TIMEOUT_SECONDS}"
+        },
+        echo=ENVIRONMENT.is_dev,
     )
+
+
+def get_engine() -> "Engine":
+    """Return the engine of this process, and create it on the first call.
+
+    The engine and its connection stay alive between invocations of a warm
+    Lambda container. Opening a connection for every request cost ~290 ms of a
+    ~410 ms call (TCP, TLS, authentication and SQLAlchemy's dialect setup) and
+    most of the database load in the 2026 address sweeps. See
+    https://github.com/HathorNetwork/on-call-incidents/issues/318
+    """
+    global _engine
+    if _engine is None:
+        _engine = create_wallet_service_engine()
+    return _engine
 
 
 class WalletServiceDBClient:

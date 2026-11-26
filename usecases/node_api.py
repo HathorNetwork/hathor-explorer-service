@@ -15,17 +15,6 @@ class NodeApi:
     ) -> Optional[None]:
         self.node_api_gateway = node_api_gateway or NodeApiGateway()
 
-    def get_address_balance(self, address: str) -> Optional[dict]:
-        # check if blacklisted
-        if self.node_api_gateway.is_blacklisted_address(address):
-            return ADDRESS_BLACKLIST_RESPONSE
-
-        try:
-            return self.node_api_gateway.get_address_balance(address)
-        except HathorCoreTimeout:
-            self.node_api_gateway.blacklist_address(address)
-            return ADDRESS_BLACKLIST_RESPONSE
-
     def get_address_search(
         self,
         address: str,

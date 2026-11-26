@@ -2,7 +2,6 @@ from typing import List, Optional
 
 from gateways.clients.cache_client import ADDRESS_BLACKLIST_COLLECTION_NAME, CacheClient
 from gateways.clients.hathor_core_client import (
-    ADDRESS_BALANCE_ENDPOINT,
     ADDRESS_SEARCH_ENDPOINT,
     DASHBOARD_TX_ENDPOINT,
     DECODE_TX_ENDPOINT,
@@ -42,7 +41,7 @@ class NodeApiGateway:
         self.hathor_core_client = hathor_core_client or HathorCoreClient()
         self.cache_client = cache_client or CacheClient()
 
-    # /thin_wallet/address_balance
+    # Addresses that timed out on the full node
 
     def blacklist_address(self, address: str) -> Optional[bool]:
         """Blacklist address from calling full-node apis
@@ -60,20 +59,6 @@ class NodeApiGateway:
         :type address: str
         """
         return bool(self.cache_client.get(ADDRESS_BLACKLIST_COLLECTION_NAME, address))
-
-    def get_address_balance(self, address: str) -> Optional[dict]:
-        """Retrieve address balance from full-node
-
-        :param address: address to get balance for
-        :type address: str
-        """
-        return self.hathor_core_client.get(
-            ADDRESS_BALANCE_ENDPOINT,
-            params={"address": address},
-            # lambda timeout 15s, which is the sum of all lambda's steps timeout
-            # see: https://github.com/HathorNetwork/hathor-explorer-service/pull/93
-            timeout=10,
-        )
 
     def get_address_search(
         self,

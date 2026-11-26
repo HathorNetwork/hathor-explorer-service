@@ -4,11 +4,7 @@ from unittest.mock import MagicMock, patch
 from pytest import fixture
 
 from gateways.node_api_gateway import NODE_API_TIMEOUT_IN_SECONDS, NodeApiGateway
-from tests.fixtures.node_api_factory import (
-    AddressBalanceFactory,
-    AddressSearchFactory,
-    VersionResourceFactory,
-)
+from tests.fixtures.node_api_factory import AddressSearchFactory, VersionResourceFactory
 
 
 class TestNodeApiGateway:
@@ -39,25 +35,6 @@ class TestNodeApiGateway:
         result = gateway.is_blacklisted_address("mock-address")
         cache_client.get.assert_called_once_with("mock-collection", "mock-address")
         assert result is True
-
-    @patch("gateways.node_api_gateway.ADDRESS_BALANCE_ENDPOINT", "mock-endpoint")
-    def test_get_address_balance(self, hathor_client):
-        obj = AddressBalanceFactory()
-        hathor_client.get = MagicMock(return_value=obj)
-        gateway = NodeApiGateway(hathor_core_client=hathor_client)
-        result = gateway.get_address_balance("mock-address")
-        hathor_client.get.assert_called_once_with(
-            "mock-endpoint", params={"address": "mock-address"}, timeout=10
-        )
-        assert result
-        assert sorted(result) == sorted(obj)
-
-    @patch("gateways.node_api_gateway.ADDRESS_BALANCE_ENDPOINT", "mock-endpoint")
-    def test_get_address_balance_fail(self, hathor_client):
-        hathor_client.get = MagicMock(return_value=None)
-        gateway = NodeApiGateway(hathor_core_client=hathor_client)
-        result = gateway.get_address_balance("mock-address")
-        assert result is None
 
     @patch("gateways.node_api_gateway.ADDRESS_SEARCH_ENDPOINT", "mock-endpoint")
     def test_get_address_search(self, hathor_client):
